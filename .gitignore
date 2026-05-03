@@ -1,0 +1,91 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+# =========================
+# ENV / SECRETS
+# =========================
+.env
+.env.*
+!.env.example
+
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+*.key
+*.pem
+*.jks
+*.keystore
+serviceAccountKey.json
+
+
+# =========================
+# FLUTTER FRONTEND
+# =========================
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+frontend/build/
+frontend/coverage/
+
+frontend/android/.gradle/
+frontend/android/local.properties
+frontend/android/app/build/
+frontend/android/build/
+
+# Firebase config Android
+frontend/android/app/google-services.json
+
+# Firebase config iOS
+frontend/ios/Runner/GoogleService-Info.plist
+
+frontend/ios/Pods/
+frontend/ios/.symlinks/
+frontend/ios/Flutter/Flutter.framework
+frontend/ios/Flutter/Flutter.podspec
+frontend/ios/Flutter/Generated.xcconfig
+frontend/ios/Flutter/ephemeral/
+frontend/ios/build/
+
+
+# =========================
+# PYTHON BACKEND
+# =========================
+backend/.venv/
+backend/venv/
+backend/env/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/.ruff_cache/
+backend/build/
+backend/dist/
+backend/*.egg-info/
+
+
+# =========================
+# DATABASE LOCAL BACKUP
+# =========================
+database/*.dump
+database/*.backup
+database/*.bak
+database/*.sql.gz
+database/local/
+database/tmp/
+
+# =========================
+# IDE / OS
+# =========================
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.iml
