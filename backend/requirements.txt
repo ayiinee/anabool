@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+python-dotenv
+pydantic
+pydantic-settings
+supabase
+firebase-admin
+python-multipart
+httpx
+pillow
+numpy
+google-generativeai
+langchain
