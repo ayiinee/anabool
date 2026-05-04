@@ -1,30 +1,79 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:frontend/main.dart';
+import 'package:frontend/app/app.dart';
+import 'package:frontend/core/constants/asset_constants.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('home assets are bundled', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    const assets = [
+      HomeAssets.activityCat,
+      HomeAssets.charlotteCat,
+      HomeAssets.educationCat,
+      HomeAssets.gamoraCat,
+      HomeAssets.marketCat,
+      HomeAssets.pickupCat,
+      HomeAssets.posterCat,
+      HomeAssets.profilePhoto,
+      HomeAssets.homePoster,
+      HomeAssets.product1,
+      HomeAssets.product2,
+      HomeAssets.product3,
+      HomeAssets.product4,
+      HomeAssets.product5,
+      HomeAssets.product6,
+      HomeAssets.scanIcon,
+      HomeAssets.homeIcon,
+      HomeAssets.educationIcon,
+      HomeAssets.marketIcon,
+      HomeAssets.profileIcon,
+    ];
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    for (final asset in assets) {
+      final data = await rootBundle.load(asset);
+      expect(data.lengthInBytes, greaterThan(0), reason: asset);
+    }
+  });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('home page renders the iPhone 16 Plus reference sections',
+      (tester) async {
+    tester.view.physicalSize = const Size(430, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const AnaboolApp());
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('Anabool'), findsOneWidget);
+    expect(find.text('MeowPoints'), findsOneWidget);
+    expect(find.text('Pintasan'), findsOneWidget);
+    expect(find.text('Aktifitas'), findsOneWidget);
+    expect(find.text('Modul'), findsNWidgets(2));
+    expect(find.text('Pick-up'), findsOneWidget);
+    expect(find.text('Produk'), findsNWidgets(2));
+    expect(find.text('Konsultasi Sekarang!'), findsOneWidget);
+    expect(
+      find.text('Bingung dengan kondisi kotoran atau kotak pasir kucing Anda?'),
+      findsOneWidget,
+    );
+    expect(find.text('Coba Sekarang'), findsOneWidget);
+    expect(find.text('Status Anabul'), findsOneWidget);
+    expect(find.text('Gamora'), findsOneWidget);
+    expect(find.text('Charlotte'), findsOneWidget);
+    expect(find.text('Rekomendasi Produk'), findsOneWidget);
+    expect(find.text('Beli Sekarang'), findsNWidgets(6));
+    expect(find.text('Follow us on'), findsNothing);
+    expect(find.text('Address'), findsNothing);
+    expect(find.text('Contact'), findsNothing);
+    expect(find.textContaining('Home  |  Education'), findsNothing);
+    expect(find.text('Beranda'), findsOneWidget);
+    expect(find.text('Profil'), findsOneWidget);
+    expect(find.byIcon(Icons.home_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.school_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.storefront_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.person_rounded), findsOneWidget);
   });
 }
