@@ -43,3 +43,11 @@ class AuthAssets {
   static const googleIcon = '$imageBase/google-icon.png';
   static const xIcon = '$imageBase/x-icon.png';
 }
+
+class ChatAssets {
+  const ChatAssets._();
+
+  static const imageBase = 'assets/images/chat';
+
+  static const anaProfile = '$imageBase/ana-profile.png';
+}

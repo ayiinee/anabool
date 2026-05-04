@@ -4,6 +4,7 @@ import '../core/constants/route_constants.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/auth/presentation/pages/signup_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
+import '../features/chat/presentation/pages/chat_page.dart';
 import '../features/scan/domain/entities/scan_session.dart';
 import '../features/scan/presentation/pages/scan_camera_page.dart';
 import '../features/scan/presentation/pages/scan_preview_page.dart';
@@ -19,6 +20,7 @@ class AppRouter {
       RouteConstants.login: (_) => const LoginPage(),
       RouteConstants.signup: (_) => const SignupPage(),
       RouteConstants.home: (_) => const HomePage(),
+      RouteConstants.chat: (_) => const ChatPage(),
       RouteConstants.scanCamera: (_) => const ScanCameraPage(),
       RouteConstants.scanPreview: (context) {
         final arguments = ModalRoute.of(context)?.settings.arguments;
