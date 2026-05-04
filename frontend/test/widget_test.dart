@@ -32,6 +32,15 @@ void main() {
       HomeAssets.product6,
       HomeAssets.product7,
       HomeAssets.scanIcon,
+      HomeAssets.homeIcon,
+      HomeAssets.educationIcon,
+      HomeAssets.marketIcon,
+      HomeAssets.profileIcon,
+      AuthAssets.loginCat,
+      AuthAssets.signupCat,
+      AuthAssets.facebookIcon,
+      AuthAssets.googleIcon,
+      AuthAssets.xIcon,
     ];
 
     for (final asset in assets) {
@@ -71,6 +80,107 @@ void main() {
     }
   });
 
+  testWidgets('app starts on login and login fields accept input',
+      (tester) async {
+    await tester.pumpWidget(const AnaboolApp());
+    await tester.pump();
+
+    expect(find.text('Masuk ke akun Anda'), findsOneWidget);
+    expect(find.text('Buat Akun Anda'), findsNothing);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-field-email')),
+      'alvin@example.com',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-field-password')),
+      'secret123',
+    );
+
+    expect(find.text('alvin@example.com'), findsOneWidget);
+    expect(
+      tester
+          .widget<EditableText>(
+            find.descendant(
+              of: find.byKey(const ValueKey('auth-field-password')),
+              matching: find.byType(EditableText),
+            ),
+          )
+          .obscureText,
+      isTrue,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('auth-visibility-password')));
+    await tester.pump();
+
+    expect(
+      tester
+          .widget<EditableText>(
+            find.descendant(
+              of: find.byKey(const ValueKey('auth-field-password')),
+              matching: find.byType(EditableText),
+            ),
+          )
+          .obscureText,
+      isFalse,
+    );
+  });
+
+  testWidgets('auth links navigate between login and signup', (tester) async {
+    await tester.pumpWidget(const AnaboolApp());
+    await tester.pump();
+
+    await tester.ensureVisible(find.text('Mendaftar'));
+    await tester.tap(find.text('Mendaftar'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Buat Akun Anda'), findsOneWidget);
+    expect(find.text('Masuk ke akun Anda'), findsNothing);
+
+    await tester.ensureVisible(find.text('Masuk'));
+    await tester.tap(find.text('Masuk'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Masuk ke akun Anda'), findsOneWidget);
+    expect(find.text('Buat Akun Anda'), findsNothing);
+  });
+
+  testWidgets('signup fields accept input and signup opens home',
+      (tester) async {
+    await tester.pumpWidget(const AnaboolApp());
+    await tester.pump();
+
+    await tester.ensureVisible(find.text('Mendaftar'));
+    await tester.tap(find.text('Mendaftar'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-field-email')),
+      'new@example.com',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-field-username')),
+      'putu_alvin',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-field-password')),
+      'secret123',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-field-confirm-password')),
+      'secret123',
+    );
+
+    expect(find.text('new@example.com'), findsOneWidget);
+    expect(find.text('putu_alvin'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Mendaftar'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Anabool'), findsOneWidget);
+    expect(find.text('MeowPoints'), findsOneWidget);
+  });
+
   testWidgets('home page renders the iPhone 16 Plus reference sections',
       (tester) async {
     tester.view.physicalSize = const Size(430, 1800);
@@ -79,6 +189,17 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
 
     await tester.pumpWidget(const AnaboolApp());
+    await tester.pump();
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-field-email')),
+      'alvin@example.com',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('auth-field-password')),
+      'secret123',
+    );
+    await tester.tap(find.widgetWithText(FilledButton, 'Masuk'));
+    await tester.pumpAndSettle();
     await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.text('Anabool'), findsOneWidget);

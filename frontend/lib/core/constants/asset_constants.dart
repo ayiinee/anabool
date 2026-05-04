@@ -2,6 +2,7 @@ class HomeAssets {
   const HomeAssets._();
 
   static const imageBase = 'assets/images/home';
+  static const iconBase = 'assets/icons/home';
 
   static const activityCat = '$imageBase/cat-activity.png';
   static const charlotteCat = '$imageBase/cat-charlotte.png';
@@ -24,4 +25,21 @@ class HomeAssets {
   static const product6 = '$imageBase/product-6.png';
   static const product7 = '$imageBase/product-7.png';
   static const scanIcon = '$imageBase/scan-icon.png';
+
+  static const homeIcon = '$iconBase/home-icon.svg';
+  static const educationIcon = '$iconBase/education-icon.svg';
+  static const marketIcon = '$iconBase/market-icon.svg';
+  static const profileIcon = '$iconBase/profile-icon.svg';
+}
+
+class AuthAssets {
+  const AuthAssets._();
+
+  static const imageBase = 'assets/images/auth';
+
+  static const loginCat = '$imageBase/cat-login.png';
+  static const signupCat = '$imageBase/cat-signup.png';
+  static const facebookIcon = '$imageBase/facebook-icon.png';
+  static const googleIcon = '$imageBase/google-icon.png';
+  static const xIcon = '$imageBase/x-icon.png';
 }

@@ -84,31 +84,9 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/home/Vector.png
-    - assets/images/home/cat-activity.png
-    - assets/images/home/cat-charlotte.png
-    - assets/images/home/cat-education.png
-    - assets/images/home/cat-gamora.png
-    - assets/images/home/cat-market.png
-    - assets/images/home/cat-pickup.png
-    - assets/images/home/cat-poster.png
-    - assets/images/home/home-poster.png
-    - assets/images/home/home-poster2.png
-    - assets/images/home/home-poster3.png
-    - assets/images/home/home-poster4.png
-    - assets/images/home/home-poster5.png
-    - assets/images/home/home-poster6.png
-    - assets/images/home/iPhone 16 Plus - 1.png
-    - assets/images/home/poster-layer.png
-    - assets/images/home/product-1.png
-    - assets/images/home/product-2.png
-    - assets/images/home/product-3.png
-    - assets/images/home/product-4.png
-    - assets/images/home/product-5.png
-    - assets/images/home/product-6.png
-    - assets/images/home/product-7.png
-    - assets/images/home/putu-alvin.png
-    - assets/images/home/scan-icon.png
+    - assets/images/home/
+    - assets/images/auth/
+    - assets/icons/home/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
