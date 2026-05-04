@@ -1,13 +1,16 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
 import 'design_image.dart';
+import 'home_components.dart';
 
 class HeroHeader extends StatelessWidget {
   const HeroHeader({super.key});
 
-  static const _horizontalPadding = 22.0;
   static const _posterAspectRatio = 1138 / 512;
 
   @override
@@ -17,7 +20,8 @@ class HeroHeader extends StatelessWidget {
         final screenWidth = MediaQuery.sizeOf(context).width;
         final availableWidth =
             constraints.hasBoundedWidth ? constraints.maxWidth : screenWidth;
-        final posterWidth = availableWidth - (_horizontalPadding * 2);
+        final posterWidth =
+            availableWidth - (HomeMetrics.horizontalPadding * 2);
         final posterHeight =
             (posterWidth / _posterAspectRatio).clamp(142.0, 174.0).toDouble();
         const headerHeight = 266.0;
@@ -31,7 +35,12 @@ class HeroHeader extends StatelessWidget {
               Container(
                 height: headerHeight,
                 width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(22, 20, 22, 0),
+                padding: const EdgeInsets.fromLTRB(
+                  HomeMetrics.horizontalPadding,
+                  20,
+                  HomeMetrics.horizontalPadding,
+                  0,
+                ),
                 decoration: const BoxDecoration(
                   color: AnaboolColors.header,
                   borderRadius: BorderRadius.only(
@@ -60,8 +69,8 @@ class HeroHeader extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: _horizontalPadding,
-                right: _horizontalPadding,
+                left: HomeMetrics.horizontalPadding,
+                right: HomeMetrics.horizontalPadding,
                 top: headerHeight - overlap,
                 child: _PosterCard(height: posterHeight),
               ),
@@ -136,15 +145,11 @@ class _HelpdeskButton extends StatelessWidget {
       height: 44,
       child: TextButton.icon(
         onPressed: () {},
-        style: TextButton.styleFrom(
+        style: HomeButtonStyles.filled(
           backgroundColor: AnaboolColors.brown,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.only(left: 11, right: 13),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          minimumSize: Size.zero,
+          radius: HomeMetrics.tileRadius,
         ),
         icon: const Icon(
           Icons.support_agent_rounded,
@@ -179,12 +184,7 @@ class _HeaderIconButton extends StatelessWidget {
       child: IconButton(
         tooltip: tooltip,
         onPressed: () {},
-        style: IconButton.styleFrom(
-          backgroundColor: AnaboolColors.brown,
-          foregroundColor: Colors.white,
-          padding: EdgeInsets.zero,
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
+        style: HomeButtonStyles.headerIcon(),
         icon: Icon(icon, size: 24),
       ),
     );
@@ -234,71 +234,208 @@ class _MeowPointsPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 44,
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 13),
-      decoration: BoxDecoration(
-        color: const Color(0xFFEBA968),
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: const [
+    const radius = BorderRadius.all(Radius.circular(15));
+
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        borderRadius: radius,
+        boxShadow: [
           BoxShadow(
-            color: Color(0x17000000),
-            blurRadius: 8,
-            offset: Offset(0, 3),
+            color: Color(0x187A3400),
+            blurRadius: 16,
+            offset: Offset(0, 5),
           ),
         ],
       ),
-      child: const Row(
-        children: [
-          Text(
-            'MeowPoints',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          Spacer(),
-          CircleAvatar(
-            radius: 9,
-            backgroundColor: AnaboolColors.brown,
-            child: Icon(Icons.star_rounded, color: Colors.white, size: 13),
-          ),
-          SizedBox(width: 6),
-          Flexible(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerRight,
-              child: Text(
-                '194,589 XP',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w900,
+      child: ClipRRect(
+        borderRadius: radius,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: const SizedBox(
+            height: 44,
+            width: double.infinity,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Color(0x36FFF8F0),
+                      border: Border.fromBorderSide(
+                        BorderSide(color: Color(0x5CFFFFFF), width: 1),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                Positioned(
+                  left: 0,
+                  top: 7,
+                  bottom: 7,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: Color(0x8CFFFFFF)),
+                    child: SizedBox(width: 1.4),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  top: 8,
+                  bottom: 8,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: Color(0x33A64700)),
+                    child: SizedBox(width: 1),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  left: 0,
+                  bottom: 0,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: Color(0x24A64700)),
+                    child: SizedBox(height: 1),
+                  ),
+                ),
+                Positioned.fill(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 14),
+                    child: Row(
+                      children: [
+                        Text(
+                          'MeowPoints',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Spacer(),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircleAvatar(
+                                radius: 9,
+                                backgroundColor: AnaboolColors.brown,
+                                child: Icon(
+                                  Icons.star_rounded,
+                                  color: Colors.white,
+                                  size: 13,
+                                ),
+                              ),
+                              SizedBox(width: 6),
+                              Text(
+                                '194,589 XP',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _PosterCard extends StatelessWidget {
+class _PosterCard extends StatefulWidget {
   const _PosterCard({required this.height});
 
   final double height;
 
   @override
+  State<_PosterCard> createState() => _PosterCardState();
+}
+
+class _PosterCardState extends State<_PosterCard> {
+  static const _autoPlayDelay = Duration(seconds: 4);
+  static const _posterHorizontalCropScale = 1.055;
+  static const _posters = [
+    HomeAssets.homePoster,
+    HomeAssets.homePoster3,
+    HomeAssets.homePoster4,
+    HomeAssets.homePoster5,
+    HomeAssets.homePoster6,
+  ];
+
+  late final PageController _pageController;
+  Timer? _autoPlayTimer;
+  int _currentPoster = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _startAutoPlay();
+  }
+
+  @override
+  void dispose() {
+    _autoPlayTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _startAutoPlay() {
+    _autoPlayTimer?.cancel();
+    if (_posters.length < 2) {
+      return;
+    }
+
+    _autoPlayTimer = Timer.periodic(_autoPlayDelay, (_) {
+      if (!mounted || !_pageController.hasClients) {
+        return;
+      }
+
+      final nextPoster = (_currentPoster + 1) % _posters.length;
+      _pageController.animateToPage(
+        nextPoster,
+        duration: const Duration(milliseconds: 420),
+        curve: Curves.easeOutCubic,
+      );
+    });
+  }
+
+  void _pauseAutoPlay() {
+    _autoPlayTimer?.cancel();
+    _autoPlayTimer = null;
+  }
+
+  void _moveToPoster(int index) {
+    if (index == _currentPoster || !_pageController.hasClients) {
+      return;
+    }
+
+    _pauseAutoPlay();
+    _pageController
+        .animateToPage(
+      index,
+      duration: const Duration(milliseconds: 320),
+      curve: Curves.easeOutCubic,
+    )
+        .whenComplete(() {
+      if (mounted) {
+        _startAutoPlay();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
-        Container(
-          height: height,
+        DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(HomeMetrics.cardRadius),
             boxShadow: const [
               BoxShadow(
                 color: Color(0x26000000),
@@ -307,38 +444,59 @@ class _PosterCard extends StatelessWidget {
               ),
             ],
           ),
-          clipBehavior: Clip.antiAlias,
-          child: const DesignImage(
-            asset: HomeAssets.homePoster,
-            width: double.infinity,
-            fit: BoxFit.cover,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(HomeMetrics.cardRadius),
+            child: SizedBox(
+              width: double.infinity,
+              height: widget.height,
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification is ScrollStartNotification &&
+                      notification.dragDetails != null) {
+                    _pauseAutoPlay();
+                  } else if (notification is ScrollEndNotification) {
+                    _startAutoPlay();
+                  }
+
+                  return false;
+                },
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: _posters.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPoster = index;
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    return Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.diagonal3Values(
+                        _posterHorizontalCropScale,
+                        1,
+                        1,
+                      ),
+                      child: DesignImage(
+                        asset: _posters[index],
+                        width: double.infinity,
+                        height: widget.height,
+                        fit: BoxFit.cover,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
           ),
         ),
-        const Positioned(
-          left: 10,
-          top: 0,
-          bottom: 0,
-          child: _PosterArrow(icon: Icons.chevron_left_rounded),
-        ),
-        const Positioned(
-          right: 10,
-          top: 0,
-          bottom: 0,
-          child: _PosterArrow(icon: Icons.chevron_right_rounded),
-        ),
-        const Positioned(
+        Positioned(
           left: 0,
           right: 0,
           bottom: 10,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _PosterDot(active: true),
-              SizedBox(width: 5),
-              _PosterDot(),
-              SizedBox(width: 5),
-              _PosterDot(),
-            ],
+          child: _PosterIndicator(
+            count: _posters.length,
+            currentIndex: _currentPoster,
+            onSelected: _moveToPoster,
           ),
         ),
       ],
@@ -346,25 +504,44 @@ class _PosterCard extends StatelessWidget {
   }
 }
 
-class _PosterArrow extends StatelessWidget {
-  const _PosterArrow({required this.icon});
+class _PosterIndicator extends StatelessWidget {
+  const _PosterIndicator({
+    required this.count,
+    required this.currentIndex,
+    required this.onSelected,
+  });
 
-  final IconData icon;
+  final int count;
+  final int currentIndex;
+  final ValueChanged<int> onSelected;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        width: 30,
-        height: 30,
+      child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.44),
-          shape: BoxShape.circle,
+          color: Colors.white.withValues(alpha: 0.94),
+          borderRadius: BorderRadius.circular(999),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x26000000),
+              blurRadius: 18,
+              offset: Offset(0, 6),
+            ),
+          ],
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 26,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              count,
+              (index) => _PosterDot(
+                active: index == currentIndex,
+                onTap: () => onSelected(index),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -372,18 +549,38 @@ class _PosterArrow extends StatelessWidget {
 }
 
 class _PosterDot extends StatelessWidget {
-  const _PosterDot({this.active = false});
+  const _PosterDot({
+    required this.active,
+    required this.onTap,
+  });
 
   final bool active;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: active ? 16 : 6,
-      height: 6,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: active ? 0.95 : 0.58),
-        borderRadius: BorderRadius.circular(999),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 3),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOutCubic,
+          width: 6,
+          height: 7,
+          decoration: BoxDecoration(
+            color: active ? AnaboolColors.brown : Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x26000000),
+                blurRadius: 6,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

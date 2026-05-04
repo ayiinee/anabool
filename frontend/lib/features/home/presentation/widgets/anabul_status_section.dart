@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
 import 'design_image.dart';
+import 'home_components.dart';
 
 class AnabulStatusSection extends StatelessWidget {
   const AnabulStatusSection({super.key});
@@ -10,18 +11,16 @@ class AnabulStatusSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.fromLTRB(22, 18, 22, 22),
+      padding: EdgeInsets.fromLTRB(
+        HomeMetrics.horizontalPadding,
+        18,
+        HomeMetrics.horizontalPadding,
+        22,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Status Anabul',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: Colors.black,
-            ),
-          ),
+          HomeSectionTitle('Status Anabul'),
           SizedBox(height: 14),
           Row(
             children: [
@@ -65,21 +64,10 @@ class _CatStatusCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return HomeSurface(
       height: 184,
       padding: const EdgeInsets.fromLTRB(14, 10, 14, 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AnaboolColors.border),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x22000000),
-            blurRadius: 5,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
+      shadows: HomeShadows.raisedCard,
       child: Stack(
         children: [
           Positioned(

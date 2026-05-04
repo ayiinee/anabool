@@ -33,6 +33,7 @@ frontend/.flutter-plugins-dependencies
 frontend/.packages
 frontend/build/
 frontend/coverage/
+frontend/*.err
 
 frontend/android/.gradle/
 frontend/android/local.properties

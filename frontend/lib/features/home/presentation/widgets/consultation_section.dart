@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
 import 'design_image.dart';
+import 'home_components.dart';
 
 class ConsultationSection extends StatelessWidget {
   const ConsultationSection({super.key});
@@ -10,18 +11,16 @@ class ConsultationSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(22, 16, 22, 24),
+      padding: const EdgeInsets.fromLTRB(
+        HomeMetrics.horizontalPadding,
+        16,
+        HomeMetrics.horizontalPadding,
+        24,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Konsultasi Sekarang!',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: Colors.black,
-            ),
-          ),
+          const HomeSectionTitle('Konsultasi Sekarang!'),
           const SizedBox(height: 4),
           const Text(
             'Dapatkan rekomendasi perawatan kotak pasir yang aman berdasarkan kondisi kucing Anda.',
@@ -32,21 +31,9 @@ class ConsultationSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          Container(
+          HomeSurface(
             height: 156,
             width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: AnaboolColors.border),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x17000000),
-                  blurRadius: 5,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
             clipBehavior: Clip.antiAlias,
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -96,13 +83,10 @@ class ConsultationSection extends StatelessWidget {
                             width: 122,
                             child: TextButton(
                               onPressed: () {},
-                              style: TextButton.styleFrom(
+                              style: HomeButtonStyles.filled(
                                 backgroundColor: Colors.white,
                                 foregroundColor: AnaboolColors.brown,
-                                padding: EdgeInsets.zero,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                radius: HomeMetrics.compactRadius,
                               ),
                               child: const Text(
                                 'Coba Sekarang',
