@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
 import 'design_image.dart';
+import 'home_components.dart';
 
 class ShortcutSection extends StatelessWidget {
   const ShortcutSection({super.key});
-
-  static const _horizontalPadding = 22.0;
 
   @override
   Widget build(BuildContext context) {
@@ -20,22 +19,15 @@ class ShortcutSection extends StatelessWidget {
 
     return const Padding(
       padding: EdgeInsets.fromLTRB(
-        _horizontalPadding,
+        HomeMetrics.horizontalPadding,
         8,
-        _horizontalPadding,
+        HomeMetrics.horizontalPadding,
         24,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Pintasan',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w900,
-              color: Colors.black,
-            ),
-          ),
+          HomeSectionTitle('Pintasan'),
           SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,37 +47,116 @@ class _ShortcutItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _InteractiveShortcut(
+      label: label,
+      asset: asset,
+      onTap: () => _showShortcutFeedback(context, label),
+    );
+  }
+}
+
+class _InteractiveShortcut extends StatefulWidget {
+  const _InteractiveShortcut({
+    required this.label,
+    required this.asset,
+    required this.onTap,
+  });
+
+  final String label;
+  final String asset;
+  final VoidCallback onTap;
+
+  @override
+  State<_InteractiveShortcut> createState() => _InteractiveShortcutState();
+}
+
+class _InteractiveShortcutState extends State<_InteractiveShortcut> {
+  bool _hovered = false;
+  bool _pressed = false;
+
+  void _setHovered(bool value) {
+    if (_hovered == value) {
+      return;
+    }
+
+    setState(() {
+      _hovered = value;
+    });
+  }
+
+  void _setPressed(bool value) {
+    if (_pressed == value) {
+      return;
+    }
+
+    setState(() {
+      _pressed = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLifted = _hovered || _pressed;
+
     return SizedBox(
       width: 62,
       child: Column(
         children: [
-          Container(
-            width: 62,
-            height: 62,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AnaboolColors.border),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x14000000),
-                  blurRadius: 7,
-                  offset: Offset(0, 3),
+          AnimatedScale(
+            duration: const Duration(milliseconds: 150),
+            curve: Curves.easeOutCubic,
+            scale: _pressed ? 0.96 : (_hovered ? 1.04 : 1),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(HomeMetrics.tileRadius),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(HomeMetrics.tileRadius),
+                onTap: widget.onTap,
+                onHover: _setHovered,
+                onHighlightChanged: _setPressed,
+                splashColor: AnaboolColors.header.withValues(alpha: 0.18),
+                highlightColor: AnaboolColors.header.withValues(alpha: 0.10),
+                hoverColor: AnaboolColors.header.withValues(alpha: 0.08),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  curve: Curves.easeOutCubic,
+                  width: 62,
+                  height: 62,
+                  decoration: BoxDecoration(
+                    color: isLifted
+                        ? const Color(0xFFFFFAF7)
+                        : AnaboolColors.surface,
+                    borderRadius: BorderRadius.circular(HomeMetrics.tileRadius),
+                    border: Border.all(
+                      color: isLifted
+                          ? AnaboolColors.brownSoft
+                          : AnaboolColors.border,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isLifted
+                            ? const Color(0x287A3400)
+                            : const Color(0x14000000),
+                        blurRadius: isLifted ? 13 : 7,
+                        offset: Offset(0, isLifted ? 5 : 3),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: DesignImage(
+                      asset: widget.asset,
+                      width: 62,
+                      height: 62,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
-              ],
-            ),
-            child: Center(
-              child: DesignImage(
-                asset: asset,
-                width: 62,
-                height: 62,
-                fit: BoxFit.contain,
               ),
             ),
           ),
           const SizedBox(height: 9),
           Text(
-            label,
+            widget.label,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 12,
@@ -97,4 +168,16 @@ class _ShortcutItem extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showShortcutFeedback(BuildContext context, String label) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(
+      SnackBar(
+        content: Text('Pintasan $label sedang disiapkan.'),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
 }

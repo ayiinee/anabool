@@ -56,7 +56,6 @@ dependencies:
 
   # UI helper
   cached_network_image: ^3.4.1
-  flutter_svg: ^2.2.3
   intl: ^0.19.0
   url_launcher: ^6.3.0
   cupertino_icons: ^1.0.8
@@ -85,8 +84,31 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/home/
-    - assets/icons/home/
+    - assets/images/home/Vector.png
+    - assets/images/home/cat-activity.png
+    - assets/images/home/cat-charlotte.png
+    - assets/images/home/cat-education.png
+    - assets/images/home/cat-gamora.png
+    - assets/images/home/cat-market.png
+    - assets/images/home/cat-pickup.png
+    - assets/images/home/cat-poster.png
+    - assets/images/home/home-poster.png
+    - assets/images/home/home-poster2.png
+    - assets/images/home/home-poster3.png
+    - assets/images/home/home-poster4.png
+    - assets/images/home/home-poster5.png
+    - assets/images/home/home-poster6.png
+    - assets/images/home/iPhone 16 Plus - 1.png
+    - assets/images/home/poster-layer.png
+    - assets/images/home/product-1.png
+    - assets/images/home/product-2.png
+    - assets/images/home/product-3.png
+    - assets/images/home/product-4.png
+    - assets/images/home/product-5.png
+    - assets/images/home/product-6.png
+    - assets/images/home/product-7.png
+    - assets/images/home/putu-alvin.png
+    - assets/images/home/scan-icon.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

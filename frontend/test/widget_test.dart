@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,22 +20,54 @@ void main() {
       HomeAssets.posterCat,
       HomeAssets.profilePhoto,
       HomeAssets.homePoster,
+      HomeAssets.homePoster3,
+      HomeAssets.homePoster4,
+      HomeAssets.homePoster5,
+      HomeAssets.homePoster6,
       HomeAssets.product1,
       HomeAssets.product2,
       HomeAssets.product3,
       HomeAssets.product4,
       HomeAssets.product5,
       HomeAssets.product6,
+      HomeAssets.product7,
       HomeAssets.scanIcon,
-      HomeAssets.homeIcon,
-      HomeAssets.educationIcon,
-      HomeAssets.marketIcon,
-      HomeAssets.profileIcon,
     ];
 
     for (final asset in assets) {
       final data = await rootBundle.load(asset);
       expect(data.lengthInBytes, greaterThan(0), reason: asset);
+    }
+  });
+
+  test('home poster assets can be decoded as images', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+
+    const posters = [
+      HomeAssets.homePoster,
+      HomeAssets.homePoster3,
+      HomeAssets.homePoster4,
+      HomeAssets.homePoster5,
+      HomeAssets.homePoster6,
+    ];
+
+    for (final poster in posters) {
+      final data = await rootBundle.load(poster);
+      final buffer = await ui.ImmutableBuffer.fromUint8List(
+        data.buffer.asUint8List(),
+      );
+      final descriptor = await ui.ImageDescriptor.encoded(buffer);
+      final codec = await descriptor.instantiateCodec();
+      final frame = await codec.getNextFrame();
+
+      expect(data.lengthInBytes, greaterThan(0), reason: poster);
+      expect(frame.image.width, greaterThan(0), reason: poster);
+      expect(frame.image.height, greaterThan(0), reason: poster);
+
+      frame.image.dispose();
+      codec.dispose();
+      descriptor.dispose();
+      buffer.dispose();
     }
   });
 
@@ -64,7 +98,20 @@ void main() {
     expect(find.text('Gamora'), findsOneWidget);
     expect(find.text('Charlotte'), findsOneWidget);
     expect(find.text('Rekomendasi Produk'), findsOneWidget);
-    expect(find.text('Beli Sekarang'), findsNWidgets(6));
+    expect(find.text('14%'), findsNWidgets(4));
+    expect(find.text('Bisa COD'), findsNWidgets(4));
+    expect(find.text('Jakarta Utara'), findsNWidgets(4));
+    expect(find.text('Lihat lainnya'), findsOneWidget);
+
+    await tester.ensureVisible(find.text('Lihat lainnya'));
+    await tester.tap(find.text('Lihat lainnya'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('14%'), findsNWidgets(6));
+    expect(find.text('Bisa COD'), findsNWidgets(6));
+    expect(find.text('Jakarta Utara'), findsNWidgets(6));
+    expect(find.text('Lihat lainnya'), findsNothing);
+    expect(find.text('Beli Sekarang'), findsNothing);
     expect(find.text('Follow us on'), findsNothing);
     expect(find.text('Address'), findsNothing);
     expect(find.text('Contact'), findsNothing);
