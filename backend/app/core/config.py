@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     SUPABASE_URL: str = ""
     SUPABASE_ANON_KEY: str = ""
     SUPABASE_SERVICE_ROLE_KEY: str = ""
+    SUPABASE_PASSWORD: str = ""
+
+    DATABASE_URL: str = ""
 
     FIREBASE_PROJECT_ID: str = ""
     FIREBASE_CLIENT_EMAIL: str = ""
@@ -28,6 +31,10 @@ class Settings(BaseSettings):
 
     CNN_MODEL_PATH: str = "../ai-model/cnn/models/anabool_cnn_model.h5"
     CNN_CONFIDENCE_THRESHOLD: float = 0.70
+
+    ROBOFLOW_API_URL: str = "https://serverless.roboflow.com"
+    ROBOFLOW_API_KEY: str = ""
+    ROBOFLOW_MODEL_ID: str = "pet-poop-classifier/1"
 
     model_config = SettingsConfigDict(
         env_file=".env",
