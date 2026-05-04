@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/constants/route_constants.dart';
 import 'design_image.dart';
 import 'home_components.dart';
 
@@ -82,9 +83,8 @@ class HomeBottomNavigation extends StatelessWidget {
               Positioned(
                 top: 0,
                 child: _ScanButton(
-                  onTap: () => _showNavigationFeedback(
-                    context,
-                    'Fitur scan kotak pasir sedang disiapkan.',
+                  onTap: () => Navigator.of(context).pushNamed(
+                    RouteConstants.scanCamera,
                   ),
                 ),
               ),
