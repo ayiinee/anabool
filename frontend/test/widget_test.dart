@@ -4,7 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/app.dart';
+import 'package:frontend/core/constants/route_constants.dart';
 import 'package:frontend/core/constants/asset_constants.dart';
+import 'package:frontend/features/education/presentation/pages/education_complete_page.dart';
+import 'package:frontend/features/education/presentation/pages/education_detail_page.dart';
+import 'package:frontend/features/education/presentation/pages/education_page.dart';
 import 'package:frontend/features/home/presentation/pages/home_page.dart';
 
 void main() {
@@ -43,6 +47,9 @@ void main() {
       AuthAssets.googleIcon,
       AuthAssets.xIcon,
       ChatAssets.anaProfile,
+      EducationAssets.heroBackground,
+      EducationAssets.moduleCat,
+      EducationAssets.moduleThinkingCat,
     ];
 
     for (final asset in assets) {
@@ -74,6 +81,35 @@ void main() {
       expect(data.lengthInBytes, greaterThan(0), reason: poster);
       expect(frame.image.width, greaterThan(0), reason: poster);
       expect(frame.image.height, greaterThan(0), reason: poster);
+
+      frame.image.dispose();
+      codec.dispose();
+      descriptor.dispose();
+      buffer.dispose();
+    }
+  });
+
+  test('education image assets can be decoded as images', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+
+    const images = [
+      EducationAssets.heroBackground,
+      EducationAssets.moduleCat,
+      EducationAssets.moduleThinkingCat,
+    ];
+
+    for (final image in images) {
+      final data = await rootBundle.load(image);
+      final buffer = await ui.ImmutableBuffer.fromUint8List(
+        data.buffer.asUint8List(),
+      );
+      final descriptor = await ui.ImageDescriptor.encoded(buffer);
+      final codec = await descriptor.instantiateCodec();
+      final frame = await codec.getNextFrame();
+
+      expect(data.lengthInBytes, greaterThan(0), reason: image);
+      expect(frame.image.width, greaterThan(0), reason: image);
+      expect(frame.image.height, greaterThan(0), reason: image);
 
       frame.image.dispose();
       codec.dispose();
@@ -232,5 +268,108 @@ void main() {
     expect(find.byIcon(Icons.school_rounded), findsOneWidget);
     expect(find.byIcon(Icons.storefront_rounded), findsOneWidget);
     expect(find.byIcon(Icons.person_rounded), findsOneWidget);
+  });
+
+  testWidgets('bottom navigation modules tab opens education page',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        initialRoute: RouteConstants.home,
+        routes: {
+          RouteConstants.home: (_) => const HomePage(),
+          RouteConstants.education: (_) => const EducationPage(),
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.school_rounded));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Lanjut belajar'), findsOneWidget);
+    expect(
+        find.byKey(const ValueKey('education-search-field')), findsOneWidget);
+  });
+
+  testWidgets('education page renders and filters modules', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: EducationPage(),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Lanjut belajar'), findsOneWidget);
+    expect(find.text('Daftar Modul'), findsOneWidget);
+    expect(find.textContaining('modul belum selesai'), findsOneWidget);
+    expect(find.text('Semua'), findsOneWidget);
+    expect(find.byKey(const ValueKey('education-category-education')),
+        findsOneWidget);
+    expect(find.byKey(const ValueKey('education-category-tutorial')),
+        findsOneWidget);
+    expect(find.text('Memahami Toksoplasma Gondii'), findsWidgets);
+    expect(find.text('Membuang Limbah Kucing dengan Aman'), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('education-search-field')),
+      'kehamilan',
+    );
+    await tester.pump();
+
+    expect(find.text('Risiko Toksoplasmosis untuk Kehamilan'), findsOneWidget);
+    expect(find.text('Membuang Limbah Kucing dengan Aman'), findsNothing);
+
+    await tester.enterText(
+      find.byKey(const ValueKey('education-search-field')),
+      '',
+    );
+    await tester.tap(find.byKey(const ValueKey('education-category-tutorial')));
+    await tester.pump();
+
+    expect(find.text('Membuang Limbah Kucing dengan Aman'), findsOneWidget);
+    expect(find.text('Rutinitas Higienis Harian'), findsOneWidget);
+    expect(find.text('Risiko Toksoplasmosis untuk Kehamilan'), findsNothing);
+  });
+
+  testWidgets('education detail completes module and opens reward page',
+      (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: const EducationPage(),
+        routes: {
+          RouteConstants.education: (_) => const EducationPage(),
+          RouteConstants.educationDetail: (context) {
+            final arguments = ModalRoute.of(context)?.settings.arguments;
+            return EducationDetailPage(contentId: arguments as String);
+          },
+          RouteConstants.educationComplete: (context) {
+            final arguments = ModalRoute.of(context)?.settings.arguments
+                as EducationCompleteArguments;
+            return EducationCompletePage(arguments: arguments);
+          },
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Membuang Limbah Kucing dengan Aman'));
+    await tester.tap(find.text('Membuang Limbah Kucing dengan Aman'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Detail Modul'), findsOneWidget);
+    expect(find.text('Poin penting'), findsOneWidget);
+    expect(find.byKey(const ValueKey('education-complete-button')),
+        findsOneWidget);
+
+    await tester
+        .ensureVisible(find.byKey(const ValueKey('education-complete-button')));
+    await tester.tap(find.byKey(const ValueKey('education-complete-button')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Modul selesai!'), findsOneWidget);
+    expect(find.text('Reward berhasil diklaim'), findsOneWidget);
+    expect(find.text('Lanjut modul berikutnya'), findsOneWidget);
+    expect(find.text('+70 MeowPoints untuk progres belajar kamu.'),
+        findsOneWidget);
   });
 }

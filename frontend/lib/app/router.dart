@@ -6,6 +6,9 @@ import '../features/auth/presentation/pages/login_page.dart';
 import '../features/auth/presentation/pages/signup_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
 import '../features/chat/presentation/pages/chat_page.dart';
+import '../features/education/presentation/pages/education_complete_page.dart';
+import '../features/education/presentation/pages/education_detail_page.dart';
+import '../features/education/presentation/pages/education_page.dart';
 import '../features/scan/domain/entities/scan_session.dart';
 import '../features/scan/presentation/pages/scan_camera_page.dart';
 import '../features/scan/presentation/pages/scan_preview_page.dart';
@@ -23,6 +26,23 @@ class AppRouter {
       RouteConstants.signup: (_) => const SignupPage(),
       RouteConstants.home: (_) => const HomePage(),
       RouteConstants.chat: (_) => const ChatPage(),
+      RouteConstants.education: (_) => const EducationPage(),
+      RouteConstants.educationDetail: (context) {
+        final arguments = ModalRoute.of(context)?.settings.arguments;
+        if (arguments is String) {
+          return EducationDetailPage(contentId: arguments);
+        }
+
+        return const EducationPage();
+      },
+      RouteConstants.educationComplete: (context) {
+        final arguments = ModalRoute.of(context)?.settings.arguments;
+        if (arguments is EducationCompleteArguments) {
+          return EducationCompletePage(arguments: arguments);
+        }
+
+        return const EducationPage();
+      },
       RouteConstants.scanCamera: (_) => const ScanCameraPage(),
       RouteConstants.scanPreview: (context) {
         final arguments = ModalRoute.of(context)?.settings.arguments;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/constants/route_constants.dart';
 import 'design_image.dart';
 import 'home_components.dart';
 
@@ -50,7 +51,14 @@ class _ShortcutItem extends StatelessWidget {
     return _InteractiveShortcut(
       label: label,
       asset: asset,
-      onTap: () => _showShortcutFeedback(context, label),
+      onTap: () {
+        if (label == 'Modul') {
+          Navigator.of(context).pushNamed(RouteConstants.education);
+          return;
+        }
+
+        _showShortcutFeedback(context, label);
+      },
     );
   }
 }
