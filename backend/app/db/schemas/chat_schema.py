@@ -31,6 +31,10 @@ class ChatSession(BaseModel):
 
 class StartChatSessionRequest(BaseModel):
     scan_id: str | None = None
+    detected_class: str | None = None
+    confidence_score: float | None = None
+    risk_level: str | None = None
+    filename: str | None = None
     # MVP placeholder until all chat routes require Firebase auth.
     user_id: str | None = None
 

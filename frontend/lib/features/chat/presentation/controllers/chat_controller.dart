@@ -8,6 +8,7 @@ import '../../domain/entities/chat_session.dart';
 import '../../domain/usecases/select_chat_cta_card.dart';
 import '../../domain/usecases/send_chat_message.dart';
 import '../../domain/usecases/start_chat_from_scan.dart';
+import '../../../scan/domain/entities/scan_session.dart';
 
 class ChatController extends ChangeNotifier {
   ChatController({
@@ -40,26 +41,38 @@ class ChatController extends ChangeNotifier {
 
   List<ChatMessage> get messages => session?.messages ?? const [];
 
-  Future<void> startChat({String? scanId}) {
+  Future<void> startChat({
+    String? scanId,
+    ScanSession? scanSession,
+  }) {
     final currentRequest = _startChatRequest;
     if (currentRequest != null) {
       return currentRequest;
     }
 
-    final request = _startChat(scanId: scanId);
+    final request = _startChat(
+      scanId: scanId,
+      scanSession: scanSession,
+    );
     _startChatRequest = request;
     return request.whenComplete(() {
       _startChatRequest = null;
     });
   }
 
-  Future<void> _startChat({String? scanId}) async {
+  Future<void> _startChat({
+    String? scanId,
+    ScanSession? scanSession,
+  }) async {
     isStarting = true;
     errorMessage = null;
     notifyListeners();
 
     try {
-      session = await _startChatFromScan(scanId: scanId);
+      session = await _startChatFromScan(
+        scanId: scanId,
+        scanSession: scanSession,
+      );
     } catch (error) {
       errorMessage = error.toString();
     } finally {

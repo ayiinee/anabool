@@ -1,5 +1,6 @@
 import '../../domain/entities/chat_session.dart';
 import '../../domain/repositories/chat_repository.dart';
+import '../../../scan/domain/entities/scan_session.dart';
 import '../datasources/chat_remote_datasource.dart';
 
 class ChatRepositoryImpl implements ChatRepository {
@@ -10,8 +11,14 @@ class ChatRepositoryImpl implements ChatRepository {
   final ChatRemoteDatasource _remoteDatasource;
 
   @override
-  Future<ChatSession> startChatFromScan({String? scanId}) {
-    return _remoteDatasource.startChatFromScan(scanId: scanId);
+  Future<ChatSession> startChatFromScan({
+    String? scanId,
+    ScanSession? scanSession,
+  }) {
+    return _remoteDatasource.startChatFromScan(
+      scanId: scanId,
+      scanSession: scanSession,
+    );
   }
 
   @override

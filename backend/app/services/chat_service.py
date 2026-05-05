@@ -146,14 +146,25 @@ def send_chat_message(session_id: str, content: str) -> ChatSession:
     return session
 
 
-def start_chat_from_scan_session(scan_id: str, user_id: str | None = None) -> dict:
+def start_chat_from_scan_session(
+    scan_id: str,
+    user_id: str | None = None,
+    detected_class: str | None = None,
+    confidence_score: float | None = None,
+    risk_level: str | None = None,
+    filename: str | None = None,
+) -> dict:
     resolved_user_id = user_id or _chat_repository.find_scan_user_id(scan_id)
+    resolved_class = _clean_optional(detected_class) or "unknown"
+    resolved_confidence = confidence_score if confidence_score is not None else 0.0
+    resolved_risk = _clean_optional(risk_level) or "unknown"
     context = {
         "scan_result": {
             "scan_id": scan_id,
-            "detected_class": "unknown",
-            "confidence_score": 0.0,
-            "risk_level": "unknown",
+            "detected_class": resolved_class,
+            "confidence_score": resolved_confidence,
+            "risk_level": resolved_risk,
+            "filename": _clean_optional(filename),
         },
         "user_profile": None,
     }
@@ -161,7 +172,11 @@ def start_chat_from_scan_session(scan_id: str, user_id: str | None = None) -> di
         id=_new_id("msg"),
         role="user",
         message_type="scan_result",
-        content="Ini hasil scan feses/litter yang baru saja diambil.",
+        content=_build_scan_message_content(
+            detected_class=resolved_class,
+            confidence_score=resolved_confidence,
+            risk_level=resolved_risk,
+        ),
         created_at=_now(),
     )
     welcome_message = _assistant_text(_WELCOME_MESSAGE)
@@ -253,6 +268,29 @@ def _assistant_cta_cards() -> ChatMessage:
         cards=_CTA_CARDS,
         created_at=_now(),
     )
+
+
+def _build_scan_message_content(
+    *,
+    detected_class: str,
+    confidence_score: float,
+    risk_level: str,
+) -> str:
+    readable_class = detected_class.replace("_", " ").strip() or "unknown"
+    confidence_percent = round(max(0.0, min(confidence_score, 1.0)) * 100)
+    return (
+        "Aku baru saja mengirim foto scan. "
+        f"Hasil klasifikasi: {readable_class} ({confidence_percent}%). "
+        f"Level risiko: {risk_level}."
+    )
+
+
+def _clean_optional(value: str | None) -> str | None:
+    if value is None:
+        return None
+
+    cleaned = value.strip()
+    return cleaned or None
 
 
 def _persist_message(session_id: str, message: ChatMessage) -> ChatMessage:

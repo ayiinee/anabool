@@ -36,7 +36,14 @@ def start_chat_session(
         request.user_id if request is not None else None,
     )
     if request is not None and request.scan_id:
-        result = start_chat_from_scan_session(request.scan_id, user_id=user_id)
+        result = start_chat_from_scan_session(
+            request.scan_id,
+            user_id=user_id,
+            detected_class=request.detected_class,
+            confidence_score=request.confidence_score,
+            risk_level=request.risk_level,
+            filename=request.filename,
+        )
         return success_response("Chat session created from scan", result)
 
     result = start_consultation_chat(user_id=user_id)

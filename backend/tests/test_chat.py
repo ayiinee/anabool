@@ -31,7 +31,15 @@ def test_start_session_returns_welcome_without_cta_cards():
 
 
 def test_start_session_from_scan_returns_cta_cards():
-    response = client.post("/api/v1/chats/sessions", json={"scan_id": "scan_test"})
+    response = client.post(
+        "/api/v1/chats/sessions",
+        json={
+            "scan_id": "scan_test",
+            "detected_class": "soft_poop",
+            "confidence_score": 0.91,
+            "risk_level": "medium",
+        },
+    )
 
     assert response.status_code == 200
     body = response.json()
@@ -40,6 +48,7 @@ def test_start_session_from_scan_returns_cta_cards():
     session = body["data"]
     assert session["session_type"] == "scan_result"
     assert any(message["message_type"] == "scan_result" for message in session["messages"])
+    assert any("soft poop (91%)" in message["content"] for message in session["messages"])
     assert any(message["message_type"] == "cta_cards" for message in session["messages"])
 
 
@@ -54,12 +63,17 @@ def test_start_scan_session_with_user_id_persists_to_repository(monkeypatch):
         json={
             "scan_id": "11111111-1111-1111-1111-111111111111",
             "user_id": "22222222-2222-2222-2222-222222222222",
+            "detected_class": "normal",
+            "confidence_score": 0.84,
+            "risk_level": "low",
         },
     )
 
     assert response.status_code == 200
     assert repository.sessions[0]["user_id"] == "22222222-2222-2222-2222-222222222222"
     assert repository.sessions[0]["session_type"] == "scan_result"
+    assert repository.sessions[0]["initial_context"]["scan_result"]["detected_class"] == "normal"
+    assert repository.sessions[0]["initial_context"]["scan_result"]["confidence_score"] == 0.84
     assert [message["message_type"] for message in repository.messages] == [
         "scan_result",
         "text",
