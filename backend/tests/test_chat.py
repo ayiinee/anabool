@@ -47,9 +47,20 @@ def test_start_session_from_scan_returns_cta_cards():
 
     session = body["data"]
     assert session["session_type"] == "scan_result"
-    assert any(message["message_type"] == "scan_result" for message in session["messages"])
-    assert any("soft poop (91%)" in message["content"] for message in session["messages"])
-    assert any(message["message_type"] == "cta_cards" for message in session["messages"])
+    assert [message["message_type"] for message in session["messages"]] == [
+        "scan_result",
+        "text",
+        "text",
+        "cta_cards",
+    ]
+    assert session["messages"][1]["role"] == "assistant"
+    assert "kategori soft poop" in session["messages"][1]["content"]
+    assert "Langkah selanjutnya" in session["messages"][2]["content"]
+    assert [card["card_type"] for card in session["messages"][3]["cards"]] == [
+        "pickup",
+        "dispose",
+        "process",
+    ]
 
 
 def test_start_scan_session_with_user_id_persists_to_repository(monkeypatch):
@@ -76,6 +87,7 @@ def test_start_scan_session_with_user_id_persists_to_repository(monkeypatch):
     assert repository.sessions[0]["initial_context"]["scan_result"]["confidence_score"] == 0.84
     assert [message["message_type"] for message in repository.messages] == [
         "scan_result",
+        "text",
         "text",
         "cta_cards",
     ]

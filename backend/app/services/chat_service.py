@@ -18,18 +18,48 @@ _CTA_CARDS = [
         cta_label="Jadwalkan Pick-up",
     ),
     ChatCtaCard(
-        card_type="process",
-        title="Olah",
-        description="Langkah awal mengolah limbah tanpa kontak langsung.",
-        cta_label="Lihat Cara Olah",
-    ),
-    ChatCtaCard(
         card_type="dispose",
         title="Buang",
         description="Cara membuang limbah kucing dengan kantong tertutup.",
         cta_label="Lihat Cara Buang",
     ),
+    ChatCtaCard(
+        card_type="process",
+        title="Olah",
+        description="Langkah awal mengolah limbah tanpa kontak langsung.",
+        cta_label="Lihat Cara Olah",
+    ),
 ]
+
+_SCAN_CLASS_EXPLANATIONS = {
+    "diarrhea": (
+        "Dari hasil scan, Ana melihat indikasi awal feses cenderung cair atau diare. "
+        "Kondisi seperti ini bisa berkaitan dengan perubahan makanan, stres, infeksi, "
+        "atau iritasi pencernaan. Pantau asupan minum dan kondisi kucing, lalu konsultasikan "
+        "ke tenaga profesional jika diare berlanjut, ada darah, muntah, atau kucing tampak lemas."
+    ),
+    "lack_of_water": (
+        "Dari hasil scan, Ana melihat indikasi awal feses tampak lebih kering atau keras. "
+        "Ini bisa menjadi tanda kucing kurang cairan, pola makan kurang sesuai, atau litter box "
+        "terlalu lama tidak dibersihkan. Pastikan air minum mudah dijangkau dan pantau apakah "
+        "kucing mengejan saat buang air."
+    ),
+    "soft_poop": (
+        "Dari hasil scan, Ana melihat indikasi awal feses bertekstur lebih lembek dari biasanya. "
+        "Kondisi ini belum tentu berbahaya, tetapi bisa muncul saat makanan berubah, pencernaan "
+        "sensitif, atau kucing sedang stres. Pantau 24 jam ke depan dan jaga kebersihan area litter."
+    ),
+    "normal": (
+        "Dari hasil scan, Ana melihat indikasi awal feses berada dalam kondisi normal. "
+        "Teksturnya terlihat cukup terbentuk sehingga risiko kebersihan harian relatif lebih mudah "
+        "dikendalikan. Tetap gunakan sekop atau sarung tangan saat menangani limbah."
+    ),
+    "unknown": (
+        "Ana belum bisa membaca kondisi feses dengan yakin dari foto ini. Pencahayaan, sudut foto, "
+        "atau objek yang tertutup pasir bisa memengaruhi hasil klasifikasi. Untuk pencegahan, tetap "
+        "perlakukan limbah sebagai bahan yang perlu ditangani dengan aman."
+    ),
+}
 
 _GUIDELINES = {
     "cleaning": (
@@ -179,7 +209,17 @@ def start_chat_from_scan_session(
         ),
         created_at=_now(),
     )
-    welcome_message = _assistant_text(_WELCOME_MESSAGE)
+    explanation_message = _assistant_text(
+        _build_scan_explanation_content(
+            detected_class=resolved_class,
+            confidence_score=resolved_confidence,
+            risk_level=resolved_risk,
+        )
+    )
+    next_step_message = _assistant_text(
+        "Langkah selanjutnya mau kamu arahkan ke mana? Ana bisa bantu pilih cara penanganan "
+        "yang paling sesuai dari opsi cepat di bawah ini."
+    )
     cta_message = _assistant_cta_cards()
 
     if resolved_user_id and _chat_repository.is_available:
@@ -195,7 +235,8 @@ def start_chat_from_scan_session(
             assistant_name="Si Ana",
             messages=[
                 _persist_message(str(db_session["id"]), scan_message),
-                _persist_message(str(db_session["id"]), welcome_message),
+                _persist_message(str(db_session["id"]), explanation_message),
+                _persist_message(str(db_session["id"]), next_step_message),
                 _persist_message(str(db_session["id"]), cta_message),
             ],
         )
@@ -208,7 +249,7 @@ def start_chat_from_scan_session(
         id=_new_id("chat"),
         session_type="scan_result",
         assistant_name="Si Ana",
-        messages=[scan_message, welcome_message, cta_message],
+        messages=[scan_message, explanation_message, next_step_message, cta_message],
     )
     _cache_session(session, context)
 
@@ -264,9 +305,28 @@ def _assistant_cta_cards() -> ChatMessage:
         id=_new_id("msg"),
         role="assistant",
         message_type="cta_cards",
-        content="Pilih tindakan yang ingin kamu bahas.",
+        content="Pilih tindakan cepat yang ingin kamu ambil.",
         cards=_CTA_CARDS,
         created_at=_now(),
+    )
+
+
+def _build_scan_explanation_content(
+    *,
+    detected_class: str,
+    confidence_score: float,
+    risk_level: str,
+) -> str:
+    explanation = _SCAN_CLASS_EXPLANATIONS.get(
+        detected_class,
+        _SCAN_CLASS_EXPLANATIONS["unknown"],
+    )
+    readable_class = detected_class.replace("_", " ").strip() or "unknown"
+    confidence_percent = round(max(0.0, min(confidence_score, 1.0)) * 100)
+    return (
+        f"Hasil klasifikasi menunjukkan kategori {readable_class} "
+        f"dengan confidence {confidence_percent}% dan level risiko {risk_level}. "
+        f"{explanation}"
     )
 
 
