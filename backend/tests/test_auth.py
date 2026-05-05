@@ -1,6 +1,7 @@
 import pytest
 
 from app.core.exceptions import AppException
+from app.db.schemas.user_schema import AuthSyncRequest
 from app.services import auth_service as auth_service_module
 from app.services.auth_service import AuthService
 
@@ -66,6 +67,37 @@ def test_register_google_user_saves_firebase_claims(monkeypatch):
     }
     assert result.user.firebase_uid == "firebase-uid"
     assert result.auth_provider == "google.com"
+
+
+def test_auth_sync_request_accepts_flutter_camel_case_payload():
+    payload = AuthSyncRequest.model_validate(
+        {
+            "idToken": "firebase-token",
+            "mode": "register",
+            "displayName": "Ana Bool",
+            "photoUrl": "https://example.com/avatar.png",
+        }
+    )
+
+    assert payload.id_token == "firebase-token"
+    assert payload.mode == "register"
+    assert payload.display_name == "Ana Bool"
+    assert payload.photo_url == "https://example.com/avatar.png"
+
+
+def test_auth_sync_request_accepts_backend_snake_case_payload():
+    payload = AuthSyncRequest.model_validate(
+        {
+            "id_token": "firebase-token",
+            "display_name": "Ana Bool",
+            "photo_url": "https://example.com/avatar.png",
+        }
+    )
+
+    assert payload.id_token == "firebase-token"
+    assert payload.mode == "login"
+    assert payload.display_name == "Ana Bool"
+    assert payload.photo_url == "https://example.com/avatar.png"
 
 
 def test_login_requires_existing_database_user(monkeypatch):
