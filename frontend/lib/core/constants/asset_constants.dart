@@ -60,4 +60,5 @@ class EducationAssets {
   static const heroBackground = '$imageBase/hero-background-image.png';
   static const moduleCat = '$imageBase/modul-image.png';
   static const moduleThinkingCat = '$imageBase/modul-image2.png';
+  static const moduleMaterial = '$imageBase/module-image-material.png';
 }
