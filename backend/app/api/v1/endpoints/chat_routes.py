@@ -1,6 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.core.response import success_response
-from app.services.chat_service import mock_start_chat_from_scan
+from app.db.schemas.chat_schema import SendChatMessageRequest, StartChatSessionRequest
+from app.services.chat_service import (
+    mock_start_chat_from_scan,
+    send_chat_message,
+    start_consultation_chat,
+)
 
 router = APIRouter()
 
@@ -14,3 +19,26 @@ def chat_health():
 def start_chat_from_scan(scan_id: str):
     result = mock_start_chat_from_scan(scan_id)
     return success_response("Chat session created from scan", result)
+
+
+@router.post("/sessions")
+def start_chat_session(request: StartChatSessionRequest | None = None):
+    if request is not None and request.scan_id:
+        result = mock_start_chat_from_scan(request.scan_id)
+        return success_response("Chat session created from scan", result)
+
+    result = start_consultation_chat()
+    return success_response(
+        "Ask Ana consultation session created",
+        result.model_dump(mode="json"),
+    )
+
+
+@router.post("/{session_id}/messages")
+def create_chat_message(session_id: str, request: SendChatMessageRequest):
+    try:
+        result = send_chat_message(session_id, request.content)
+    except KeyError as error:
+        raise HTTPException(status_code=404, detail="Chat session not found") from error
+
+    return success_response("Ask Ana response created", result.model_dump(mode="json"))

@@ -42,6 +42,7 @@ void main() {
       AuthAssets.facebookIcon,
       AuthAssets.googleIcon,
       AuthAssets.xIcon,
+      ChatAssets.anaProfile,
     ];
 
     for (final asset in assets) {
