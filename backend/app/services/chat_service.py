@@ -1,12 +1,14 @@
 from datetime import datetime, timezone
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from app.ai.rag.rag_chain import generate_ana_response
+from app.db.repositories.chat_repository import ChatRepository
 from app.db.schemas.chat_schema import ChatCtaCard, ChatMessage, ChatSession
 
 
 _sessions: dict[str, ChatSession] = {}
 _session_context: dict[str, dict] = {}
+_chat_repository = ChatRepository()
 
 _CTA_CARDS = [
     ChatCtaCard(
@@ -82,7 +84,30 @@ _WELCOME_MESSAGE = (
 )
 
 
-def start_consultation_chat() -> ChatSession:
+def start_consultation_chat(user_id: str | None = None) -> ChatSession:
+    context = {
+        "scan_result": None,
+        "user_profile": None,
+    }
+    if user_id and _chat_repository.is_available:
+        db_session = _chat_repository.create_session(
+            user_id=user_id,
+            session_type="consultation",
+            initial_context=context,
+        )
+        welcome_message = _persist_message(
+            str(db_session["id"]),
+            _assistant_text(_WELCOME_MESSAGE),
+        )
+        session = ChatSession(
+            id=str(db_session["id"]),
+            session_type="consultation",
+            assistant_name="Si Ana",
+            messages=[welcome_message],
+        )
+        _cache_session(session, context)
+        return session
+
     session = ChatSession(
         id=_new_id("chat"),
         session_type="consultation",
@@ -91,43 +116,39 @@ def start_consultation_chat() -> ChatSession:
             _assistant_text(_WELCOME_MESSAGE),
         ],
     )
-    _sessions[session.id] = session
-    _session_context[session.id] = {
-        "scan_result": None,
-        "user_profile": None,
-    }
+    _cache_session(session, context)
     return session
 
 
 def send_chat_message(session_id: str, content: str) -> ChatSession:
-    session = _sessions.get(session_id)
+    session = _sessions.get(session_id) or _load_persisted_session(session_id)
     if session is None:
         raise KeyError(session_id)
 
     context = _session_context.get(session_id, {})
-    session.messages.append(
-        ChatMessage(
-            id=_new_id("msg"),
-            role="user",
-            message_type="text",
-            content=content.strip(),
-            created_at=_now(),
-        )
+    user_message = ChatMessage(
+        id=_new_id("msg"),
+        role="user",
+        message_type="text",
+        content=content.strip(),
+        created_at=_now(),
     )
+    session.messages.append(_persist_message(session.id, user_message))
 
     rag_result = generate_ana_response(
         content,
         user_profile=context.get("user_profile"),
         scan_result=context.get("scan_result"),
     )
-    session.messages.append(_assistant_text(_format_rag_answer(rag_result)))
+    assistant_message = _assistant_text(_format_rag_answer(rag_result))
+    session.messages.append(_persist_message(session.id, assistant_message))
+    _cache_session(session, context)
     return session
 
 
-def start_chat_from_scan_session(scan_id: str) -> dict:
-    session = start_consultation_chat()
-    session.session_type = "scan_result"
-    _session_context[session.id] = {
+def start_chat_from_scan_session(scan_id: str, user_id: str | None = None) -> dict:
+    resolved_user_id = user_id or _chat_repository.find_scan_user_id(scan_id)
+    context = {
         "scan_result": {
             "scan_id": scan_id,
             "detected_class": "unknown",
@@ -136,21 +157,56 @@ def start_chat_from_scan_session(scan_id: str) -> dict:
         },
         "user_profile": None,
     }
-    session.messages.insert(
-        0,
-        ChatMessage(
-            id=_new_id("msg"),
-            role="user",
-            message_type="scan_result",
-            content="Ini hasil scan feses/litter yang baru saja diambil.",
-            created_at=_now(),
-        ),
+    scan_message = ChatMessage(
+        id=_new_id("msg"),
+        role="user",
+        message_type="scan_result",
+        content="Ini hasil scan feses/litter yang baru saja diambil.",
+        created_at=_now(),
     )
-    session.messages.append(_assistant_cta_cards())
+    welcome_message = _assistant_text(_WELCOME_MESSAGE)
+    cta_message = _assistant_cta_cards()
+
+    if resolved_user_id and _chat_repository.is_available:
+        db_session = _chat_repository.create_session(
+            user_id=resolved_user_id,
+            session_type="scan_result",
+            scan_session_id=scan_id,
+            initial_context=context,
+        )
+        session = ChatSession(
+            id=str(db_session["id"]),
+            session_type="scan_result",
+            assistant_name="Si Ana",
+            messages=[
+                _persist_message(str(db_session["id"]), scan_message),
+                _persist_message(str(db_session["id"]), welcome_message),
+                _persist_message(str(db_session["id"]), cta_message),
+            ],
+        )
+        _cache_session(session, context)
+        result = session.model_dump(mode="json")
+        result["scan_id"] = scan_id
+        return result
+
+    session = ChatSession(
+        id=_new_id("chat"),
+        session_type="scan_result",
+        assistant_name="Si Ana",
+        messages=[scan_message, welcome_message, cta_message],
+    )
+    _cache_session(session, context)
 
     result = session.model_dump(mode="json")
     result["scan_id"] = scan_id
     return result
+
+
+def get_chat_session(session_id: str) -> ChatSession:
+    session = _sessions.get(session_id) or _load_persisted_session(session_id)
+    if session is None:
+        raise KeyError(session_id)
+    return session
 
 
 def _format_rag_answer(rag_result: dict) -> str:
@@ -199,9 +255,89 @@ def _assistant_cta_cards() -> ChatMessage:
     )
 
 
+def _persist_message(session_id: str, message: ChatMessage) -> ChatMessage:
+    if not _chat_repository.is_available or not _is_uuid(session_id):
+        return message
+
+    db_message = _chat_repository.create_message(
+        session_id=session_id,
+        role=message.role,
+        message_type=message.message_type,
+        content=message.content,
+        metadata={"source": "ask_ana"},
+    )
+    if message.cards:
+        _chat_repository.create_cta_cards(
+            message_id=str(db_message["id"]),
+            cards=message.cards,
+        )
+    return _message_from_row(db_message, message.cards)
+
+
+def _load_persisted_session(session_id: str) -> ChatSession | None:
+    persisted = _chat_repository.get_session(session_id)
+    if persisted is None:
+        return None
+
+    context = persisted["session"].get("initial_context") or {}
+    session = ChatSession(
+        id=str(persisted["session"]["id"]),
+        session_type=context.get("session_type", "consultation"),
+        assistant_name=context.get("assistant_name", "Si Ana"),
+        messages=[
+            _message_from_row(
+                row,
+                [
+                    _card_from_row(card)
+                    for card in persisted["cards_by_message_id"].get(str(row["id"]), [])
+                ],
+            )
+            for row in persisted["messages"]
+        ],
+    )
+    _cache_session(session, context)
+    return session
+
+
+def _message_from_row(row: dict, cards: list[ChatCtaCard] | None = None) -> ChatMessage:
+    return ChatMessage(
+        id=str(row["id"]),
+        role=row["role"],
+        message_type=row["message_type"],
+        content=row["content"],
+        created_at=row.get("sent_at") or _now(),
+        cards=cards or [],
+    )
+
+
+def _card_from_row(row: dict) -> ChatCtaCard:
+    return ChatCtaCard(
+        card_type=row["card_type"],
+        title=row["title"],
+        description=row.get("description") or "",
+        cta_label=row["cta_label"],
+        target_route=row.get("target_route"),
+        payload=row.get("payload") or {},
+        display_order=row.get("display_order", 0),
+    )
+
+
+def _cache_session(session: ChatSession, context: dict) -> None:
+    _sessions[session.id] = session
+    _session_context[session.id] = context
+
+
 def _new_id(prefix: str) -> str:
     return f"{prefix}_{uuid4().hex}"
 
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def _is_uuid(value: str) -> bool:
+    try:
+        UUID(str(value))
+    except (TypeError, ValueError):
+        return False
+    return True

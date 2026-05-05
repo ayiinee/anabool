@@ -8,6 +8,9 @@ class ChatCtaCard(BaseModel):
     title: str
     description: str
     cta_label: str
+    target_route: str | None = None
+    payload: dict = Field(default_factory=dict)
+    display_order: int = 0
 
 
 class ChatMessage(BaseModel):
@@ -28,8 +31,9 @@ class ChatSession(BaseModel):
 
 class StartChatSessionRequest(BaseModel):
     scan_id: str | None = None
+    # MVP placeholder until all chat routes require Firebase auth.
+    user_id: str | None = None
 
 
 class SendChatMessageRequest(BaseModel):
     content: str
-
