@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -216,8 +218,13 @@ class FirebaseAuthRemoteDatasource implements AuthRemoteDatasource {
   }
 
   String _extractBackendMessage(Object? responseData) {
-    if (responseData is Map<String, dynamic>) {
-      final message = responseData['message'];
+    final normalizedData = _normalizeResponseMap(responseData);
+    if (normalizedData != null) {
+      final detail = normalizedData['detail'];
+      if (detail is String && detail.isNotEmpty) {
+        return detail;
+      }
+      final message = normalizedData['message'];
       if (message is String && message.isNotEmpty) {
         return message;
       }
@@ -226,10 +233,38 @@ class FirebaseAuthRemoteDatasource implements AuthRemoteDatasource {
   }
 
   Map<String, dynamic>? _extractBackendData(Object? responseData) {
-    if (responseData is Map<String, dynamic>) {
-      final data = responseData['data'];
+    final normalizedData = _normalizeResponseMap(responseData);
+    if (normalizedData != null) {
+      final data = normalizedData['data'];
       if (data is Map<String, dynamic>) {
         return data;
+      }
+      if (data is Map) {
+        return Map<String, dynamic>.from(data);
+      }
+    }
+    return null;
+  }
+
+  Map<String, dynamic>? _normalizeResponseMap(Object? responseData) {
+    if (responseData is Map<String, dynamic>) {
+      return responseData;
+    }
+    if (responseData is Map) {
+      return Map<String, dynamic>.from(responseData);
+    }
+    if (responseData is String && responseData.isNotEmpty) {
+      final Object? decodedData;
+      try {
+        decodedData = jsonDecode(responseData);
+      } on FormatException {
+        return null;
+      }
+      if (decodedData is Map<String, dynamic>) {
+        return decodedData;
+      }
+      if (decodedData is Map) {
+        return Map<String, dynamic>.from(decodedData);
       }
     }
     return null;

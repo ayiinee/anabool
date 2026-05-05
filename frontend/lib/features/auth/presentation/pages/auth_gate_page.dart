@@ -68,7 +68,7 @@ class AuthGatePage extends StatelessWidget {
     } on AuthRegistrationRequiredException {
       return false;
     } catch (_) {
-      await FirebaseAuth.instance.signOut();
+      // Keep the Firebase session so the signup page can finish Google register sync.
       return false;
     }
   }
