@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/constants/route_constants.dart';
 import 'design_image.dart';
 import 'home_components.dart';
 
@@ -82,7 +83,8 @@ class ConsultationSection extends StatelessWidget {
                             height: 34,
                             width: 122,
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () => Navigator.of(context)
+                                  .pushNamed(RouteConstants.chat),
                               style: HomeButtonStyles.filled(
                                 backgroundColor: Colors.white,
                                 foregroundColor: AnaboolColors.brown,
