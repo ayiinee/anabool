@@ -22,7 +22,22 @@ class AppRouter {
       RouteConstants.login: (_) => const LoginPage(),
       RouteConstants.signup: (_) => const SignupPage(),
       RouteConstants.home: (_) => const HomePage(),
-      RouteConstants.chat: (_) => const ChatPage(),
+      RouteConstants.chat: (context) {
+        final arguments = ModalRoute.of(context)?.settings.arguments;
+        if (arguments is ChatPageArguments) {
+          return ChatPage(scanId: arguments.scanId);
+        }
+
+        if (arguments is ScanSession && arguments.id.isNotEmpty) {
+          return ChatPage(scanId: arguments.id);
+        }
+
+        if (arguments is String && arguments.trim().isNotEmpty) {
+          return ChatPage(scanId: arguments.trim());
+        }
+
+        return const ChatPage();
+      },
       RouteConstants.scanCamera: (_) => const ScanCameraPage(),
       RouteConstants.scanPreview: (context) {
         final arguments = ModalRoute.of(context)?.settings.arguments;

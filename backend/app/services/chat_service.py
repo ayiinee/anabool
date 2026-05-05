@@ -75,6 +75,12 @@ _GUARDRAILS = (
     "tanda dehidrasi. Jangan flush atau membuang limbah kucing ke toilet."
 )
 
+_WELCOME_MESSAGE = (
+    "Halo! Aku Ana, asisten setiamu untuk menjaga kebersihan dan kesehatan anabul kesayangan. 🐾 "
+    "Aku bisa bantu kasih tips bersihin litter box, info soal risiko Toxoplasma, sampai pilihan olah "
+    "limbah yang aman. Ada yang bisa Ana bantu hari ini?"
+)
+
 
 def start_consultation_chat() -> ChatSession:
     session = ChatSession(
@@ -82,12 +88,7 @@ def start_consultation_chat() -> ChatSession:
         session_type="consultation",
         assistant_name="Si Ana",
         messages=[
-            _assistant_text(
-                "Halo, aku Si Ana. Aku bisa bantu menjelaskan pembersihan litter box, pengemasan limbah, "
-                "risiko Toxoplasma, tanda perlu ke dokter hewan, dan pilihan Pick Up, Olah, atau Buang.\n\n"
-                f"{_GUARDRAILS}"
-            ),
-            _assistant_cta_cards(),
+            _assistant_text(_WELCOME_MESSAGE),
         ],
     )
     _sessions[session.id] = session
@@ -145,6 +146,7 @@ def start_chat_from_scan_session(scan_id: str) -> dict:
             created_at=_now(),
         ),
     )
+    session.messages.append(_assistant_cta_cards())
 
     result = session.model_dump(mode="json")
     result["scan_id"] = scan_id

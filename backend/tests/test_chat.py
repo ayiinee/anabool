@@ -11,7 +11,7 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_start_session_returns_welcome_and_cta_cards():
+def test_start_session_returns_welcome_without_cta_cards():
     response = client.post("/api/v1/chats/sessions", json={})
 
     assert response.status_code == 200
@@ -22,6 +22,24 @@ def test_start_session_returns_welcome_and_cta_cards():
     assert session["session_type"] == "consultation"
     assert session["assistant_name"] == "Si Ana"
     assert session["id"]
+    assert session["messages"][0]["content"] == (
+        "Halo! Aku Ana, asisten setiamu untuk menjaga kebersihan dan kesehatan anabul kesayangan. 🐾 "
+        "Aku bisa bantu kasih tips bersihin litter box, info soal risiko Toxoplasma, sampai pilihan olah "
+        "limbah yang aman. Ada yang bisa Ana bantu hari ini?"
+    )
+    assert not any(message["message_type"] == "cta_cards" for message in session["messages"])
+
+
+def test_start_session_from_scan_returns_cta_cards():
+    response = client.post("/api/v1/chats/sessions", json={"scan_id": "scan_test"})
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["success"] is True
+
+    session = body["data"]
+    assert session["session_type"] == "scan_result"
+    assert any(message["message_type"] == "scan_result" for message in session["messages"])
     assert any(message["message_type"] == "cta_cards" for message in session["messages"])
 
 
