@@ -16,20 +16,61 @@ _CTA_CARDS = [
         title="Pick Up",
         description="Panduan menyiapkan limbah kucing untuk penjemputan aman.",
         cta_label="Jadwalkan Pick-up",
+        payload={"action": "select_chat_cta"},
     ),
     ChatCtaCard(
         card_type="dispose",
         title="Buang",
         description="Cara membuang limbah kucing dengan kantong tertutup.",
         cta_label="Lihat Cara Buang",
+        payload={"action": "select_chat_cta"},
     ),
     ChatCtaCard(
         card_type="process",
         title="Olah",
         description="Langkah awal mengolah limbah tanpa kontak langsung.",
         cta_label="Lihat Cara Olah",
+        payload={"action": "select_chat_cta"},
     ),
 ]
+
+_CTA_SELECTION_RESPONSES = {
+    "process": {
+        "selected_label": "Olah",
+        "tutorial": (
+            "Boleh, kita arahkan ke Olah. Quick tips: gunakan sarung tangan dan masker, "
+            "pisahkan limbah kucing dari kompos tanaman pangan, masukkan ke wadah khusus "
+            "yang tertutup, lalu ikuti metode pengolahan yang memang disiapkan untuk limbah "
+            "hewan. Hindari kontak langsung dan cuci alat setelah selesai."
+        ),
+        "module_title": "Modul Pengolahan Limbah",
+        "module_category": "waste_processing",
+        "target_route": "/modules/waste-processing",
+    },
+    "dispose": {
+        "selected_label": "Buang",
+        "tutorial": (
+            "Siap, kita pakai alur Buang. Quick tips: ambil feses dengan sekop, masukkan "
+            "ke kantong kuat, ikat rapat, lalu gunakan kantong kedua bila basah atau berbau. "
+            "Buang ke tempat sampah sesuai aturan setempat, bersihkan sekop, dan cuci tangan "
+            "dengan sabun."
+        ),
+        "module_title": "Modul Sanitasi Lingkungan",
+        "module_category": "environment_sanitation",
+        "target_route": "/modules/environment-sanitation",
+    },
+    "pickup": {
+        "selected_label": "Pick Up",
+        "tutorial": (
+            "Oke, kita siapkan Pick Up. Quick tips: kemas limbah dalam kantong tertutup ganda, "
+            "letakkan di titik ambil yang teduh, jauhkan dari anak-anak dan hewan lain, lalu "
+            "pastikan area litter box tetap dibersihkan setelah limbah dipindahkan."
+        ),
+        "module_title": "Modul Teknik Kebersihan/Kesehatan",
+        "module_category": "cleanliness_health",
+        "target_route": "/modules/cleanliness-health",
+    },
+}
 
 _SCAN_CLASS_EXPLANATIONS = {
     "diarrhea": (
@@ -176,6 +217,39 @@ def send_chat_message(session_id: str, content: str) -> ChatSession:
     return session
 
 
+def select_chat_cta_card(session_id: str, card_type: str) -> ChatSession:
+    session = _sessions.get(session_id) or _load_persisted_session(session_id)
+    if session is None:
+        raise KeyError(session_id)
+
+    normalized_card_type = card_type.strip().lower()
+    response_config = _CTA_SELECTION_RESPONSES.get(normalized_card_type)
+    if response_config is None:
+        raise ValueError("Unknown chat CTA card type")
+
+    context = _session_context.get(session_id, {})
+    user_message = ChatMessage(
+        id=_new_id("msg"),
+        role="user",
+        message_type="cta_selection",
+        content=f"Saya memilih {response_config['selected_label']}.",
+        created_at=_now(),
+    )
+    assistant_message = _assistant_cta_followup(
+        session_id=session.id,
+        card_type=normalized_card_type,
+        tutorial=response_config["tutorial"],
+        module_title=response_config["module_title"],
+        module_category=response_config["module_category"],
+        target_route=response_config["target_route"],
+    )
+
+    session.messages.append(_persist_message(session.id, user_message))
+    session.messages.append(_persist_message(session.id, assistant_message))
+    _cache_session(session, context)
+    return session
+
+
 def start_chat_from_scan_session(
     scan_id: str,
     user_id: str | None = None,
@@ -307,6 +381,39 @@ def _assistant_cta_cards() -> ChatMessage:
         message_type="cta_cards",
         content="Pilih tindakan cepat yang ingin kamu ambil.",
         cards=_CTA_CARDS,
+        created_at=_now(),
+    )
+
+
+def _assistant_cta_followup(
+    *,
+    session_id: str,
+    card_type: str,
+    tutorial: str,
+    module_title: str,
+    module_category: str,
+    target_route: str,
+) -> ChatMessage:
+    return ChatMessage(
+        id=_new_id("msg"),
+        role="assistant",
+        message_type="cta_cards",
+        content=f"{tutorial}\n\nKlik Pelajari Selengkapnya untuk membuka {module_title}.",
+        cards=[
+            ChatCtaCard(
+                card_type=f"{card_type}_module",
+                title=module_title,
+                description="Buka modul edukasi tanpa menutup sesi chat Ana.",
+                cta_label="Pelajari Selengkapnya",
+                target_route=target_route,
+                payload={
+                    "module_category": module_category,
+                    "chat_session_id": session_id,
+                    "return_route": f"/chats/{session_id}",
+                    "preserve_chat_session": True,
+                },
+            )
+        ],
         created_at=_now(),
     )
 

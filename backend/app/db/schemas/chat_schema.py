@@ -41,3 +41,7 @@ class StartChatSessionRequest(BaseModel):
 
 class SendChatMessageRequest(BaseModel):
     content: str
+
+
+class SelectChatCtaCardRequest(BaseModel):
+    card_type: str

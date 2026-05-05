@@ -121,6 +121,73 @@ def test_send_message_uses_rag_response(monkeypatch):
     assert "Sumber rujukan: Modul 1" in answer
 
 
+def test_select_process_card_returns_tutorial_and_dynamic_module_link():
+    session_id = _start_scan_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/select-card",
+        json={"card_type": "process"},
+    )
+
+    assert response.status_code == 200
+    session = response.json()["data"]
+    assert session["id"] == session_id
+    assert session["messages"][-2]["message_type"] == "cta_selection"
+    assert session["messages"][-2]["content"] == "Saya memilih Olah."
+
+    followup = session["messages"][-1]
+    assert followup["message_type"] == "cta_cards"
+    assert "Quick tips" in followup["content"]
+    assert "Modul Pengolahan Limbah" in followup["content"]
+    assert len(followup["cards"]) == 1
+
+    card = followup["cards"][0]
+    assert card["cta_label"] == "Pelajari Selengkapnya"
+    assert card["target_route"] == "/modules/waste-processing"
+    assert card["payload"]["module_category"] == "waste_processing"
+    assert card["payload"]["chat_session_id"] == session_id
+    assert card["payload"]["return_route"] == f"/chats/{session_id}"
+    assert card["payload"]["preserve_chat_session"] is True
+
+
+def test_select_dispose_card_routes_to_environment_sanitation_module():
+    session_id = _start_scan_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/select-card",
+        json={"card_type": "dispose"},
+    )
+
+    assert response.status_code == 200
+    followup = response.json()["data"]["messages"][-1]
+    assert "Modul Sanitasi Lingkungan" in followup["content"]
+    assert followup["cards"][0]["target_route"] == "/modules/environment-sanitation"
+    assert followup["cards"][0]["payload"]["module_category"] == "environment_sanitation"
+
+
+def test_select_pickup_card_routes_to_cleanliness_health_module():
+    session_id = _start_scan_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/select-card",
+        json={"card_type": "pickup"},
+    )
+
+    assert response.status_code == 200
+    followup = response.json()["data"]["messages"][-1]
+    assert "Modul Teknik Kebersihan/Kesehatan" in followup["content"]
+    assert followup["cards"][0]["target_route"] == "/modules/cleanliness-health"
+    assert followup["cards"][0]["payload"]["module_category"] == "cleanliness_health"
+
+
+def test_select_unknown_card_returns_400():
+    session_id = _start_scan_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/select-card",
+        json={"card_type": "unknown"},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Unknown chat CTA card type"
+
+
 def test_unknown_session_returns_404():
     response = client.post(
         "/api/v1/chats/chat_missing/messages",
@@ -133,6 +200,20 @@ def test_unknown_session_returns_404():
 
 def _start_session_id() -> str:
     response = client.post("/api/v1/chats/sessions", json={})
+    assert response.status_code == 200
+    return response.json()["data"]["id"]
+
+
+def _start_scan_session_id() -> str:
+    response = client.post(
+        "/api/v1/chats/sessions",
+        json={
+            "scan_id": "scan_test",
+            "detected_class": "normal",
+            "confidence_score": 0.9,
+            "risk_level": "low",
+        },
+    )
     assert response.status_code == 200
     return response.json()["data"]["id"]
 
