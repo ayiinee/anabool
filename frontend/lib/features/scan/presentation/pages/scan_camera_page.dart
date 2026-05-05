@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/route_constants.dart';
+import '../../domain/entities/scan_image_file.dart';
 import '../widgets/camera_scan_overlay.dart';
 import '../widgets/scan_qris_button.dart';
 import 'scan_preview_page.dart';
@@ -116,7 +117,7 @@ class _ScanCameraPageState extends State<ScanCameraPage> {
       Navigator.of(context).pushNamed(
         RouteConstants.scanPreview,
         arguments: ScanPreviewArguments(
-          imagePath: image.path,
+          imageFile: await _createScanImageFile(image),
           fromGallery: false,
         ),
       );
@@ -144,10 +145,34 @@ class _ScanCameraPageState extends State<ScanCameraPage> {
     Navigator.of(context).pushNamed(
       RouteConstants.scanPreview,
       arguments: ScanPreviewArguments(
-        imagePath: image.path,
+        imageFile: await _createScanImageFile(image),
         fromGallery: true,
       ),
     );
+  }
+
+  Future<ScanImageFile> _createScanImageFile(XFile image) async {
+    final filename = _resolveImageFilename(image);
+
+    return ScanImageFile(
+      bytes: await image.readAsBytes(),
+      filename: filename,
+      path: image.path,
+      mimeType: image.mimeType,
+    );
+  }
+
+  String _resolveImageFilename(XFile image) {
+    if (image.name.trim().isNotEmpty) {
+      return image.name;
+    }
+
+    final pathFilename = image.path.split(RegExp(r'[\\/]')).last;
+    if (pathFilename.trim().isNotEmpty && pathFilename.contains('.')) {
+      return pathFilename;
+    }
+
+    return 'scan.jpg';
   }
 
   Future<void> _toggleFlash() async {

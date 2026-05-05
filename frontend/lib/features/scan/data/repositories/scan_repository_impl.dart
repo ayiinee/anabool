@@ -1,3 +1,4 @@
+import '../../domain/entities/scan_image_file.dart';
 import '../../domain/entities/scan_session.dart';
 import '../../domain/repositories/scan_repository.dart';
 import '../datasources/scan_remote_datasource.dart';
@@ -10,13 +11,13 @@ class ScanRepositoryImpl implements ScanRepository {
   final ScanRemoteDatasource _remoteDatasource;
 
   @override
-  Future<ScanSession> uploadScanImage(String imagePath) {
-    return _remoteDatasource.uploadScanImage(imagePath);
+  Future<ScanSession> uploadScanImage(ScanImageFile imageFile) {
+    return _remoteDatasource.uploadScanImage(imageFile);
   }
 
   @override
-  Future<ScanSession> processScan(String imagePath) {
-    return uploadScanImage(imagePath);
+  Future<ScanSession> processScan(ScanImageFile imageFile) {
+    return uploadScanImage(imageFile);
   }
 
   @override

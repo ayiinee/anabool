@@ -1,3 +1,4 @@
+import '../entities/scan_image_file.dart';
 import '../entities/scan_session.dart';
 import '../repositories/scan_repository.dart';
 
@@ -6,7 +7,7 @@ class UploadScanImage {
 
   final ScanRepository _repository;
 
-  Future<ScanSession> call(String imagePath) {
-    return _repository.uploadScanImage(imagePath);
+  Future<ScanSession> call(ScanImageFile imageFile) {
+    return _repository.uploadScanImage(imageFile);
   }
 }
