@@ -93,3 +93,6 @@ Thumbs.db
 *.iml
 
 .pytest_cache/
+*.log
+backend/*.log
+backend/uvicorn.*

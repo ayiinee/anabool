@@ -29,7 +29,7 @@ class EducationController extends ChangeNotifier {
   }
 
   static final EducationRepository _sharedRepository = EducationRepositoryImpl(
-    remoteDatasource: LocalEducationRemoteDatasource(),
+    remoteDatasource: DioEducationRemoteDatasource(),
   );
 
   final GetEducationContents _getEducationContents;

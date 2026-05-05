@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
+
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/network/api_config.dart';
 import '../models/education_category_model.dart';
 import '../models/education_content_model.dart';
 import '../models/user_edu_progress_model.dart';
@@ -9,6 +12,139 @@ abstract class EducationRemoteDatasource {
   Future<EducationContentModel> getDetail(String contentId);
   Future<List<UserEduProgressModel>> getProgress();
   Future<UserEduProgressModel> completeContent(String contentId);
+}
+
+class DioEducationRemoteDatasource implements EducationRemoteDatasource {
+  DioEducationRemoteDatasource({
+    Dio? dio,
+    String? baseUrl,
+    EducationRemoteDatasource? fallbackDatasource,
+  })  : _dio = dio ??
+            Dio(
+              BaseOptions(
+                baseUrl: baseUrl ?? ApiConfig.baseUrl,
+                connectTimeout: const Duration(seconds: 12),
+                receiveTimeout: const Duration(seconds: 30),
+              ),
+            ),
+        _fallbackDatasource =
+            fallbackDatasource ?? LocalEducationRemoteDatasource();
+
+  final Dio _dio;
+  final EducationRemoteDatasource _fallbackDatasource;
+
+  List<EducationCategoryModel> _categories = const [];
+  List<EducationContentModel> _contents = const [];
+  List<UserEduProgressModel> _progress = const [];
+  Future<void>? _catalogLoad;
+
+  @override
+  Future<List<EducationCategoryModel>> getCategories() async {
+    await _loadCatalog();
+    return _categories;
+  }
+
+  @override
+  Future<List<EducationContentModel>> getContents() async {
+    await _loadCatalog();
+    return _contents;
+  }
+
+  @override
+  Future<EducationContentModel> getDetail(String contentId) async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/api/v1/modules/$contentId',
+      );
+      final data = _readData(response.data);
+      return EducationContentModel.fromMap(data);
+    } on DioException {
+      return _fallbackDatasource.getDetail(contentId);
+    } on EducationRemoteException {
+      rethrow;
+    } catch (error) {
+      throw EducationRemoteException(error.toString());
+    }
+  }
+
+  @override
+  Future<List<UserEduProgressModel>> getProgress() async {
+    await _loadCatalog();
+    return _progress;
+  }
+
+  @override
+  Future<UserEduProgressModel> completeContent(String contentId) async {
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        '/api/v1/modules/$contentId/complete',
+      );
+      final data = _readData(response.data);
+      return UserEduProgressModel.fromMap(data);
+    } on DioException {
+      return _fallbackDatasource.completeContent(contentId);
+    } catch (error) {
+      throw EducationRemoteException(error.toString());
+    }
+  }
+
+  Future<void> _loadCatalog() async {
+    if (_catalogLoad != null) {
+      return _catalogLoad;
+    }
+
+    _catalogLoad = _fetchCatalog();
+    try {
+      await _catalogLoad;
+    } finally {
+      _catalogLoad = null;
+    }
+  }
+
+  Future<void> _fetchCatalog() async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>('/api/v1/modules');
+      final data = _readData(response.data);
+
+      _categories = (data['categories'] as List<dynamic>? ?? const [])
+          .cast<Map<String, dynamic>>()
+          .map(EducationCategoryModel.fromMap)
+          .toList();
+      _contents = (data['contents'] as List<dynamic>? ?? const [])
+          .cast<Map<String, dynamic>>()
+          .map(EducationContentModel.fromMap)
+          .toList();
+      _progress = (data['progress'] as List<dynamic>? ?? const [])
+          .cast<Map<String, dynamic>>()
+          .map(UserEduProgressModel.fromMap)
+          .toList();
+    } on DioException {
+      _categories = await _fallbackDatasource.getCategories();
+      _contents = await _fallbackDatasource.getContents();
+      _progress = await _fallbackDatasource.getProgress();
+    } catch (error) {
+      throw EducationRemoteException(error.toString());
+    }
+  }
+
+  Map<String, dynamic> _readData(Map<String, dynamic>? body) {
+    if (body == null) {
+      throw const EducationRemoteException('Backend modul kosong.');
+    }
+
+    if (body['success'] == false) {
+      throw EducationRemoteException(
+        body['message']?.toString() ?? 'Gagal mengambil modul.',
+      );
+    }
+
+    final data = body['data'];
+    if (data is! Map<String, dynamic>) {
+      throw const EducationRemoteException('Format data modul tidak valid.');
+    }
+
+    return data;
+  }
 }
 
 class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
@@ -29,7 +165,7 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
 
   static const _contents = [
     {
-      'id': 'toxoplasma-basic',
+      'id': 'modul-1-toxoplasma-gondii',
       'category_id': 'cat-education',
       'category_slug': 'education',
       'title': 'Memahami Toksoplasma Gondii',
@@ -43,7 +179,7 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       'is_featured': true,
     },
     {
-      'id': 'pregnancy-risk',
+      'id': 'modul-2-risiko-ibu-hamil',
       'category_id': 'cat-education',
       'category_slug': 'education',
       'title': 'Risiko Toksoplasmosis untuk Kehamilan',
@@ -57,7 +193,7 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       'is_featured': false,
     },
     {
-      'id': 'cat-waste-spread',
+      'id': 'modul-3-penyebaran-kotoran-kucing',
       'category_id': 'cat-education',
       'category_slug': 'education',
       'title': 'Cara Penyebaran dari Limbah Kucing',
@@ -71,7 +207,7 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       'is_featured': false,
     },
     {
-      'id': 'safe-disposal',
+      'id': 'modul-4-protokol-aman',
       'category_id': 'cat-tutorial',
       'category_slug': 'tutorial',
       'title': 'Membuang Limbah Kucing dengan Aman',
@@ -85,7 +221,7 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       'is_featured': true,
     },
     {
-      'id': 'hygiene-routine',
+      'id': 'modul-5-hygiene-measures',
       'category_id': 'cat-tutorial',
       'category_slug': 'tutorial',
       'title': 'Rutinitas Higienis Harian',
@@ -99,7 +235,7 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       'is_featured': false,
     },
     {
-      'id': 'fertilizer-cycle',
+      'id': 'modul-7-circular-economy',
       'category_id': 'cat-education',
       'category_slug': 'education',
       'title': 'Dari Limbah Menjadi Pupuk',
@@ -112,21 +248,35 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       'duration_minutes': 9,
       'is_featured': false,
     },
+    {
+      'id': 'modul-6-mitos-larangan',
+      'category_id': 'cat-education',
+      'category_slug': 'education',
+      'title': 'Modul 6 Mitos, Larangan, dan Kesalahan Fatal',
+      'summary':
+          'Luruskan mitos umum tentang kucing, kehamilan, dan pencegahan toksoplasmosis.',
+      'body':
+          'Tidak semua larangan seputar kucing dan kehamilan akurat. Modul ini membantu membedakan mitos, kebiasaan yang benar-benar berisiko, dan tindakan pencegahan yang lebih aman untuk keluarga.',
+      'thumbnail_asset': EducationAssets.moduleThinkingCat,
+      'reward_points': 95,
+      'duration_minutes': 8,
+      'is_featured': false,
+    },
   ];
 
   final Map<String, UserEduProgressModel> _progress = {
-    'toxoplasma-basic': const UserEduProgressModel(
-      contentId: 'toxoplasma-basic',
+    'modul-1-toxoplasma-gondii': const UserEduProgressModel(
+      contentId: 'modul-1-toxoplasma-gondii',
       progressPct: 72,
       isCompleted: false,
     ),
-    'safe-disposal': const UserEduProgressModel(
-      contentId: 'safe-disposal',
+    'modul-4-protokol-aman': const UserEduProgressModel(
+      contentId: 'modul-4-protokol-aman',
       progressPct: 38,
       isCompleted: false,
     ),
-    'cat-waste-spread': const UserEduProgressModel(
-      contentId: 'cat-waste-spread',
+    'modul-3-penyebaran-kotoran-kucing': const UserEduProgressModel(
+      contentId: 'modul-3-penyebaran-kotoran-kucing',
       progressPct: 100,
       isCompleted: true,
     ),

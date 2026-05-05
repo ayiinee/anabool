@@ -95,10 +95,13 @@ class _DetailContent extends StatelessWidget {
                 progressValue: displayedProgress,
                 progressText: '$lessonNumber/$lessonTotal',
               ),
-              const Expanded(
+              Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(22, 8, 22, 18),
-                  child: _LessonCard(),
+                  padding: const EdgeInsets.fromLTRB(22, 8, 22, 18),
+                  child: _LessonCard(
+                    content: content,
+                    lessonNumber: lessonNumber,
+                  ),
                 ),
               ),
               _LessonActions(
@@ -276,10 +279,23 @@ class _MeowPointsPill extends StatelessWidget {
 }
 
 class _LessonCard extends StatelessWidget {
-  const _LessonCard();
+  const _LessonCard({
+    required this.content,
+    required this.lessonNumber,
+  });
+
+  final EducationContent content;
+  final int lessonNumber;
 
   @override
   Widget build(BuildContext context) {
+    final paragraphs = content.body
+        .split(RegExp(r'\n\s*\n'))
+        .map((part) => part.trim())
+        .where((part) => part.isNotEmpty)
+        .take(8)
+        .toList();
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(15, 14, 15, 18),
@@ -288,66 +304,51 @@ class _LessonCard extends StatelessWidget {
         border: Border.all(color: AnaboolColors.border),
         borderRadius: BorderRadius.circular(7),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '3. Mengenal Toxoplasma gondii',
-            style: TextStyle(
+            '$lessonNumber. ${content.title}',
+            style: const TextStyle(
               color: AnaboolColors.brownDark,
               fontSize: 12,
               fontWeight: FontWeight.w900,
               height: 1.2,
             ),
           ),
-          SizedBox(height: 8),
-          Text(
-            'Toxoplasma gondii adalah parasit mikroskopis yang sering disalahpahami, terutama oleh pemilik kucing. Banyak orang langsung menghubungkannya dengan kucing, padahal risikonya bukan sekadar dari memelihara, menyentuh, atau menyayangi kucing.',
-            style: TextStyle(
-              color: AnaboolColors.brownDark,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              height: 1.22,
+          const SizedBox(height: 8),
+          for (var index = 0; index < paragraphs.length; index++) ...[
+            Text(
+              paragraphs[index],
+              style: const TextStyle(
+                color: AnaboolColors.brownDark,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w500,
+                height: 1.22,
+              ),
             ),
-          ),
-          SizedBox(height: 18),
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(6)),
-            child: DesignImage(
-              asset: EducationAssets.moduleMaterial,
-              fit: BoxFit.contain,
+            if (index == 0) ...[
+              const SizedBox(height: 18),
+              const ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(6)),
+                child: DesignImage(
+                  asset: EducationAssets.moduleMaterial,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+            const SizedBox(height: 18),
+          ],
+          if (paragraphs.isEmpty)
+            Text(
+              content.summary,
+              style: const TextStyle(
+                color: AnaboolColors.brownDark,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w500,
+                height: 1.22,
+              ),
             ),
-          ),
-          SizedBox(height: 18),
-          Text(
-            'Hal yang lebih perlu diperhatikan adalah kebersihan yang kurang aman, makanan yang terkontaminasi, kotoran kucing yang dibiarkan terlalu lama, serta kebiasaan tidak mencuci tangan setelah membersihkan kotak pasir, berkebun, memegang makanan mentah, atau membuang limbah.',
-            style: TextStyle(
-              color: AnaboolColors.brownDark,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              height: 1.22,
-            ),
-          ),
-          SizedBox(height: 18),
-          Text(
-            'Karena parasit ini tidak bisa dilihat langsung oleh mata, pencegahan tidak bisa hanya mengandalkan tampilan kotoran atau pasir. Pencegahan lebih bergantung pada kebiasaan harian yang aman dan konsisten.',
-            style: TextStyle(
-              color: AnaboolColors.brownDark,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              height: 1.22,
-            ),
-          ),
-          SizedBox(height: 18),
-          Text(
-            'Modul ini akan membantu kamu memahami bagaimana Toxoplasma gondii bekerja, bagaimana cara penyebarannya, dan kenapa kebersihan kotak pasir penting untuk menjaga rumah tetap aman tanpa harus takut pada kucing kesayangan.',
-            style: TextStyle(
-              color: AnaboolColors.brownDark,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              height: 1.22,
-            ),
-          ),
         ],
       ),
     );

@@ -15,6 +15,10 @@ class EducationContentModel extends EducationContent {
   });
 
   factory EducationContentModel.fromMap(Map<String, dynamic> map) {
+    final rewardPoints = map['reward_points'] ?? map['meowpoints_reward'] ?? 0;
+    final durationMinutes =
+        map['duration_minutes'] ?? map['estimated_duration_minutes'] ?? 0;
+
     return EducationContentModel(
       id: map['id'] as String,
       categoryId: map['category_id'] as String,
@@ -22,9 +26,10 @@ class EducationContentModel extends EducationContent {
       title: map['title'] as String,
       summary: map['summary'] as String,
       body: map['body'] as String,
-      thumbnailAsset: map['thumbnail_asset'] as String,
-      rewardPoints: map['reward_points'] as int,
-      durationMinutes: map['duration_minutes'] as int,
+      thumbnailAsset:
+          (map['thumbnail_asset'] ?? map['thumbnail_url'] ?? '') as String,
+      rewardPoints: (rewardPoints as num).toInt(),
+      durationMinutes: (durationMinutes as num).toInt(),
       isFeatured: map['is_featured'] as bool? ?? false,
     );
   }

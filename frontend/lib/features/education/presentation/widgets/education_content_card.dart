@@ -35,7 +35,7 @@ class EducationContentCard extends StatelessWidget {
         splashColor: AnaboolColors.header.withValues(alpha: 0.16),
         highlightColor: AnaboolColors.header.withValues(alpha: 0.08),
         child: Container(
-          height: compact ? 78 : 96,
+          height: compact ? 82 : 106,
           padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
           decoration: BoxDecoration(
             border: Border.all(color: AnaboolColors.border),
