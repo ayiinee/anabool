@@ -125,8 +125,6 @@ class _HeaderActions extends StatelessWidget {
     return const Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _HelpdeskButton(),
-        SizedBox(width: 8),
         _HeaderIconButton(
           icon: Icons.notifications_none_rounded,
           tooltip: 'Notifikasi',
