@@ -91,3 +91,5 @@ database/tmp/
 .DS_Store
 Thumbs.db
 *.iml
+
+.pytest_cache/

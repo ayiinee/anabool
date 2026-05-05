@@ -89,15 +89,19 @@ class _SignupPageState extends State<SignupPage> {
     if (_authController.currentUser != null && !_navigatedToHome) {
       _navigatedToHome = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) {
-          return;
-        }
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          RouteConstants.home,
-          (route) => false,
-        );
+        _showRegistrationSuccessDialogAndGoHome();
       });
     }
+  }
+
+  Future<void> _showRegistrationSuccessDialogAndGoHome() async {
+    if (!mounted) {
+      return;
+    }
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      RouteConstants.home,
+      (route) => false,
+    );
   }
 
   String? _validateEmail(String? value) {

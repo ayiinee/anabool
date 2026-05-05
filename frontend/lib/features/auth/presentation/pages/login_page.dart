@@ -236,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
               isLoading: _authController.isLoading,
             ),
             const SizedBox(height: 16),
-                        const SizedBox(height: 18),
+            const SizedBox(height: 18),
             const Row(
               children: [
                 Expanded(child: Divider(color: AnaboolColors.peach)),
