@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/network/api_config.dart';
 import '../models/chat_session_model.dart';
 
 abstract class ChatRemoteDatasource {
@@ -67,7 +68,7 @@ class DioChatRemoteDatasource implements ChatRemoteDatasource {
       case DioExceptionType.receiveTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.connectionError:
-        return 'Ana belum tersambung ke backend. Pastikan server RAG berjalan dan alamat API bisa diakses dari perangkat ini.';
+        return 'Ana belum tersambung ke backend. Pastikan server backend ANABOOL berjalan dan alamat API sesuai perangkat ini.';
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
         return statusCode == null
@@ -99,10 +100,7 @@ class DioChatRemoteDatasource implements ChatRemoteDatasource {
 class ChatApiConfig {
   const ChatApiConfig._();
 
-  static const baseUrl = String.fromEnvironment(
-    'ANABOOL_API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:8000',
-  );
+  static String get baseUrl => ApiConfig.baseUrl;
 }
 
 class ChatRemoteException implements Exception {

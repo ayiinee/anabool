@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/network/api_config.dart';
 import '../models/scan_session_model.dart';
 
 abstract class ScanRemoteDatasource {
@@ -54,10 +55,7 @@ class DioScanRemoteDatasource implements ScanRemoteDatasource {
 class ScanApiConfig {
   const ScanApiConfig._();
 
-  static const baseUrl = String.fromEnvironment(
-    'ANABOOL_API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:8000',
-  );
+  static String get baseUrl => ApiConfig.baseUrl;
 }
 
 class ScanRemoteException implements Exception {
