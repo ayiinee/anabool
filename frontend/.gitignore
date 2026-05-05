@@ -41,3 +41,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+backend/uvicorn-auth-debug.err.log
+backend/uvicorn-auth-debug.log
