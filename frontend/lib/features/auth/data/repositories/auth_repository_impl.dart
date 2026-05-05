@@ -9,8 +9,42 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource _remoteDatasource;
 
   @override
+  Stream<AuthUser?> watchAuthState() {
+    return _remoteDatasource.watchAuthState();
+  }
+
+  @override
+  Future<AuthUser> loginWithEmailPassword({
+    required String email,
+    required String password,
+  }) {
+    return _remoteDatasource.loginWithEmailPassword(
+      email: email,
+      password: password,
+    );
+  }
+
+  @override
+  Future<AuthUser> signUpWithEmailPassword({
+    required String email,
+    required String password,
+    String? displayName,
+  }) {
+    return _remoteDatasource.signUpWithEmailPassword(
+      email: email,
+      password: password,
+      displayName: displayName,
+    );
+  }
+
+  @override
   Future<AuthUser?> loginWithGoogle() {
     return _remoteDatasource.loginWithGoogle();
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail(String email) {
+    return _remoteDatasource.sendPasswordResetEmail(email);
   }
 
   @override

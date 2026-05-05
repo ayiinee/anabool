@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/app.dart';
 import 'package:frontend/core/constants/asset_constants.dart';
+import 'package:frontend/features/home/presentation/pages/home_page.dart';
 
 void main() {
   test('home assets are bundled', () async {
@@ -145,8 +146,7 @@ void main() {
     expect(find.text('Buat Akun Anda'), findsNothing);
   });
 
-  testWidgets('signup fields accept input and signup opens home',
-      (tester) async {
+  testWidgets('signup fields accept input', (tester) async {
     await tester.pumpWidget(const AnaboolApp());
     await tester.pump();
 
@@ -173,12 +173,6 @@ void main() {
 
     expect(find.text('new@example.com'), findsOneWidget);
     expect(find.text('putu_alvin'), findsOneWidget);
-
-    await tester.tap(find.widgetWithText(FilledButton, 'Mendaftar'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Anabool'), findsOneWidget);
-    expect(find.text('MeowPoints'), findsOneWidget);
   });
 
   testWidgets('home page renders the iPhone 16 Plus reference sections',
@@ -188,17 +182,11 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
 
-    await tester.pumpWidget(const AnaboolApp());
-    await tester.pump();
-    await tester.enterText(
-      find.byKey(const ValueKey('auth-field-email')),
-      'alvin@example.com',
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: HomePage(),
+      ),
     );
-    await tester.enterText(
-      find.byKey(const ValueKey('auth-field-password')),
-      'secret123',
-    );
-    await tester.tap(find.widgetWithText(FilledButton, 'Masuk'));
     await tester.pumpAndSettle();
     await tester.pump(const Duration(milliseconds: 300));
 

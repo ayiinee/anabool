@@ -8,11 +8,13 @@ class AuthSocialButton extends StatelessWidget {
     required this.asset,
     required this.label,
     required this.onPressed,
+    this.isEnabled = true,
   });
 
   final String asset;
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +30,19 @@ class AuthSocialButton extends StatelessWidget {
         elevation: 0,
         child: InkWell(
           borderRadius: BorderRadius.circular(8),
-          onTap: onPressed,
+          onTap: isEnabled ? onPressed : null,
           child: SizedBox(
             width: 54,
             height: 46,
             child: Center(
-              child: Image.asset(
-                asset,
-                width: 24,
-                height: 24,
-                fit: BoxFit.contain,
+              child: Opacity(
+                opacity: isEnabled ? 1 : 0.45,
+                child: Image.asset(
+                  asset,
+                  width: 24,
+                  height: 24,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
