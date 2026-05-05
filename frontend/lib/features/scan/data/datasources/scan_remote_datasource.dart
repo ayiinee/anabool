@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
+import '../../domain/entities/scan_image_file.dart';
 import '../models/scan_session_model.dart';
 
 abstract class ScanRemoteDatasource {
-  Future<ScanSessionModel> uploadScanImage(String imagePath);
+  Future<ScanSessionModel> uploadScanImage(ScanImageFile imageFile);
 }
 
 class DioScanRemoteDatasource implements ScanRemoteDatasource {
@@ -22,18 +24,19 @@ class DioScanRemoteDatasource implements ScanRemoteDatasource {
   final Dio _dio;
 
   @override
-  Future<ScanSessionModel> uploadScanImage(String imagePath) async {
-    final filename = imagePath.split(RegExp(r'[\\/]')).last;
+  Future<ScanSessionModel> uploadScanImage(ScanImageFile imageFile) async {
     final formData = FormData.fromMap({
-      'file': await MultipartFile.fromFile(
-        imagePath,
-        filename: filename.isEmpty ? 'scan.jpg' : filename,
+      'file': MultipartFile.fromBytes(
+        imageFile.bytes,
+        filename: imageFile.filename.isEmpty ? 'scan.jpg' : imageFile.filename,
       ),
     });
 
-    final response = await _dio.post<Map<String, dynamic>>(
-      '/api/v1/scans/process',
-      data: formData,
+    final response = await _runScanRequest(
+      () => _dio.post<Map<String, dynamic>>(
+        '/api/v1/scans/process',
+        data: formData,
+      ),
     );
 
     final body = response.data;
@@ -49,15 +52,68 @@ class DioScanRemoteDatasource implements ScanRemoteDatasource {
 
     return ScanSessionModel.fromApiResponse(body);
   }
+
+  Future<Response<Map<String, dynamic>>> _runScanRequest(
+    Future<Response<Map<String, dynamic>>> Function() request,
+  ) async {
+    try {
+      return await request();
+    } on DioException catch (error) {
+      throw ScanRemoteException(_friendlyDioMessage(error));
+    }
+  }
+
+  String _friendlyDioMessage(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.receiveTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.connectionError:
+        return 'Scan API is not reachable. Make sure the FastAPI backend is running and accessible at ${_dio.options.baseUrl}.';
+      case DioExceptionType.badResponse:
+        final message = _readBackendMessage(error.response?.data);
+        if (message != null) {
+          return message;
+        }
+
+        final statusCode = error.response?.statusCode;
+        return statusCode == null
+            ? 'Scan API returned an invalid response.'
+            : 'Scan API returned error $statusCode.';
+      case DioExceptionType.cancel:
+        return 'Scan request was cancelled. Please try again.';
+      case DioExceptionType.badCertificate:
+      case DioExceptionType.unknown:
+        return 'Scan API connection failed. Check the API address and network connection.';
+    }
+  }
+
+  String? _readBackendMessage(Object? data) {
+    if (data is Map<String, dynamic>) {
+      final message = data['message'];
+      if (message != null && message.toString().trim().isNotEmpty) {
+        return message.toString();
+      }
+    }
+
+    return null;
+  }
 }
 
 class ScanApiConfig {
   const ScanApiConfig._();
 
-  static const baseUrl = String.fromEnvironment(
+  static const _configuredBaseUrl = String.fromEnvironment(
     'ANABOOL_API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:8000',
   );
+
+  static String get baseUrl {
+    if (_configuredBaseUrl.isNotEmpty) {
+      return _configuredBaseUrl;
+    }
+
+    return kIsWeb ? 'http://localhost:8000' : 'http://10.0.2.2:8000';
+  }
 }
 
 class ScanRemoteException implements Exception {

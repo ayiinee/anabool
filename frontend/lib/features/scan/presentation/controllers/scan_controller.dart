@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../../data/datasources/scan_remote_datasource.dart';
 import '../../data/repositories/scan_repository_impl.dart';
+import '../../domain/entities/scan_image_file.dart';
 import '../../domain/entities/scan_session.dart';
 import '../../domain/usecases/upload_scan_image.dart';
 
@@ -22,13 +23,13 @@ class ScanController extends ChangeNotifier {
   String? errorMessage;
   ScanSession? latestSession;
 
-  Future<ScanSession?> analyzeImage(String imagePath) async {
+  Future<ScanSession?> analyzeImage(ScanImageFile imageFile) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
 
     try {
-      latestSession = await _uploadScanImage(imagePath);
+      latestSession = await _uploadScanImage(imageFile);
       return latestSession;
     } catch (error) {
       errorMessage = error.toString();

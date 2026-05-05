@@ -1,20 +1,19 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/route_constants.dart';
+import '../../domain/entities/scan_image_file.dart';
 import '../../domain/entities/scan_session.dart';
 import '../controllers/scan_controller.dart';
 import '../widgets/scan_success_dialog.dart';
 
 class ScanPreviewArguments {
   const ScanPreviewArguments({
-    required this.imagePath,
+    required this.imageFile,
     required this.fromGallery,
   });
 
-  final String imagePath;
+  final ScanImageFile imageFile;
   final bool fromGallery;
 }
 
@@ -47,7 +46,7 @@ class _ScanPreviewPageState extends State<ScanPreviewPage> {
 
   Future<void> _analyzeImage() async {
     final session =
-        await _scanController.analyzeImage(widget.arguments.imagePath);
+        await _scanController.analyzeImage(widget.arguments.imageFile);
     if (!mounted) {
       return;
     }
@@ -112,8 +111,8 @@ class _ScanPreviewPageState extends State<ScanPreviewPage> {
                 ),
                 Expanded(
                   child: Center(
-                    child: Image.file(
-                      File(widget.arguments.imagePath),
+                    child: Image.memory(
+                      widget.arguments.imageFile.bytes,
                       width: double.infinity,
                       fit: BoxFit.contain,
                     ),
