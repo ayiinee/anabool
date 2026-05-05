@@ -9,10 +9,21 @@ import '../widgets/cta_card_row.dart';
 import '../widgets/scan_result_bubble.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  const ChatPage({
+    this.scanId,
+    super.key,
+  });
+
+  final String? scanId;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
+}
+
+class ChatPageArguments {
+  const ChatPageArguments({required this.scanId});
+
+  final String scanId;
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -25,6 +36,7 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     _controller = ChatController.create();
     _controller.addListener(_scrollToLatestMessage);
+    _controller.startChat(scanId: widget.scanId);
   }
 
   @override

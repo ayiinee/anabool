@@ -70,6 +70,7 @@ backend/.ruff_cache/
 backend/build/
 backend/dist/
 backend/*.egg-info/
+backend/.cache/
 
 
 # =========================
@@ -90,3 +91,5 @@ database/tmp/
 .DS_Store
 Thumbs.db
 *.iml
+
+.pytest_cache/

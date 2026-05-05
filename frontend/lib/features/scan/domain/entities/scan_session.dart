@@ -3,6 +3,7 @@ import 'waste_class.dart';
 
 class ScanSession {
   const ScanSession({
+    required this.id,
     required this.filename,
     required this.status,
     required this.wasteClass,
@@ -12,6 +13,7 @@ class ScanSession {
     required this.rawPayload,
   });
 
+  final String id;
   final String filename;
   final String status;
   final WasteClass wasteClass;

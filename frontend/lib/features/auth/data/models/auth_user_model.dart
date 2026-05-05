@@ -30,10 +30,10 @@ class AuthUserModel extends AuthUser {
 
   factory AuthUserModel.fromJson(Map<String, dynamic> json) {
     return AuthUserModel(
-      id: json['id'] as String,
-      email: json['email'] as String,
-      displayName: json['displayName'] as String?,
-      photoUrl: json['photoUrl'] as String?,
+      id: (json['firebase_uid'] ?? json['firebaseUid'] ?? json['id']) as String,
+      email: (json['email'] ?? '') as String,
+      displayName: (json['display_name'] ?? json['displayName']) as String?,
+      photoUrl: (json['avatar_url'] ?? json['photoUrl']) as String?,
     );
   }
 

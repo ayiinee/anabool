@@ -8,6 +8,7 @@ import '../controllers/auth_controller.dart';
 import '../widgets/auth_footer_link.dart';
 import '../widgets/auth_layout.dart';
 import '../widgets/auth_primary_button.dart';
+import '../widgets/auth_social_button.dart';
 import '../widgets/auth_text_field.dart';
 
 class SignupPage extends StatefulWidget {
@@ -60,6 +61,10 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
+  Future<void> _signUpWithGoogle() async {
+    await _authController.signUpWithGoogle();
+  }
+
   void _handleAuthStateChange() {
     if (!mounted) {
       return;
@@ -84,15 +89,19 @@ class _SignupPageState extends State<SignupPage> {
     if (_authController.currentUser != null && !_navigatedToHome) {
       _navigatedToHome = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) {
-          return;
-        }
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          RouteConstants.home,
-          (route) => false,
-        );
+        _showRegistrationSuccessDialogAndGoHome();
       });
     }
+  }
+
+  Future<void> _showRegistrationSuccessDialogAndGoHome() async {
+    if (!mounted) {
+      return;
+    }
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      RouteConstants.home,
+      (route) => false,
+    );
   }
 
   String? _validateEmail(String? value) {
@@ -221,6 +230,34 @@ class _SignupPageState extends State<SignupPage> {
                 _submit();
               },
               isLoading: _authController.isLoading,
+            ),
+            const SizedBox(height: 18),
+            const Row(
+              children: [
+                Expanded(child: Divider(color: AnaboolColors.peach)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    'Atau daftar dengan',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AnaboolColors.brownSoft,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+                Expanded(child: Divider(color: AnaboolColors.peach)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            AuthSocialButton(
+              asset: AuthAssets.googleIcon,
+              label: 'Daftar dengan Google',
+              onPressed: () {
+                _signUpWithGoogle();
+              },
+              isEnabled: !_authController.isLoading,
             ),
             const SizedBox(height: 18),
             const Text(

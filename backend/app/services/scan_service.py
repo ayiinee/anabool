@@ -1,4 +1,5 @@
 from fastapi import UploadFile
+from uuid import uuid4
 
 from app.ai.cv.cnn_inference import predict_waste_class
 
@@ -9,6 +10,7 @@ async def process_scan(file: UploadFile) -> dict:
     confidence_score = prediction["confidence_score"]
 
     return {
+        "scan_id": _new_scan_id(),
         "filename": file.filename,
         "scan_status": "detected" if detected_class != "unknown" else "needs_review",
         "detected_class": detected_class,
@@ -30,6 +32,7 @@ async def process_scan(file: UploadFile) -> dict:
 
 async def mock_process_scan(file: UploadFile) -> dict:
     return {
+        "scan_id": _new_scan_id(),
         "filename": file.filename,
         "scan_status": "detected",
         "detected_class": "soft_poop",
@@ -105,3 +108,7 @@ def build_next_action_cards(default_action: str) -> list[dict]:
     ]
 
     return sorted(cards, key=lambda card: card["card_type"] != default_action)
+
+
+def _new_scan_id() -> str:
+    return f"scan_{uuid4().hex}"

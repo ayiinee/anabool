@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../domain/entities/scan_image_file.dart';
+import '../../../../core/network/api_config.dart';
 import '../models/scan_session_model.dart';
 
 abstract class ScanRemoteDatasource {
@@ -103,17 +103,10 @@ class DioScanRemoteDatasource implements ScanRemoteDatasource {
 class ScanApiConfig {
   const ScanApiConfig._();
 
-  static const _configuredBaseUrl = String.fromEnvironment(
+  static const baseUrl = String.fromEnvironment(
     'ANABOOL_API_BASE_URL',
+    defaultValue: 'http://10.0.2.2:8000',
   );
-
-  static String get baseUrl {
-    if (_configuredBaseUrl.isNotEmpty) {
-      return _configuredBaseUrl;
-    }
-
-    return kIsWeb ? 'http://localhost:8000' : 'http://10.0.2.2:8000';
-  }
 }
 
 class ScanRemoteException implements Exception {

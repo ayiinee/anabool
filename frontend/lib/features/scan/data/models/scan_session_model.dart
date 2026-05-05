@@ -4,6 +4,7 @@ import 'waste_class_model.dart';
 
 class ScanSessionModel extends ScanSession {
   const ScanSessionModel({
+    required super.id,
     required super.filename,
     required super.status,
     required super.wasteClass,
@@ -17,6 +18,7 @@ class ScanSessionModel extends ScanSession {
     final data = _extractData(json);
 
     return ScanSessionModel(
+      id: _readString(data, const ['scan_id', 'id'], fallback: ''),
       filename:
           _readString(data, const ['filename', 'file_name'], fallback: '-'),
       status: _readString(

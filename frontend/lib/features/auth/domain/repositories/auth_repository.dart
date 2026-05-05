@@ -1,4 +1,5 @@
 import '../entities/auth_user.dart';
+import '../entities/auth_sync_mode.dart';
 
 abstract class AuthRepository {
   Stream<AuthUser?> watchAuthState();
@@ -13,6 +14,9 @@ abstract class AuthRepository {
   });
   Future<AuthUser?> loginWithGoogle();
   Future<void> sendPasswordResetEmail(String email);
-  Future<AuthUser> syncUserProfile(AuthUser user);
+  Future<AuthUser> syncUserProfile(
+    AuthUser user, {
+    required AuthSyncMode mode,
+  });
   Future<void> logout();
 }

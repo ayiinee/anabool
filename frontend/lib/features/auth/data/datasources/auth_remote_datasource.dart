@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../../../core/network/api_config.dart';
+import '../../domain/entities/auth_exception.dart';
+import '../../domain/entities/auth_sync_mode.dart';
 import '../models/auth_user_model.dart';
 
 abstract class AuthRemoteDatasource {
@@ -18,7 +24,10 @@ abstract class AuthRemoteDatasource {
   });
   Future<AuthUserModel?> loginWithGoogle();
   Future<void> sendPasswordResetEmail(String email);
-  Future<AuthUserModel> syncUserProfile(AuthUserModel user);
+  Future<AuthUserModel> syncUserProfile(
+    AuthUserModel user, {
+    required AuthSyncMode mode,
+  });
   Future<void> logout();
 }
 
@@ -26,15 +35,18 @@ class FirebaseAuthRemoteDatasource implements AuthRemoteDatasource {
   FirebaseAuthRemoteDatasource({
     FirebaseAuth? firebaseAuth,
     GoogleSignIn? googleSignIn,
+    Dio? dio,
   })  : _firebaseAuth = firebaseAuth,
-        _googleSignIn = googleSignIn;
+        _googleSignIn = googleSignIn,
+        _dio = dio ?? Dio();
 
   final FirebaseAuth? _firebaseAuth;
+  final Dio _dio;
   GoogleSignIn? _googleSignIn;
 
   FirebaseAuth get _auth {
     if (_firebaseAuth != null) {
-      return _firebaseAuth!;
+      return _firebaseAuth;
     }
     if (Firebase.apps.isEmpty) {
       throw Exception(
@@ -154,15 +166,108 @@ class FirebaseAuthRemoteDatasource implements AuthRemoteDatasource {
   }
 
   @override
-  Future<AuthUserModel> syncUserProfile(AuthUserModel user) async {
-    // MVP placeholder: frontend currently relies on Firebase user data only.
-    return user;
+  Future<AuthUserModel> syncUserProfile(
+    AuthUserModel user, {
+    required AuthSyncMode mode,
+  }) async {
+    final firebaseUser = _auth.currentUser;
+    final idToken = await firebaseUser?.getIdToken();
+    if (idToken == null || idToken.isEmpty) {
+      throw Exception('Token login tidak tersedia. Silakan masuk ulang.');
+    }
+
+    try {
+      final response = await _dio.post<Map<String, dynamic>>(
+        '${ApiConfig.baseUrl}/api/v1/auth/sync-user',
+        data: {
+          'idToken': idToken,
+          'mode': mode.name,
+          'displayName': user.displayName,
+          'photoUrl': user.photoUrl,
+        },
+      );
+
+      final responseData = response.data;
+      final data = responseData?['data'];
+      if (data is! Map<String, dynamic>) {
+        return user;
+      }
+
+      final userData = data['user'];
+      if (userData is! Map<String, dynamic>) {
+        return user;
+      }
+
+      return AuthUserModel.fromJson(userData);
+    } on DioException catch (error) {
+      final backendData = error.response?.data;
+      final message = _extractBackendMessage(backendData);
+      final data = _extractBackendData(backendData);
+      if (data?['reason'] == 'registration_required') {
+        await logout();
+        throw AuthRegistrationRequiredException(message);
+      }
+      throw Exception(message);
+    }
   }
 
   @override
   Future<void> logout() async {
     await _signIn.signOut();
     return _auth.signOut();
+  }
+
+  String _extractBackendMessage(Object? responseData) {
+    final normalizedData = _normalizeResponseMap(responseData);
+    if (normalizedData != null) {
+      final detail = normalizedData['detail'];
+      if (detail is String && detail.isNotEmpty) {
+        return detail;
+      }
+      final message = normalizedData['message'];
+      if (message is String && message.isNotEmpty) {
+        return message;
+      }
+    }
+    return 'Autentikasi backend gagal. Coba lagi.';
+  }
+
+  Map<String, dynamic>? _extractBackendData(Object? responseData) {
+    final normalizedData = _normalizeResponseMap(responseData);
+    if (normalizedData != null) {
+      final data = normalizedData['data'];
+      if (data is Map<String, dynamic>) {
+        return data;
+      }
+      if (data is Map) {
+        return Map<String, dynamic>.from(data);
+      }
+    }
+    return null;
+  }
+
+  Map<String, dynamic>? _normalizeResponseMap(Object? responseData) {
+    if (responseData is Map<String, dynamic>) {
+      return responseData;
+    }
+    if (responseData is Map) {
+      return Map<String, dynamic>.from(responseData);
+    }
+    if (responseData is String && responseData.isNotEmpty) {
+      final Object? decodedData;
+      try {
+        decodedData = jsonDecode(responseData);
+      } on FormatException {
+        return null;
+      }
+      if (decodedData is Map<String, dynamic>) {
+        return decodedData;
+      }
+      if (decodedData is Map) {
+        return Map<String, dynamic>.from(decodedData);
+      }
+    }
+    return null;
   }
 
   String _mapFirebaseAuthError(FirebaseAuthException error) {

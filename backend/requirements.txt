@@ -9,6 +9,11 @@ python-multipart
 httpx
 pillow
 numpy
-google-generativeai
 langchain
-inference-sdk
+inference-sdk; python_version < "3.13"
+sentence-transformers
+torch
+pypdf
+groq
+pytest
+

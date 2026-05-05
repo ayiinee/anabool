@@ -96,6 +96,16 @@ class _LoginPageState extends State<LoginPage> {
       _showSnackBar(statusMessage);
     }
 
+    if (_authController.shouldRedirectToSignup) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) {
+          return;
+        }
+        Navigator.of(context).pushReplacementNamed(RouteConstants.signup);
+      });
+      return;
+    }
+
     if (_authController.currentUser != null && !_navigatedToHome) {
       _navigatedToHome = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -225,7 +235,8 @@ class _LoginPageState extends State<LoginPage> {
               },
               isLoading: _authController.isLoading,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            const SizedBox(height: 18),
             const Row(
               children: [
                 Expanded(child: Divider(color: AnaboolColors.peach)),
@@ -245,43 +256,15 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                AuthSocialButton(
-                  asset: AuthAssets.googleIcon,
-                  label: 'Lanjutkan dengan Google',
-                  onPressed: () {
-                    _loginWithGoogle();
-                  },
-                  isEnabled: !_authController.isLoading,
-                ),
-                const AuthSocialButton(
-                  asset: AuthAssets.facebookIcon,
-                  label: 'Lanjutkan dengan Facebook',
-                  onPressed: null,
-                  isEnabled: false,
-                ),
-                const AuthSocialButton(
-                  asset: AuthAssets.xIcon,
-                  label: 'Lanjutkan dengan X',
-                  onPressed: null,
-                  isEnabled: false,
-                ),
-              ],
+            AuthSocialButton(
+              asset: AuthAssets.googleIcon,
+              label: 'Masuk dengan Google',
+              onPressed: () {
+                _loginWithGoogle();
+              },
+              isEnabled: !_authController.isLoading,
             ),
             const SizedBox(height: 22),
-            const Text(
-              'Gunakan kata sandi unik dan hanya masuk ke akun Anda di perangkat tepercaya.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: AnaboolColors.brownSoft,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                height: 1.35,
-              ),
-            ),
-            const SizedBox(height: 18),
             AuthFooterLink(
               prefix: "Tidak punya akun?",
               action: 'Mendaftar',

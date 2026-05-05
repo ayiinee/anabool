@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
@@ -87,21 +88,25 @@ class _HeroGreeting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final userName = _currentUserName();
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Anabool',
-          style: TextStyle(
+          'Halo, $userName',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 17,
             fontWeight: FontWeight.w900,
           ),
         ),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
-          'Selamat siang, Alvin',
-          style: TextStyle(
+          _wibGreeting(),
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 13,
             fontWeight: FontWeight.w600,
@@ -196,6 +201,8 @@ class _UserPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userName = _currentUserName();
+
     return Container(
       height: 30,
       padding: const EdgeInsets.fromLTRB(4, 3, 12, 3),
@@ -203,10 +210,10 @@ class _UserPill extends StatelessWidget {
         color: AnaboolColors.brown,
         borderRadius: BorderRadius.circular(999),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ClipOval(
+          const ClipOval(
             child: DesignImage(
               asset: HomeAssets.profilePhoto,
               width: 24,
@@ -214,19 +221,54 @@ class _UserPill extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(width: 6),
-          Text(
-            'Putu Alvin',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              userName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+String _currentUserName() {
+  final user = FirebaseAuth.instance.currentUser;
+  final displayName = user?.displayName?.trim();
+  if (displayName != null && displayName.isNotEmpty) {
+    return displayName;
+  }
+
+  final email = user?.email?.trim();
+  if (email != null && email.isNotEmpty) {
+    return email.split('@').first;
+  }
+
+  return 'Pengguna';
+}
+
+String _wibGreeting() {
+  final wibTime = DateTime.now().toUtc().add(const Duration(hours: 7));
+  final hour = wibTime.hour;
+
+  if (hour >= 4 && hour < 11) {
+    return 'Selamat pagi';
+  }
+  if (hour >= 11 && hour < 15) {
+    return 'Selamat siang';
+  }
+  if (hour >= 15 && hour < 18) {
+    return 'Selamat sore';
+  }
+  return 'Selamat malam';
 }
 
 class _MeowPointsPill extends StatelessWidget {

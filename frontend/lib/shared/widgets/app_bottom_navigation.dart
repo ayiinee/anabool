@@ -81,11 +81,7 @@ class AppBottomNavigation extends StatelessWidget {
                       label: 'Modul',
                       active: activeDestination ==
                           AppBottomNavigationDestination.education,
-                      onTap: onEducationTap ??
-                          () => _showNavigationFeedback(
-                                context,
-                                'Halaman Modul sedang disiapkan.',
-                              ),
+                      onTap: onEducationTap ?? () => _goEducation(context),
                     ),
                     SizedBox(width: centerGap),
                     _BottomNavItem(
@@ -136,6 +132,15 @@ class AppBottomNavigation extends StatelessWidget {
     }
 
     Navigator.of(context).pushReplacementNamed(RouteConstants.home);
+  }
+
+  void _goEducation(BuildContext context) {
+    if (ModalRoute.of(context)?.settings.name == RouteConstants.education) {
+      _showNavigationFeedback(context, 'Anda sudah berada di Modul.');
+      return;
+    }
+
+    Navigator.of(context).pushReplacementNamed(RouteConstants.education);
   }
 }
 

@@ -1,42 +1,39 @@
 from datetime import datetime
-from typing import Literal
 
 from pydantic import BaseModel, Field
 
 
-ChatRole = Literal["user", "assistant"]
-ChatMessageType = Literal["text", "cta_cards", "scan_result"]
-ChatSessionType = Literal["consultation", "scan_result"]
-ChatCardType = Literal["pickup", "process", "dispose"]
-
-
 class ChatCtaCard(BaseModel):
-    card_type: ChatCardType
+    card_type: str
     title: str
     description: str
     cta_label: str
+    target_route: str | None = None
+    payload: dict = Field(default_factory=dict)
+    display_order: int = 0
 
 
 class ChatMessage(BaseModel):
     id: str
-    role: ChatRole
-    message_type: ChatMessageType
+    role: str
+    message_type: str
     content: str
-    cards: list[ChatCtaCard] = Field(default_factory=list)
     created_at: datetime
+    cards: list[ChatCtaCard] = Field(default_factory=list)
 
 
 class ChatSession(BaseModel):
     id: str
-    session_type: ChatSessionType
+    session_type: str
     assistant_name: str
-    messages: list[ChatMessage]
+    messages: list[ChatMessage] = Field(default_factory=list)
 
 
 class StartChatSessionRequest(BaseModel):
-    session_type: ChatSessionType = "consultation"
     scan_id: str | None = None
+    # MVP placeholder until all chat routes require Firebase auth.
+    user_id: str | None = None
 
 
 class SendChatMessageRequest(BaseModel):
-    content: str = Field(min_length=1, max_length=1200)
+    content: str

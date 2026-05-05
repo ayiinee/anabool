@@ -5,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/repositories/auth_repository_impl.dart';
+import '../../domain/entities/auth_exception.dart';
+import '../../domain/entities/auth_sync_mode.dart';
 import '../../domain/entities/auth_user.dart';
 import '../../domain/usecases/login_with_email_password.dart';
 import '../../domain/usecases/login_with_google.dart';
@@ -58,6 +60,7 @@ class AuthController extends ChangeNotifier {
   AuthUser? currentUser;
   String? errorMessage;
   String? statusMessage;
+  bool shouldRedirectToSignup = false;
   bool isLoading = false;
   bool isReady = false;
 
@@ -68,8 +71,7 @@ class AuthController extends ChangeNotifier {
     }
 
     _authStateSubscription = _watchAuthState().listen(
-      (user) {
-        currentUser = user;
+      (_) {
         isReady = true;
         notifyListeners();
       },
@@ -89,7 +91,10 @@ class AuthController extends ChangeNotifier {
         email: email,
         password: password,
       );
-      currentUser = await _syncUserProfile(currentUser!);
+      currentUser = await _syncUserProfile(
+        currentUser!,
+        mode: AuthSyncMode.login,
+      );
     });
   }
 
@@ -97,7 +102,22 @@ class AuthController extends ChangeNotifier {
     await _run(() async {
       currentUser = await _loginWithGoogle();
       if (currentUser != null) {
-        currentUser = await _syncUserProfile(currentUser!);
+        currentUser = await _syncUserProfile(
+          currentUser!,
+          mode: AuthSyncMode.login,
+        );
+      }
+    });
+  }
+
+  Future<void> signUpWithGoogle() async {
+    await _run(() async {
+      currentUser = await _loginWithGoogle();
+      if (currentUser != null) {
+        currentUser = await _syncUserProfile(
+          currentUser!,
+          mode: AuthSyncMode.register,
+        );
       }
     });
   }
@@ -113,7 +133,10 @@ class AuthController extends ChangeNotifier {
         password: password,
         displayName: displayName,
       );
-      currentUser = await _syncUserProfile(currentUser!);
+      currentUser = await _syncUserProfile(
+        currentUser!,
+        mode: AuthSyncMode.register,
+      );
     });
   }
 
@@ -134,6 +157,7 @@ class AuthController extends ChangeNotifier {
   void clearMessages() {
     errorMessage = null;
     statusMessage = null;
+    shouldRedirectToSignup = false;
     notifyListeners();
   }
 
@@ -147,10 +171,15 @@ class AuthController extends ChangeNotifier {
     isLoading = true;
     errorMessage = null;
     statusMessage = null;
+    shouldRedirectToSignup = false;
     notifyListeners();
 
     try {
       await action();
+    } on AuthRegistrationRequiredException catch (error) {
+      currentUser = null;
+      shouldRedirectToSignup = true;
+      errorMessage = error.message;
     } catch (error) {
       errorMessage = error.toString().replaceFirst('Exception: ', '');
     } finally {
