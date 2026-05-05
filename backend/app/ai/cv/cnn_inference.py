@@ -5,7 +5,6 @@ from typing import Any
 
 from fastapi import UploadFile
 from fastapi.concurrency import run_in_threadpool
-from inference_sdk import InferenceHTTPClient
 
 from app.ai.cv.label_mapper import map_detected_class
 from app.core.config import settings
@@ -13,7 +12,15 @@ from app.core.exceptions import AppException
 
 
 @lru_cache
-def get_roboflow_client() -> InferenceHTTPClient:
+def get_roboflow_client():
+    try:
+        from inference_sdk import InferenceHTTPClient
+    except ImportError as exc:
+        raise AppException(
+            "inference-sdk is not installed. Install backend requirements first.",
+            status_code=503,
+        ) from exc
+
     if not settings.ROBOFLOW_API_KEY:
         raise AppException("Roboflow API key is not configured.", status_code=503)
 

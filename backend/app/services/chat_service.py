@@ -1,10 +1,12 @@
 from datetime import datetime, timezone
 from uuid import uuid4
 
+from app.ai.rag.rag_chain import generate_ana_response
 from app.db.schemas.chat_schema import ChatCtaCard, ChatMessage, ChatSession
 
 
 _sessions: dict[str, ChatSession] = {}
+_session_context: dict[str, dict] = {}
 
 _CTA_CARDS = [
     ChatCtaCard(
@@ -89,6 +91,10 @@ def start_consultation_chat() -> ChatSession:
         ],
     )
     _sessions[session.id] = session
+    _session_context[session.id] = {
+        "scan_result": None,
+        "user_profile": None,
+    }
     return session
 
 
@@ -97,6 +103,7 @@ def send_chat_message(session_id: str, content: str) -> ChatSession:
     if session is None:
         raise KeyError(session_id)
 
+    context = _session_context.get(session_id, {})
     session.messages.append(
         ChatMessage(
             id=_new_id("msg"),
@@ -106,13 +113,28 @@ def send_chat_message(session_id: str, content: str) -> ChatSession:
             created_at=_now(),
         )
     )
-    session.messages.append(_assistant_text(_build_answer(content)))
+
+    rag_result = generate_ana_response(
+        content,
+        user_profile=context.get("user_profile"),
+        scan_result=context.get("scan_result"),
+    )
+    session.messages.append(_assistant_text(_format_rag_answer(rag_result)))
     return session
 
 
-def mock_start_chat_from_scan(scan_id: str) -> dict:
+def start_chat_from_scan_session(scan_id: str) -> dict:
     session = start_consultation_chat()
     session.session_type = "scan_result"
+    _session_context[session.id] = {
+        "scan_result": {
+            "scan_id": scan_id,
+            "detected_class": "unknown",
+            "confidence_score": 0.0,
+            "risk_level": "unknown",
+        },
+        "user_profile": None,
+    }
     session.messages.insert(
         0,
         ChatMessage(
@@ -129,9 +151,12 @@ def mock_start_chat_from_scan(scan_id: str) -> dict:
     return result
 
 
-def _build_answer(content: str) -> str:
-    topic = _detect_topic(content)
-    return f"{_GUIDELINES[topic]}\n\n{_GUARDRAILS}"
+def _format_rag_answer(rag_result: dict) -> str:
+    answer = rag_result["answer"].strip()
+    sources = rag_result.get("sources") or []
+    if sources:
+        answer = f"{answer}\n\nSumber rujukan: {', '.join(sources)}"
+    return answer
 
 
 def _detect_topic(content: str) -> str:

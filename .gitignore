@@ -70,6 +70,7 @@ backend/.ruff_cache/
 backend/build/
 backend/dist/
 backend/*.egg-info/
+backend/.cache/
 
 
 # =========================

@@ -25,7 +25,13 @@ class Settings(BaseSettings):
     FIREBASE_CLIENT_EMAIL: str = ""
     FIREBASE_PRIVATE_KEY: str = ""
 
-    GEMINI_API_KEY: str = ""
+    GROQ_API_KEY: str = ""
+    GROQ_CHAT_MODEL: str = "meta-llama/llama-4-scout-17b-16e-instruct"
+
+    EMBEDDING_PROVIDER: str = "hash"
+    EMBEDDING_MODEL_NAME: str = "intfloat/multilingual-e5-small"
+    EMBEDDING_DIMENSION: int = 384
+    EMBEDDING_CACHE_DIR: str = ".cache/huggingface"
 
     OSRM_BASE_URL: str = "https://router.project-osrm.org"
 

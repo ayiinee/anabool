@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException
 from app.core.response import success_response
 from app.db.schemas.chat_schema import SendChatMessageRequest, StartChatSessionRequest
 from app.services.chat_service import (
-    mock_start_chat_from_scan,
     send_chat_message,
+    start_chat_from_scan_session,
     start_consultation_chat,
 )
 
@@ -17,14 +17,14 @@ def chat_health():
 
 @router.post("/from-scan/{scan_id}")
 def start_chat_from_scan(scan_id: str):
-    result = mock_start_chat_from_scan(scan_id)
+    result = start_chat_from_scan_session(scan_id)
     return success_response("Chat session created from scan", result)
 
 
 @router.post("/sessions")
 def start_chat_session(request: StartChatSessionRequest | None = None):
     if request is not None and request.scan_id:
-        result = mock_start_chat_from_scan(request.scan_id)
+        result = start_chat_from_scan_session(request.scan_id)
         return success_response("Chat session created from scan", result)
 
     result = start_consultation_chat()
