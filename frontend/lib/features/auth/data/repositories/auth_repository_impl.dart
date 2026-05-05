@@ -1,4 +1,5 @@
 import '../../domain/entities/auth_user.dart';
+import '../../domain/entities/auth_sync_mode.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../models/auth_user_model.dart';
@@ -48,8 +49,14 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<AuthUser> syncUserProfile(AuthUser user) {
-    return _remoteDatasource.syncUserProfile(AuthUserModel.fromEntity(user));
+  Future<AuthUser> syncUserProfile(
+    AuthUser user, {
+    required AuthSyncMode mode,
+  }) {
+    return _remoteDatasource.syncUserProfile(
+      AuthUserModel.fromEntity(user),
+      mode: mode,
+    );
   }
 
   @override

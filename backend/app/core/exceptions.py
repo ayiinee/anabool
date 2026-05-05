@@ -1,11 +1,19 @@
+from typing import Any
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 
 class AppException(Exception):
-    def __init__(self, message: str, status_code: int = 400):
+    def __init__(
+        self,
+        message: str,
+        status_code: int = 400,
+        data: Any = None,
+    ):
         self.message = message
         self.status_code = status_code
+        self.data = data
 
 
 async def app_exception_handler(request: Request, exc: AppException):
@@ -14,7 +22,7 @@ async def app_exception_handler(request: Request, exc: AppException):
         content={
             "success": False,
             "message": exc.message,
-            "data": None,
+            "data": exc.data,
         },
     )
 
