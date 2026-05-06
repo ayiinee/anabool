@@ -96,11 +96,7 @@ class AppBottomNavigation extends StatelessWidget {
                       label: 'Profil',
                       active: activeDestination ==
                           AppBottomNavigationDestination.profile,
-                      onTap: onProfileTap ??
-                          () => _showNavigationFeedback(
-                                context,
-                                'Halaman Profil sedang disiapkan.',
-                              ),
+                      onTap: onProfileTap ?? () => _goProfile(context),
                     ),
                   ],
                 ),
@@ -146,6 +142,13 @@ class AppBottomNavigation extends StatelessWidget {
     }
 
     Navigator.of(context).pushReplacementNamed(RouteConstants.marketplace);
+  void _goProfile(BuildContext context) {
+    if (ModalRoute.of(context)?.settings.name == RouteConstants.profile) {
+      _showNavigationFeedback(context, 'Anda sudah berada di Profil.');
+      return;
+    }
+
+    Navigator.of(context).pushReplacementNamed(RouteConstants.profile);
   }
 }
 
