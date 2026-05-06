@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
-import '../../../../shared/widgets/app_bottom_navigation.dart';
 import '../controllers/chat_controller.dart';
 import '../../domain/entities/chat_message.dart';
 import '../../../scan/domain/entities/scan_image_file.dart';
@@ -97,10 +96,9 @@ class _ChatPageState extends State<ChatPage> {
     final mediaQuery = MediaQuery.of(context);
     final keyboardInset = mediaQuery.viewInsets.bottom;
     final keyboardOpen = keyboardInset > 0;
-    final bottomNavHeight =
-        keyboardOpen ? 0.0 : AppBottomNavigation.heightWithInset(context);
-    final composerBottom =
-        keyboardOpen ? keyboardInset + 14 : bottomNavHeight + 16;
+    final bottomInset = mediaQuery.padding.bottom;
+    final composerBottom = keyboardOpen ? keyboardInset + 14 : bottomInset + 14;
+    final conversationBottomPadding = composerBottom + 76;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -119,7 +117,7 @@ class _ChatPageState extends State<ChatPage> {
                       return _ChatConversation(
                         controller: _controller,
                         scrollController: _scrollController,
-                        bottomPadding: bottomNavHeight + 104,
+                        bottomPadding: conversationBottomPadding,
                         initialScanSession: widget.initialScanSession,
                         initialScanImageFile: widget.initialScanImageFile,
                       );
@@ -146,13 +144,6 @@ class _ChatPageState extends State<ChatPage> {
                 },
               ),
             ),
-            if (!keyboardOpen)
-              const Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: AppBottomNavigation(),
-              ),
           ],
         ),
       ),
