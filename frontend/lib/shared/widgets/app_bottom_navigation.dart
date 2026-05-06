@@ -89,11 +89,7 @@ class AppBottomNavigation extends StatelessWidget {
                       label: 'Produk',
                       active: activeDestination ==
                           AppBottomNavigationDestination.market,
-                      onTap: onMarketTap ??
-                          () => _showNavigationFeedback(
-                                context,
-                                'Halaman Produk sedang disiapkan.',
-                              ),
+                      onTap: onMarketTap ?? () => _goMarket(context),
                     ),
                     _BottomNavItem(
                       icon: Icons.person_rounded,
@@ -141,6 +137,15 @@ class AppBottomNavigation extends StatelessWidget {
     }
 
     Navigator.of(context).pushReplacementNamed(RouteConstants.education);
+  }
+
+  void _goMarket(BuildContext context) {
+    if (ModalRoute.of(context)?.settings.name == RouteConstants.marketplace) {
+      _showNavigationFeedback(context, 'Anda sudah berada di Produk.');
+      return;
+    }
+
+    Navigator.of(context).pushReplacementNamed(RouteConstants.marketplace);
   }
 }
 

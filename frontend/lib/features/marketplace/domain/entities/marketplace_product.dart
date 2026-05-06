@@ -1,5 +1,6 @@
 import 'marketplace_category.dart';
 import 'marketplace_seller.dart';
+import 'marketplace_review.dart';
 
 class MarketplaceProduct {
   final String id;
@@ -16,6 +17,7 @@ class MarketplaceProduct {
   final MarketplaceSeller? seller;
   final MarketplaceCategory? category;
   final List<String> imageUrls;
+  final List<MarketplaceReview> reviews;
 
   const MarketplaceProduct({
     required this.id,
@@ -32,12 +34,18 @@ class MarketplaceProduct {
     this.seller,
     this.category,
     this.imageUrls = const [],
+    this.reviews = const [],
   });
 
   factory MarketplaceProduct.fromMap(Map<String, dynamic> map) {
     var images = <String>[];
     if (map['images'] != null) {
       images = (map['images'] as List).map((i) => i['image_url'].toString()).toList();
+    }
+
+    var reviewsList = <MarketplaceReview>[];
+    if (map['reviews'] != null) {
+      reviewsList = (map['reviews'] as List).map((r) => MarketplaceReview.fromMap(r)).toList();
     }
 
     return MarketplaceProduct(
@@ -55,6 +63,7 @@ class MarketplaceProduct {
       seller: map['seller'] != null ? MarketplaceSeller.fromMap(map['seller']) : null,
       category: map['category'] != null ? MarketplaceCategory.fromMap(map['category']) : null,
       imageUrls: images,
+      reviews: reviewsList,
     );
   }
 }

@@ -15,4 +15,6 @@ class RouteConstants {
   static const pickup = '/pickup';
   static const pickupAgents = '/pickup/agents';
   static const pickupTracking = '/pickup/tracking';
+  static const marketplace = '/marketplace';
+  static const marketplaceDetail = '/marketplace/detail';
 }

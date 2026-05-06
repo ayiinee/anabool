@@ -17,6 +17,8 @@ import '../features/scan/domain/entities/scan_session.dart';
 import '../features/scan/presentation/pages/scan_camera_page.dart';
 import '../features/scan/presentation/pages/scan_preview_page.dart';
 import '../features/scan/presentation/pages/scan_result_page.dart';
+import '../features/marketplace/presentation/pages/marketplace_page.dart';
+import '../features/marketplace/presentation/pages/marketplace_product_detail_page.dart';
 
 class AppRouter {
   const AppRouter._();
@@ -102,6 +104,15 @@ class AppRouter {
         }
 
         return const PickupCategoryPage();
+      },
+      RouteConstants.marketplace: (_) => const MarketplacePage(),
+      RouteConstants.marketplaceDetail: (context) {
+        final arguments = ModalRoute.of(context)?.settings.arguments;
+        if (arguments is String) {
+          return MarketplaceProductDetailPage(productId: arguments);
+        }
+
+        return const MarketplacePage();
       },
     };
   }
