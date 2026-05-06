@@ -13,6 +13,10 @@ class HeroHeader extends StatelessWidget {
   const HeroHeader({super.key});
 
   static const _posterAspectRatio = 1138 / 512;
+  static const _headerBorderRadius = BorderRadius.only(
+    bottomLeft: Radius.circular(18),
+    bottomRight: Radius.circular(18),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -33,40 +37,43 @@ class HeroHeader extends StatelessWidget {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              Container(
+              const SizedBox(
                 height: headerHeight,
                 width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(
-                  HomeMetrics.horizontalPadding,
-                  20,
-                  HomeMetrics.horizontalPadding,
-                  0,
-                ),
-                decoration: const BoxDecoration(
-                  color: AnaboolColors.header,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(18),
-                    bottomRight: Radius.circular(18),
-                  ),
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: _HeroGreeting(),
+                child: ClipRRect(
+                  borderRadius: _headerBorderRadius,
+                  child: Stack(
+                    children: [
+                      Positioned.fill(child: _HeroBackground()),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          HomeMetrics.horizontalPadding,
+                          20,
+                          HomeMetrics.horizontalPadding,
+                          0,
                         ),
-                        SizedBox(width: 12),
-                        _HeaderActions(),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    _UserPill(),
-                    SizedBox(height: 14),
-                    _MeowPointsPill(),
-                  ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: _HeroGreeting(),
+                                ),
+                                SizedBox(width: 12),
+                                _HeaderActions(),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            _UserPill(),
+                            SizedBox(height: 14),
+                            _MeowPointsPill(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Positioned(
@@ -79,6 +86,68 @@ class HeroHeader extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _HeroBackground extends StatelessWidget {
+  const _HeroBackground();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        const DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFFFA258),
+                Color(0xFFFFBA80),
+                Color(0xFFFFD6B8),
+              ],
+              stops: [0, 0.58, 1],
+            ),
+          ),
+        ),
+        Positioned.fill(
+          child: Transform.translate(
+            offset: const Offset(0, 32),
+            child: const Opacity(
+              opacity: 1,
+              child: ColorFiltered(
+                colorFilter: ColorFilter.mode(
+                  Color(0xFF8E430F),
+                  BlendMode.srcIn,
+                ),
+                child: DesignImage(
+                  asset: HomeAssets.heroBackground,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const Positioned.fill(
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0x00FFFFFF),
+                  Color(0x17FFFFFF),
+                  Color(0x45FFF2E8),
+                ],
+                stops: [0, 0.62, 1],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

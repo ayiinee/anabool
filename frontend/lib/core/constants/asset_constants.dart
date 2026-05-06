@@ -12,6 +12,7 @@ class HomeAssets {
   static const pickupCat = '$imageBase/cat-pickup.png';
   static const posterCat = '$imageBase/cat-poster.png';
   static const profilePhoto = '$imageBase/putu-alvin.png';
+  static const heroBackground = '$imageBase/hero-background-image.png';
   static const homePoster = '$imageBase/home-poster.png';
   static const homePoster3 = '$imageBase/home-poster3.png';
   static const homePoster4 = '$imageBase/home-poster4.png';
