@@ -12,4 +12,7 @@ class RouteConstants {
   static const scanCamera = '/scan/camera';
   static const scanPreview = '/scan/preview';
   static const scanResult = '/scan/result';
+  static const pickup = '/pickup';
+  static const pickupAgents = '/pickup/agents';
+  static const pickupTracking = '/pickup/tracking';
 }

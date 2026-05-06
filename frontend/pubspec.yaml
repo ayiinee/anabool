@@ -89,6 +89,7 @@ flutter:
     - assets/images/auth/
     - assets/images/chat/
     - assets/images/education/
+    - assets/images/pickup/
     - assets/icons/home/
 
   # To add assets to your application, add an assets section, like this:

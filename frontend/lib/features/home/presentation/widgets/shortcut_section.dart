@@ -57,6 +57,11 @@ class _ShortcutItem extends StatelessWidget {
           return;
         }
 
+        if (label == 'Pick-up') {
+          Navigator.of(context).pushNamed(RouteConstants.pickup);
+          return;
+        }
+
         _showShortcutFeedback(context, label);
       },
     );

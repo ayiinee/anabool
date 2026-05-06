@@ -62,3 +62,12 @@ class EducationAssets {
   static const moduleThinkingCat = '$imageBase/modul-image2.png';
   static const moduleMaterial = '$imageBase/module-image-material.png';
 }
+
+class PickupAssets {
+  const PickupAssets._();
+
+  static const imageBase = 'assets/images/pickup';
+
+  /// Reuse the home pickup cat as the mascot for category selection.
+  static const pickupMascot = HomeAssets.pickupCat;
+}
