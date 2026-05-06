@@ -50,6 +50,9 @@ class ChatAssets {
   static const imageBase = 'assets/images/chat';
 
   static const anaProfile = '$imageBase/ana-profile.png';
+  static const catPickup = '$imageBase/cat-pickup.png';
+  static const catProcess = '$imageBase/cat-process.png';
+  static const catThrow = '$imageBase/cat-throw.png';
 }
 
 class EducationAssets {
