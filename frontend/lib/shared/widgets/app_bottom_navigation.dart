@@ -142,6 +142,8 @@ class AppBottomNavigation extends StatelessWidget {
     }
 
     Navigator.of(context).pushReplacementNamed(RouteConstants.marketplace);
+  }
+
   void _goProfile(BuildContext context) {
     if (ModalRoute.of(context)?.settings.name == RouteConstants.profile) {
       _showNavigationFeedback(context, 'Anda sudah berada di Profil.');
