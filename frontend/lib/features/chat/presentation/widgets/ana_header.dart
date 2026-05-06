@@ -28,17 +28,23 @@ class AnaHeader extends StatelessWidget {
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints.tightFor(width: 52, height: 56),
           ),
-          Container(
+          SizedBox(
             width: 48,
             height: 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 3),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: Image.asset(
-              ChatAssets.anaProfile,
-              fit: BoxFit.cover,
+            child: DecoratedBox(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(2),
+                child: ClipOval(
+                  child: Image.asset(
+                    ChatAssets.anaProfile,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
