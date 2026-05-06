@@ -9,6 +9,10 @@ class RouteConstants {
   static const education = '/education';
   static const educationDetail = '/education/detail';
   static const educationComplete = '/education/complete';
+  static const profile = '/profile';
+  static const editProfile = '/profile/edit';
+  static const safetyMode = '/profile/safety-mode';
+  static const address = '/profile/address';
   static const scanCamera = '/scan/camera';
   static const scanPreview = '/scan/preview';
   static const scanResult = '/scan/result';

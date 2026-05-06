@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/constants/route_constants.dart';
 import 'design_image.dart';
 import 'home_components.dart';
 
@@ -139,37 +140,6 @@ class _HeaderActions extends StatelessWidget {
   }
 }
 
-class _HelpdeskButton extends StatelessWidget {
-  const _HelpdeskButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 44,
-      child: TextButton.icon(
-        onPressed: () {},
-        style: HomeButtonStyles.filled(
-          backgroundColor: AnaboolColors.brown,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.only(left: 11, right: 13),
-          radius: HomeMetrics.tileRadius,
-        ),
-        icon: const Icon(
-          Icons.support_agent_rounded,
-          size: 21,
-        ),
-        label: const Text(
-          'Helpdesk',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _HeaderIconButton extends StatelessWidget {
   const _HeaderIconButton({
     required this.icon,
@@ -202,55 +172,70 @@ class _UserPill extends StatelessWidget {
     final userName = _currentUserName();
 
     return Container(
-      height: 30,
-      padding: const EdgeInsets.fromLTRB(4, 3, 12, 3),
       decoration: BoxDecoration(
-        color: AnaboolColors.brown,
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const ClipOval(
-            child: DesignImage(
-              asset: HomeAssets.profilePhoto,
-              width: 24,
-              height: 24,
-              fit: BoxFit.cover,
+      child: Material(
+        color: AnaboolColors.brown,
+        borderRadius: BorderRadius.circular(999),
+        child: InkWell(
+          onTap: () => Navigator.of(context).pushNamed(RouteConstants.profile),
+          borderRadius: BorderRadius.circular(999),
+          splashColor: Colors.white.withValues(alpha: 0.16),
+          highlightColor: Colors.white.withValues(alpha: 0.10),
+          child: Container(
+            height: 30,
+            padding: const EdgeInsets.fromLTRB(4, 3, 12, 3),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const ClipOval(
+                  child: DesignImage(
+                    asset: HomeAssets.profilePhoto,
+                    width: 24,
+                    height: 24,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    userName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 6),
-          Flexible(
-            child: Text(
-              userName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 }
 
 String _currentUserName() {
-  final user = FirebaseAuth.instance.currentUser;
-  final displayName = user?.displayName?.trim();
-  if (displayName != null && displayName.isNotEmpty) {
-    return displayName;
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    final displayName = user?.displayName?.trim();
+    if (displayName != null && displayName.isNotEmpty) {
+      return displayName;
+    }
+
+    final email = user?.email?.trim();
+    if (email != null && email.isNotEmpty) {
+      return email.split('@').first;
+    }
+  } catch (_) {
+    return 'Anabool';
   }
 
-  final email = user?.email?.trim();
-  if (email != null && email.isNotEmpty) {
-    return email.split('@').first;
-  }
-
-  return 'Pengguna';
+  return 'Anabool';
 }
 
 String _wibGreeting() {

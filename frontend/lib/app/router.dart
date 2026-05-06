@@ -9,6 +9,10 @@ import '../features/chat/presentation/pages/chat_page.dart';
 import '../features/education/presentation/pages/education_complete_page.dart';
 import '../features/education/presentation/pages/education_detail_page.dart';
 import '../features/education/presentation/pages/education_page.dart';
+import '../features/profile/presentation/pages/address_page.dart';
+import '../features/profile/presentation/pages/edit_profile_page.dart';
+import '../features/profile/presentation/pages/profile_page.dart';
+import '../features/profile/presentation/pages/safety_mode_page.dart';
 import '../features/scan/domain/entities/scan_session.dart';
 import '../features/scan/presentation/pages/scan_camera_page.dart';
 import '../features/scan/presentation/pages/scan_preview_page.dart';
@@ -65,6 +69,10 @@ class AppRouter {
 
         return const EducationPage();
       },
+      RouteConstants.profile: (_) => const ProfilePage(),
+      RouteConstants.editProfile: (_) => const EditProfilePage(),
+      RouteConstants.safetyMode: (_) => const SafetyModePage(),
+      RouteConstants.address: (_) => const AddressPage(),
       RouteConstants.scanCamera: (_) => const ScanCameraPage(),
       RouteConstants.scanPreview: (context) {
         final arguments = ModalRoute.of(context)?.settings.arguments;
