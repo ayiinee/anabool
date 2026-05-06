@@ -1,0 +1,2 @@
+INFO:     10.10.4.95:50648 - "GET /api/v1/scans/health HTTP/1.1" 200 OK
+INFO:     192.168.137.1:50649 - "GET /api/v1/scans/health HTTP/1.1" 200 OK

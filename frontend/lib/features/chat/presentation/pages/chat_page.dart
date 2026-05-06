@@ -3,27 +3,41 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme.dart';
 import '../../../../shared/widgets/app_bottom_navigation.dart';
 import '../controllers/chat_controller.dart';
+import '../../domain/entities/chat_message.dart';
+import '../../../scan/domain/entities/scan_image_file.dart';
+import '../../../scan/domain/entities/scan_session.dart';
 import '../widgets/ana_header.dart';
 import '../widgets/chat_bubble.dart';
 import '../widgets/cta_card_row.dart';
+import '../widgets/image_bubble.dart';
 import '../widgets/scan_result_bubble.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({
     this.scanId,
+    this.initialScanSession,
+    this.initialScanImageFile,
     super.key,
   });
 
   final String? scanId;
+  final ScanSession? initialScanSession;
+  final ScanImageFile? initialScanImageFile;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
 
 class ChatPageArguments {
-  const ChatPageArguments({required this.scanId});
+  const ChatPageArguments({
+    required this.scanId,
+    this.scanSession,
+    this.imageFile,
+  });
 
   final String scanId;
+  final ScanSession? scanSession;
+  final ScanImageFile? imageFile;
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -36,7 +50,10 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     _controller = ChatController.create();
     _controller.addListener(_scrollToLatestMessage);
-    _controller.startChat(scanId: widget.scanId);
+    _controller.startChat(
+      scanId: widget.scanId,
+      scanSession: widget.initialScanSession,
+    );
   }
 
   @override
@@ -103,6 +120,8 @@ class _ChatPageState extends State<ChatPage> {
                         controller: _controller,
                         scrollController: _scrollController,
                         bottomPadding: bottomNavHeight + 104,
+                        initialScanSession: widget.initialScanSession,
+                        initialScanImageFile: widget.initialScanImageFile,
                       );
                     },
                   ),
@@ -146,14 +165,21 @@ class _ChatConversation extends StatelessWidget {
     required this.controller,
     required this.scrollController,
     required this.bottomPadding,
+    required this.initialScanSession,
+    required this.initialScanImageFile,
   });
 
   final ChatController controller;
   final ScrollController scrollController;
   final double bottomPadding;
+  final ScanSession? initialScanSession;
+  final ScanImageFile? initialScanImageFile;
 
   @override
   Widget build(BuildContext context) {
+    final hasInitialScanMessage =
+        initialScanSession != null && initialScanImageFile != null;
+
     return ListView(
       controller: scrollController,
       padding: EdgeInsets.only(top: 18, bottom: bottomPadding),
@@ -191,8 +217,17 @@ class _ChatConversation extends StatelessWidget {
               ),
             ),
           ),
+        if (hasInitialScanMessage)
+          _InitialScanMessage(
+            scanSession: initialScanSession!,
+            imageFile: initialScanImageFile!,
+          ),
         for (final message in controller.messages) ...[
-          if (message.hasCards)
+          if (hasInitialScanMessage &&
+              message.isUser &&
+              message.messageType == 'scan_result')
+            const SizedBox.shrink()
+          else if (message.hasCards)
             Padding(
               padding: const EdgeInsets.only(top: 8, bottom: 12),
               child: CtaCardRow(
@@ -222,6 +257,46 @@ class _ChatConversation extends StatelessWidget {
           ),
       ],
     );
+  }
+}
+
+class _InitialScanMessage extends StatelessWidget {
+  const _InitialScanMessage({
+    required this.scanSession,
+    required this.imageFile,
+  });
+
+  final ScanSession scanSession;
+  final ScanImageFile imageFile;
+
+  @override
+  Widget build(BuildContext context) {
+    final caption = ChatMessage(
+      id: 'local_scan_caption_${scanSession.id}',
+      role: 'user',
+      messageType: 'text',
+      content: _caption,
+      createdAt: DateTime.now(),
+    );
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
+          child: ImageBubble(imageProvider: MemoryImage(imageFile.bytes)),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 7),
+          child: ChatBubble(message: caption),
+        ),
+      ],
+    );
+  }
+
+  String get _caption {
+    final label = scanSession.wasteClass.displayName;
+    final confidence = scanSession.confidencePercent;
+    return 'Aku baru saja mengambil foto scan. Hasil klasifikasi: $label ($confidence%).';
   }
 }
 

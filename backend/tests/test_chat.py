@@ -31,7 +31,15 @@ def test_start_session_returns_welcome_without_cta_cards():
 
 
 def test_start_session_from_scan_returns_cta_cards():
-    response = client.post("/api/v1/chats/sessions", json={"scan_id": "scan_test"})
+    response = client.post(
+        "/api/v1/chats/sessions",
+        json={
+            "scan_id": "scan_test",
+            "detected_class": "soft_poop",
+            "confidence_score": 0.91,
+            "risk_level": "medium",
+        },
+    )
 
     assert response.status_code == 200
     body = response.json()
@@ -39,8 +47,20 @@ def test_start_session_from_scan_returns_cta_cards():
 
     session = body["data"]
     assert session["session_type"] == "scan_result"
-    assert any(message["message_type"] == "scan_result" for message in session["messages"])
-    assert any(message["message_type"] == "cta_cards" for message in session["messages"])
+    assert [message["message_type"] for message in session["messages"]] == [
+        "scan_result",
+        "text",
+        "text",
+        "cta_cards",
+    ]
+    assert session["messages"][1]["role"] == "assistant"
+    assert "kategori soft poop" in session["messages"][1]["content"]
+    assert "Langkah selanjutnya" in session["messages"][2]["content"]
+    assert [card["card_type"] for card in session["messages"][3]["cards"]] == [
+        "pickup",
+        "dispose",
+        "process",
+    ]
 
 
 def test_start_scan_session_with_user_id_persists_to_repository(monkeypatch):
@@ -54,14 +74,20 @@ def test_start_scan_session_with_user_id_persists_to_repository(monkeypatch):
         json={
             "scan_id": "11111111-1111-1111-1111-111111111111",
             "user_id": "22222222-2222-2222-2222-222222222222",
+            "detected_class": "normal",
+            "confidence_score": 0.84,
+            "risk_level": "low",
         },
     )
 
     assert response.status_code == 200
     assert repository.sessions[0]["user_id"] == "22222222-2222-2222-2222-222222222222"
     assert repository.sessions[0]["session_type"] == "scan_result"
+    assert repository.sessions[0]["initial_context"]["scan_result"]["detected_class"] == "normal"
+    assert repository.sessions[0]["initial_context"]["scan_result"]["confidence_score"] == 0.84
     assert [message["message_type"] for message in repository.messages] == [
         "scan_result",
+        "text",
         "text",
         "cta_cards",
     ]
@@ -95,6 +121,73 @@ def test_send_message_uses_rag_response(monkeypatch):
     assert "Sumber rujukan: Modul 1" in answer
 
 
+def test_select_process_card_returns_tutorial_and_dynamic_module_link():
+    session_id = _start_scan_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/select-card",
+        json={"card_type": "process"},
+    )
+
+    assert response.status_code == 200
+    session = response.json()["data"]
+    assert session["id"] == session_id
+    assert session["messages"][-2]["message_type"] == "cta_selection"
+    assert session["messages"][-2]["content"] == "Saya memilih Olah."
+
+    followup = session["messages"][-1]
+    assert followup["message_type"] == "cta_cards"
+    assert "Quick tips" in followup["content"]
+    assert "Modul Pengolahan Limbah" in followup["content"]
+    assert len(followup["cards"]) == 1
+
+    card = followup["cards"][0]
+    assert card["cta_label"] == "Pelajari Selengkapnya"
+    assert card["target_route"] == "/modules/waste-processing"
+    assert card["payload"]["module_category"] == "waste_processing"
+    assert card["payload"]["chat_session_id"] == session_id
+    assert card["payload"]["return_route"] == f"/chats/{session_id}"
+    assert card["payload"]["preserve_chat_session"] is True
+
+
+def test_select_dispose_card_routes_to_environment_sanitation_module():
+    session_id = _start_scan_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/select-card",
+        json={"card_type": "dispose"},
+    )
+
+    assert response.status_code == 200
+    followup = response.json()["data"]["messages"][-1]
+    assert "Modul Sanitasi Lingkungan" in followup["content"]
+    assert followup["cards"][0]["target_route"] == "/modules/environment-sanitation"
+    assert followup["cards"][0]["payload"]["module_category"] == "environment_sanitation"
+
+
+def test_select_pickup_card_routes_to_cleanliness_health_module():
+    session_id = _start_scan_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/select-card",
+        json={"card_type": "pickup"},
+    )
+
+    assert response.status_code == 200
+    followup = response.json()["data"]["messages"][-1]
+    assert "Modul Teknik Kebersihan/Kesehatan" in followup["content"]
+    assert followup["cards"][0]["target_route"] == "/modules/cleanliness-health"
+    assert followup["cards"][0]["payload"]["module_category"] == "cleanliness_health"
+
+
+def test_select_unknown_card_returns_400():
+    session_id = _start_scan_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/select-card",
+        json={"card_type": "unknown"},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Unknown chat CTA card type"
+
+
 def test_unknown_session_returns_404():
     response = client.post(
         "/api/v1/chats/chat_missing/messages",
@@ -107,6 +200,20 @@ def test_unknown_session_returns_404():
 
 def _start_session_id() -> str:
     response = client.post("/api/v1/chats/sessions", json={})
+    assert response.status_code == 200
+    return response.json()["data"]["id"]
+
+
+def _start_scan_session_id() -> str:
+    response = client.post(
+        "/api/v1/chats/sessions",
+        json={
+            "scan_id": "scan_test",
+            "detected_class": "normal",
+            "confidence_score": 0.9,
+            "risk_level": "low",
+        },
+    )
     assert response.status_code == 200
     return response.json()["data"]["id"]
 

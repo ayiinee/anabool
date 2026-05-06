@@ -1,10 +1,14 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_config.dart';
+import '../../../scan/domain/entities/scan_session.dart';
 import '../models/chat_session_model.dart';
 
 abstract class ChatRemoteDatasource {
-  Future<ChatSessionModel> startChatFromScan({String? scanId});
+  Future<ChatSessionModel> startChatFromScan({
+    String? scanId,
+    ScanSession? scanSession,
+  });
   Future<ChatSessionModel> sendChatMessage(String sessionId, String content);
 }
 
@@ -24,12 +28,22 @@ class DioChatRemoteDatasource implements ChatRemoteDatasource {
   final Dio _dio;
 
   @override
-  Future<ChatSessionModel> startChatFromScan({String? scanId}) async {
+  Future<ChatSessionModel> startChatFromScan({
+    String? scanId,
+    ScanSession? scanSession,
+  }) async {
     final response = await _runChatRequest(
       () => _dio.post<Map<String, dynamic>>(
         '/api/v1/chats/sessions',
         data: {
           if (scanId != null && scanId.trim().isNotEmpty) 'scan_id': scanId,
+          if (scanSession != null) ...{
+            'detected_class': scanSession.wasteClass.category,
+            'confidence_score': scanSession.confidenceScore,
+            if (scanSession.wasteClass.riskLevel != null)
+              'risk_level': scanSession.wasteClass.riskLevel,
+            'filename': scanSession.filename,
+          },
         },
       ),
     );

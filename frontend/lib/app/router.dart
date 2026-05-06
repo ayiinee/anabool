@@ -28,11 +28,18 @@ class AppRouter {
       RouteConstants.chat: (context) {
         final arguments = ModalRoute.of(context)?.settings.arguments;
         if (arguments is ChatPageArguments) {
-          return ChatPage(scanId: arguments.scanId);
+          return ChatPage(
+            scanId: arguments.scanId,
+            initialScanSession: arguments.scanSession,
+            initialScanImageFile: arguments.imageFile,
+          );
         }
 
         if (arguments is ScanSession && arguments.id.isNotEmpty) {
-          return ChatPage(scanId: arguments.id);
+          return ChatPage(
+            scanId: arguments.id,
+            initialScanSession: arguments,
+          );
         }
 
         if (arguments is String && arguments.trim().isNotEmpty) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/route_constants.dart';
+import '../../../chat/presentation/pages/chat_page.dart';
 import '../../domain/entities/scan_image_file.dart';
 import '../../domain/entities/scan_session.dart';
 import '../controllers/scan_controller.dart';
@@ -69,10 +70,10 @@ class _ScanPreviewPageState extends State<ScanPreviewPage> {
       return;
     }
 
-    await _showSuccessThenOpenResult(session);
+    await _showSuccessThenOpenChat(session);
   }
 
-  Future<void> _showSuccessThenOpenResult(ScanSession session) async {
+  Future<void> _showSuccessThenOpenChat(ScanSession session) async {
     showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -87,8 +88,12 @@ class _ScanPreviewPageState extends State<ScanPreviewPage> {
 
     Navigator.of(context, rootNavigator: true).pop();
     Navigator.of(context).pushReplacementNamed(
-      RouteConstants.scanResult,
-      arguments: session,
+      RouteConstants.chat,
+      arguments: ChatPageArguments(
+        scanId: session.id,
+        scanSession: session,
+        imageFile: widget.arguments.imageFile,
+      ),
     );
   }
 

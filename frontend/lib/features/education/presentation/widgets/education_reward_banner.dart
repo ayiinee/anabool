@@ -43,7 +43,7 @@ class EducationRewardBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Reward berhasil diklaim',
+                  'Hadiah berhasil diklaim',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 14,

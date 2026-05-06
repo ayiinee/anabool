@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_config.dart';
 import '../../domain/entities/scan_image_file.dart';
+import '../../domain/entities/scan_image_file.dart';
 import '../models/scan_session_model.dart';
 
 abstract class ScanRemoteDatasource {
@@ -98,6 +99,12 @@ class DioScanRemoteDatasource implements ScanRemoteDatasource {
 
     return null;
   }
+}
+
+class ScanApiConfig {
+  const ScanApiConfig._();
+
+  static String get baseUrl => ApiConfig.baseUrl;
 }
 
 class ScanRemoteException implements Exception {

@@ -1,12 +1,17 @@
 from fastapi import APIRouter, Header, HTTPException
 from app.core.security import authenticated_user_from_authorization
 from app.core.response import success_response
-from app.db.schemas.chat_schema import SendChatMessageRequest, StartChatSessionRequest
+from app.db.schemas.chat_schema import (
+    SelectChatCtaCardRequest,
+    SendChatMessageRequest,
+    StartChatSessionRequest,
+)
 from app.services.chat_service import (
     get_chat_session,
     send_chat_message,
     start_chat_from_scan_session,
     start_consultation_chat,
+    select_chat_cta_card,
 )
 
 router = APIRouter()
@@ -36,7 +41,14 @@ def start_chat_session(
         request.user_id if request is not None else None,
     )
     if request is not None and request.scan_id:
-        result = start_chat_from_scan_session(request.scan_id, user_id=user_id)
+        result = start_chat_from_scan_session(
+            request.scan_id,
+            user_id=user_id,
+            detected_class=request.detected_class,
+            confidence_score=request.confidence_score,
+            risk_level=request.risk_level,
+            filename=request.filename,
+        )
         return success_response("Chat session created from scan", result)
 
     result = start_consultation_chat(user_id=user_id)
@@ -64,6 +76,18 @@ def create_chat_message(session_id: str, request: SendChatMessageRequest):
         raise HTTPException(status_code=404, detail="Chat session not found") from error
 
     return success_response("Ask Ana response created", result.model_dump(mode="json"))
+
+
+@router.post("/{session_id}/select-card")
+def select_chat_card(session_id: str, request: SelectChatCtaCardRequest):
+    try:
+        result = select_chat_cta_card(session_id, request.card_type)
+    except KeyError as error:
+        raise HTTPException(status_code=404, detail="Chat session not found") from error
+    except ValueError as error:
+        raise HTTPException(status_code=400, detail=str(error)) from error
+
+    return success_response("Chat CTA selected", result.model_dump(mode="json"))
 
 
 def _resolve_user_id(authorization: str | None, request_user_id: str | None) -> str | None:
