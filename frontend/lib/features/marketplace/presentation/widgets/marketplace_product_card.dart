@@ -25,17 +25,17 @@ class MarketplaceProductCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(14),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: const Color(0xFFE5E5E5)),
           boxShadow: const [
             BoxShadow(
               color: Color(0x0A000000),
-              blurRadius: 4,
-              offset: Offset(0, 2),
+              blurRadius: 10,
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -60,15 +60,20 @@ class MarketplaceProductCard extends StatelessWidget {
                         : const Icon(Icons.image, color: Colors.grey),
                   ),
                   Positioned(
-                    top: 0,
-                    right: 0,
+                    top: 8,
+                    right: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: const BoxDecoration(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
                         color: AnaboolColors.brownDark,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                        ),
+                        borderRadius: BorderRadius.circular(999),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x22000000),
+                            blurRadius: 8,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
                       ),
                       child: const Text(
                         '14%',
@@ -87,7 +92,7 @@ class MarketplaceProductCard extends StatelessWidget {
             Expanded(
               flex: 5,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -126,10 +131,11 @@ class MarketplaceProductCard extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
+                            color: Colors.white,
                             border: Border.all(color: const Color(0xFFE5E5E5)),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: const Text(
                             'Bisa COD',
@@ -142,10 +148,11 @@ class MarketplaceProductCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                           decoration: BoxDecoration(
+                            color: Colors.white,
                             border: Border.all(color: const Color(0xFFE5E5E5)),
-                            borderRadius: BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: const Row(
                             children: [

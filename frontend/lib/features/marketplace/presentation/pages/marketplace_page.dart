@@ -58,7 +58,7 @@ class _MarketplacePageState extends State<MarketplacePage> {
                       _SearchHeader(controller: _controller),
                       _CategoryFilter(controller: _controller),
                       const SizedBox(height: 16),
-                      const _PromoBanner(),
+                      const _PromoBannerCarousel(),
                       const SizedBox(height: 16),
                       _ProductGrid(controller: _controller),
                     ],
@@ -218,16 +218,50 @@ class _PromoBanner extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         child: Stack(
           children: [
-            // Using a placeholder image since we don't have the specific banner asset
-            // Actually I'll create a nice styled container based on design
             Positioned(
-              right: -20,
-              bottom: -10,
-              child: Image.network(
-                'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&q=80&w=300', // Example kitten image
-                width: 160,
-                height: 160,
-                fit: BoxFit.cover,
+              left: -70,
+              top: 14,
+              child: Container(
+                width: 190,
+                height: 190,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8B3C05).withValues(alpha: 0.55),
+                  borderRadius: BorderRadius.circular(120),
+                ),
+              ),
+            ),
+            Positioned(
+              right: -90,
+              bottom: -90,
+              child: Container(
+                width: 240,
+                height: 240,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF5F2800).withValues(alpha: 0.55),
+                  borderRadius: BorderRadius.circular(140),
+                ),
+              ),
+            ),
+            Positioned(
+              left: -40,
+              bottom: -120,
+              child: Container(
+                width: 240,
+                height: 240,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6E2E00).withValues(alpha: 0.45),
+                  borderRadius: BorderRadius.circular(140),
+                ),
+              ),
+            ),
+            Positioned(
+              right: -18,
+              bottom: -6,
+              child: Image.asset(
+                HomeAssets.marketCat,
+                width: 168,
+                height: 168,
+                fit: BoxFit.contain,
               ),
             ),
             Padding(
@@ -267,6 +301,141 @@ class _PromoBanner extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PromoBannerCarousel extends StatefulWidget {
+  const _PromoBannerCarousel();
+
+  @override
+  State<_PromoBannerCarousel> createState() => _PromoBannerCarouselState();
+}
+
+class _PromoBannerCarouselState extends State<_PromoBannerCarousel> {
+  static const _pageCount = 3;
+  late final PageController _pageController;
+  int _activePage = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _activePage);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _goToPage(int index) {
+    if (!_pageController.hasClients) return;
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: SizedBox(
+        height: 158,
+        child: Stack(
+          children: [
+            Container(
+              height: 140,
+              decoration: BoxDecoration(
+                color: AnaboolColors.brownDark,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: Stack(
+                children: [
+                  PageView.builder(
+                    controller: _pageController,
+                    itemCount: _pageCount,
+                    onPageChanged: (value) => setState(() => _activePage = value),
+                    itemBuilder: (context, index) => const _PromoBanner(),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: _BannerNavButton(
+                        icon: Icons.chevron_left_rounded,
+                        onTap: () => _goToPage((_activePage - 1).clamp(0, _pageCount - 1)),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: _BannerNavButton(
+                        icon: Icons.chevron_right_rounded,
+                        onTap: () => _goToPage((_activePage + 1).clamp(0, _pageCount - 1)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(_pageCount, (i) {
+                  final active = i == _activePage;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    curve: Curves.easeOutCubic,
+                    width: 8,
+                    height: 8,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: active ? AnaboolColors.brownDark : const Color(0xFFE8CDB9),
+                      borderRadius: BorderRadius.circular(99),
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _BannerNavButton extends StatelessWidget {
+  const _BannerNavButton({required this.icon, required this.onTap});
+
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkResponse(
+        onTap: onTap,
+        radius: 22,
+        child: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.20),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: Colors.white, size: 22),
         ),
       ),
     );

@@ -3,8 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../app/theme.dart';
-import '../../../../core/constants/asset_constants.dart';
-import '../../../../core/constants/route_constants.dart';
 import '../../../../shared/widgets/app_bottom_navigation.dart';
 import '../controllers/marketplace_controller.dart';
 import '../../domain/entities/marketplace_product.dart';
@@ -97,7 +95,7 @@ class _MarketplaceProductDetailPageState extends State<MarketplaceProductDetailP
                       backgroundColor: AnaboolColors.brownDark,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                       elevation: 0,
                     ),
@@ -147,7 +145,7 @@ class _ProductHeaderImage extends StatelessWidget {
         ),
         SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -185,10 +183,10 @@ class _CircularIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 42,
+      height: 42,
       decoration: const BoxDecoration(
-        color: Color(0xFFFFE6D8), // Light peach bg
+        color: AnaboolColors.peach, // Light peach bg
         shape: BoxShape.circle,
       ),
       child: IconButton(
@@ -211,6 +209,12 @@ class _ProductInfoSection extends StatelessWidget {
       symbol: 'Rp ',
       decimalDigits: 0,
     );
+
+    final tags = <String>[
+      if ((product.category?.name ?? '').trim().isNotEmpty) product.category!.name,
+      'Makanan Kucing',
+      'Kandang Kucing',
+    ];
 
     return Container(
       width: double.infinity,
@@ -246,15 +250,16 @@ class _ProductInfoSection extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              _TagChip(label: product.category?.name ?? 'Kategori'),
-              const SizedBox(width: 8),
-              _TagChip(label: 'Makanan Kucing'), // Example extra tag
+              for (var i = 0; i < tags.length; i++) ...[
+                _TagChip(label: tags[i]),
+                if (i != tags.length - 1) const SizedBox(width: 8),
+              ],
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFE6D8),
-                  borderRadius: BorderRadius.circular(12),
+                  color: AnaboolColors.peach.withValues(alpha: 0.75),
+                  borderRadius: BorderRadius.circular(999),
                 ),
                 child: Row(
                   children: [
@@ -290,7 +295,7 @@ class _TagChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         border: Border.all(color: const Color(0xFFE8CDB9)),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         label,
@@ -357,8 +362,8 @@ class _SellerInfoSection extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFE6D8),
-                  borderRadius: BorderRadius.circular(16),
+                  color: AnaboolColors.peach.withValues(alpha: 0.75),
+                  borderRadius: BorderRadius.circular(999),
                 ),
                 child: const Text(
                   'Follow',
@@ -448,16 +453,22 @@ class _ReviewsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SingleChildScrollView(
+        const SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+          padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
           child: Row(
-            children: [
+            children: <Widget>[
               _FilterChip(label: 'Semua', isSelected: true),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _FilterChip(label: 'Bintang 5'),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _FilterChip(label: 'Bintang 4'),
+              SizedBox(width: 8),
+              _FilterChip(label: 'Bintang 3'),
+              SizedBox(width: 8),
+              _FilterChip(label: 'Bintang 2'),
+              SizedBox(width: 8),
+              _FilterChip(label: 'Bintang 1'),
             ],
           ),
         ),
@@ -485,7 +496,7 @@ class _ReviewsTab extends StatelessWidget {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFE6D8).withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: const Color(0xFFE8CDB9)),
                 ),
                 child: Column(
@@ -531,7 +542,7 @@ class _ReviewsTab extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          DateFormat('dd MMM yyyy').format(review.createdAt),
+                          DateFormat('dd MMM yyyy', 'id_ID').format(review.createdAt),
                           style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
@@ -571,16 +582,16 @@ class _FilterChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        color: isSelected ? const Color(0xFFFFE6D8) : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
+        color: isSelected ? AnaboolColors.peach.withValues(alpha: 0.75) : Colors.white,
+        borderRadius: BorderRadius.circular(999),
         border: Border.all(
-          color: isSelected ? const Color(0xFFE8CDB9) : const Color(0xFFE5E5E5),
+          color: const Color(0xFFE8CDB9),
         ),
       ),
       child: Text(
         label,
         style: TextStyle(
-          color: isSelected ? AnaboolColors.brownDark : const Color(0xFFC4C4C4),
+          color: isSelected ? AnaboolColors.brownDark : AnaboolColors.brownSoft,
           fontSize: 12,
           fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
         ),
