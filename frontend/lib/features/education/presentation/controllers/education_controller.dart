@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/rewards/meowpoints_store.dart';
 import '../../data/datasources/education_remote_datasource.dart';
 import '../../data/repositories/education_repository_impl.dart';
 import '../../domain/entities/education_category.dart';
@@ -138,6 +139,7 @@ class EducationController extends ChangeNotifier {
   }
 
   Future<bool> complete(String contentId) async {
+    final wasCompleted = progressFor(contentId).isCompleted;
     isCompleting = true;
     errorMessage = null;
     notifyListeners();
@@ -149,6 +151,12 @@ class EducationController extends ChangeNotifier {
           if (item.contentId != completed.contentId) item,
         completed,
       ];
+      if (!wasCompleted && completed.isCompleted) {
+        MeowPointsStore.instance.awardModuleCompletion(
+          completed.contentId,
+          points: selectedContent?.rewardPoints,
+        );
+      }
       return true;
     } catch (error) {
       errorMessage = error.toString();
@@ -166,6 +174,7 @@ class EducationController extends ChangeNotifier {
     }
 
     final lesson = module.lessonAt(currentLessonIndex);
+    final wasCompleted = progressFor(module.id).isCompleted;
     isCompleting = true;
     errorMessage = null;
     _applyLocalLessonCompletion(module, lesson);
@@ -174,6 +183,12 @@ class EducationController extends ChangeNotifier {
     try {
       final updated = await _completeLearningLesson(module.id, lesson.id);
       _replaceProgress(updated);
+      if (!wasCompleted && updated.isCompleted) {
+        MeowPointsStore.instance.awardModuleCompletion(
+          module.id,
+          points: module.xpReward,
+        );
+      }
 
       return true;
     } catch (error) {

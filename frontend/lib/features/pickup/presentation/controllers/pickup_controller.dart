@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/rewards/meowpoints_store.dart';
 import '../../domain/entities/pickup_agent.dart';
 import '../../domain/entities/pickup_order.dart';
 
@@ -272,6 +273,9 @@ class PickupController extends ChangeNotifier {
             ),
           ],
         );
+        if (_activeOrder!.pickupType == 'pupuk') {
+          MeowPointsStore.instance.awardPickupCompost(_activeOrder!.id);
+        }
         notifyListeners();
       }
     }

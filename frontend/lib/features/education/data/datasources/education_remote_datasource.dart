@@ -40,16 +40,7 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
 
   List<LearningModuleModel>? _moduleCache;
 
-  final Map<String, UserEduProgressModel> _progressByModule = {
-    'module_1_toxoplasma_gondii': const UserEduProgressModel(
-      contentId: 'module_1_toxoplasma_gondii',
-      progressPct: 33.33333333333333,
-      completedSteps: 3,
-      currentStepOrder: 3,
-      totalSteps: 9,
-      isCompleted: false,
-    ),
-  };
+  final Map<String, UserEduProgressModel> _progressByModule = {};
 
   @override
   Future<List<EducationCategoryModel>> getCategories() async {

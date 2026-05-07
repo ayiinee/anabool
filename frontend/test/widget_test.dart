@@ -471,13 +471,12 @@ void main() {
     expect(find.byKey(const ValueKey('education-category-tutorial')),
         findsOneWidget);
     expect(find.text('Memahami Toxoplasma gondii'), findsWidgets);
-    expect(find.text('33%'), findsWidgets);
+    expect(find.text('0%'), findsWidgets);
     final progressBars = tester.widgetList<LinearProgressIndicator>(
       find.byType(LinearProgressIndicator),
     );
     expect(
-      progressBars
-          .any((bar) => (bar.value ?? 0) > 0.32 && (bar.value ?? 0) < 0.34),
+      progressBars.any((bar) => (bar.value ?? 0) == 0),
       isTrue,
     );
 

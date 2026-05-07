@@ -8,7 +8,7 @@ class HomeDashboardMockData {
 
   static const user = UserSummary(
     name: 'Ana',
-    meowPoints: '1.250',
+    meowPoints: '0',
     initials: 'A',
   );
 

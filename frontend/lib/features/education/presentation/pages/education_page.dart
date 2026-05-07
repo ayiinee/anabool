@@ -4,6 +4,7 @@ import '../../../../app/theme.dart';
 import '../../../../core/auth/current_user_identity.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../../../core/constants/route_constants.dart';
+import '../../../../core/rewards/meowpoints_store.dart';
 import '../../../../shared/widgets/app_bottom_navigation.dart';
 import '../../../home/presentation/widgets/design_image.dart';
 import '../../domain/entities/education_content.dart';
@@ -181,8 +182,6 @@ class _BackButton extends StatelessWidget {
 class _UserSummaryCard extends StatelessWidget {
   const _UserSummaryCard({required this.uncompletedCount});
 
-  static const _meowPoints = '194,589 XP';
-
   final int uncompletedCount;
 
   @override
@@ -239,9 +238,9 @@ class _UserSummaryCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 7),
-                const Row(
+                Row(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 7,
                       backgroundColor: Colors.white,
                       child: Icon(
@@ -250,18 +249,23 @@ class _UserSummaryCard extends StatelessWidget {
                         size: 11,
                       ),
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Flexible(
-                      child: Text(
-                        _meowPoints,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          height: 1,
-                        ),
+                      child: AnimatedBuilder(
+                        animation: MeowPointsStore.instance,
+                        builder: (context, _) {
+                          return Text(
+                            MeowPointsStore.instance.balanceLabel,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              height: 1,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],

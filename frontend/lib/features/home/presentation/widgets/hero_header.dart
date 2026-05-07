@@ -7,6 +7,7 @@ import '../../../../app/theme.dart';
 import '../../../../core/auth/current_user_identity.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../../../core/constants/route_constants.dart';
+import '../../../../core/rewards/meowpoints_store.dart';
 import 'design_image.dart';
 import 'home_components.dart';
 
@@ -330,12 +331,12 @@ class _MeowPointsPill extends StatelessWidget {
         borderRadius: radius,
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: const SizedBox(
+          child: SizedBox(
             height: 44,
             width: double.infinity,
             child: Stack(
               children: [
-                Positioned.fill(
+                const Positioned.fill(
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       color: Color(0x36FFF8F0),
@@ -345,7 +346,7 @@ class _MeowPointsPill extends StatelessWidget {
                     ),
                   ),
                 ),
-                Positioned(
+                const Positioned(
                   left: 0,
                   top: 7,
                   bottom: 7,
@@ -354,7 +355,7 @@ class _MeowPointsPill extends StatelessWidget {
                     child: SizedBox(width: 1.4),
                   ),
                 ),
-                Positioned(
+                const Positioned(
                   right: 0,
                   top: 8,
                   bottom: 8,
@@ -363,7 +364,7 @@ class _MeowPointsPill extends StatelessWidget {
                     child: SizedBox(width: 1),
                   ),
                 ),
-                Positioned(
+                const Positioned(
                   right: 0,
                   left: 0,
                   bottom: 0,
@@ -374,10 +375,10 @@ class _MeowPointsPill extends StatelessWidget {
                 ),
                 Positioned.fill(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           'MeowPoints',
                           style: TextStyle(
                             color: Colors.white,
@@ -385,13 +386,13 @@ class _MeowPointsPill extends StatelessWidget {
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              CircleAvatar(
+                              const CircleAvatar(
                                 radius: 9,
                                 backgroundColor: AnaboolColors.brown,
                                 child: Icon(
@@ -400,14 +401,19 @@ class _MeowPointsPill extends StatelessWidget {
                                   size: 13,
                                 ),
                               ),
-                              SizedBox(width: 6),
-                              Text(
-                                '194,589 XP',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w900,
-                                ),
+                              const SizedBox(width: 6),
+                              AnimatedBuilder(
+                                animation: MeowPointsStore.instance,
+                                builder: (context, _) {
+                                  return Text(
+                                    MeowPointsStore.instance.balanceLabel,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),

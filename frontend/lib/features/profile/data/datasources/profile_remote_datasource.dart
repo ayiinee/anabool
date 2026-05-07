@@ -1,5 +1,6 @@
 import '../../../../core/auth/current_user_identity.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/rewards/meowpoints_store.dart';
 import '../../domain/entities/user_address.dart';
 import '../../domain/entities/user_profile.dart';
 import '../models/user_address_model.dart';
@@ -32,7 +33,7 @@ class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
     'avatar_asset': HomeAssets.profilePhoto,
     'location': 'Bali, Indonesia',
     'voucher_count': 4,
-    'meow_points': 194589,
+    'meow_points': 0,
     'safety_mode_enabled': true,
     'addresses': [
       {
@@ -119,8 +120,11 @@ class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
       email: email,
       addresses: [
         for (final address in _profile.addresses)
-          address.isPrimary ? address.copyWith(recipientName: userName) : address,
+          address.isPrimary
+              ? address.copyWith(recipientName: userName)
+              : address,
       ],
+      meowPoints: MeowPointsStore.instance.balance,
     );
   }
 }
