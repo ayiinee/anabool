@@ -11,7 +11,9 @@ import '../controllers/pickup_controller.dart';
 /// Matches the Figma design with a cute cat mascot in the center,
 /// a "Pilih kategori" heading, and two category buttons side by side.
 class PickupCategoryPage extends StatefulWidget {
-  const PickupCategoryPage({super.key});
+  const PickupCategoryPage({super.key, required this.controller});
+
+  final PickupController controller;
 
   @override
   State<PickupCategoryPage> createState() => _PickupCategoryPageState();
@@ -23,12 +25,11 @@ class _PickupCategoryPageState extends State<PickupCategoryPage> {
   @override
   void initState() {
     super.initState();
-    _controller = PickupController();
+    _controller = widget.controller;
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 

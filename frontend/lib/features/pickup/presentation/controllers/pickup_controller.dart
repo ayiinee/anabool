@@ -1,9 +1,39 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../domain/entities/pickup_agent.dart';
 import '../../domain/entities/pickup_order.dart';
+
+class PickupRouteSnapshot {
+  const PickupRouteSnapshot({
+    required this.userPoint,
+    required this.agentPoint,
+    required this.routePoints,
+    required this.distanceMeters,
+    required this.durationSeconds,
+    required this.isFromOsrm,
+  });
+
+  final LatLng userPoint;
+  final LatLng agentPoint;
+  final List<LatLng> routePoints;
+  final int distanceMeters;
+  final int durationSeconds;
+  final bool isFromOsrm;
+
+  int get etaMinutes => (durationSeconds / 60).ceil().clamp(1, 99).toInt();
+
+  String get etaLabel => '$etaMinutes menit';
+
+  String get distanceLabel {
+    if (distanceMeters >= 1000) {
+      return '${(distanceMeters / 1000).toStringAsFixed(1)} km';
+    }
+    return '$distanceMeters m';
+  }
+}
 
 /// In-memory controller for the pickup feature.
 ///
@@ -35,6 +65,13 @@ class PickupController extends ChangeNotifier {
   PickupOrder? _activeOrder;
   PickupOrder? get activeOrder => _activeOrder;
 
+  PickupRouteSnapshot? _activeRoute;
+  PickupRouteSnapshot? get activeRoute => _activeRoute;
+
+  DateTime? _acceptedAt;
+  DateTime? _processingAt;
+  DateTime? _completedAt;
+
   /// Simulation timer for auto-advancing order status.
   Timer? _simulationTimer;
 
@@ -47,16 +84,51 @@ class PickupController extends ChangeNotifier {
       _activeOrder != null &&
       _activeOrder!.statusLogs.every((log) => log.isCompleted);
 
+  String get activeOrderStatusLabel {
+    final order = _activeOrder;
+    if (order == null) return '';
+
+    PickupStatusLog? latestCompleted;
+    for (final log in order.statusLogs) {
+      if (log.isCompleted) latestCompleted = log;
+    }
+    return latestCompleted?.label ?? order.statusLogs.first.label;
+  }
+
+  String get activeOrderEtaLabel {
+    final order = _activeOrder;
+    if (order == null) return '';
+
+    for (final log in order.statusLogs) {
+      if (!log.isCompleted && log.subtitle != null) {
+        return log.subtitle!;
+      }
+    }
+
+    for (final log in order.statusLogs.reversed) {
+      if (log.isCompleted && log.subtitle != null) {
+        return log.subtitle!;
+      }
+    }
+    return '';
+  }
+
   // ──────────────────────────── Actions ────────────────────────────
 
   void selectCategory(String category) {
     _selectedCategory = category;
     _selectedAgentId = null;
+    _paymentMode = category == 'pupuk' ? 'meowpoint' : 'price';
     notifyListeners();
   }
 
   void togglePaymentMode(String mode) {
     _paymentMode = mode;
+    notifyListeners();
+  }
+
+  void updateActiveRoute(PickupRouteSnapshot route) {
+    _activeRoute = route;
     notifyListeners();
   }
 
@@ -86,7 +158,11 @@ class PickupController extends ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 800));
 
     final now = DateTime.now();
-    final eta = now.add(const Duration(minutes: 13));
+    final routeEtaMinutes =
+        (_activeRoute?.etaMinutes ?? 13).clamp(5, 45).toInt();
+    _acceptedAt = now;
+    _processingAt = now.add(const Duration(minutes: 2));
+    _completedAt = now.add(Duration(minutes: routeEtaMinutes + 2));
 
     _activeOrder = PickupOrder(
       id: 'order_${now.millisecondsSinceEpoch}',
@@ -99,26 +175,26 @@ class PickupController extends ChangeNotifier {
         serviceType: agent.serviceType,
       ),
       pickupType: _selectedCategory ?? 'kotoran',
-      status: 'processing',
+      status: 'accepted',
       statusLogs: [
         PickupStatusLog(
-          status: 'processing',
-          label: 'Pesanan Diproses',
-          subtitle: _formatTime(now),
-          timestamp: now,
+          status: 'accepted',
+          label: 'Pesanan Diterima',
+          subtitle: 'Diterima ${_formatTime(_acceptedAt!)}',
+          timestamp: _acceptedAt,
           isCompleted: true,
         ),
         PickupStatusLog(
-          status: 'on_the_way',
+          status: 'processing',
           label: 'Pesanan Diproses',
-          subtitle: 'Estimasi tiba ${_formatTime(eta)}',
+          subtitle: 'Estimasi diproses ${_formatTime(_processingAt!)}',
           timestamp: null,
           isCompleted: false,
         ),
-        const PickupStatusLog(
+        PickupStatusLog(
           status: 'completed',
           label: 'Pick-up Selesai',
-          subtitle: null,
+          subtitle: 'Estimasi selesai ${_formatTime(_completedAt!)}',
           timestamp: null,
           isCompleted: false,
         ),
@@ -137,7 +213,7 @@ class PickupController extends ChangeNotifier {
   void _startSimulation() {
     _simulationTimer?.cancel();
 
-    // Phase 1: After 5 seconds, move to "on_the_way"
+    // Phase 1: After 5 seconds, move to "processing"
     // Phase 2: After another 8 seconds, move to "completed"
     const phaseDurations = [
       Duration(seconds: 5),
@@ -155,15 +231,14 @@ class PickupController extends ChangeNotifier {
           id: _activeOrder!.id,
           agent: _activeOrder!.agent,
           pickupType: _activeOrder!.pickupType,
-          status: 'on_the_way',
+          status: 'processing',
           statusLogs: [
             _activeOrder!.statusLogs[0], // processing — already completed
             PickupStatusLog(
-              status: 'on_the_way',
+              status: 'processing',
               label: 'Pesanan Diproses',
-              subtitle:
-                  'Estimasi tiba ${_formatTime(DateTime.now().add(const Duration(minutes: 8)))}',
-              timestamp: DateTime.now(),
+              subtitle: 'Diproses ${_formatTime(_processingAt!)}',
+              timestamp: _processingAt,
               isCompleted: true,
             ),
             _activeOrder!.statusLogs[2], // completed — still pending
@@ -191,8 +266,8 @@ class PickupController extends ChangeNotifier {
             PickupStatusLog(
               status: 'completed',
               label: 'Pick-up Selesai',
-              subtitle: _formatTime(DateTime.now()),
-              timestamp: DateTime.now(),
+              subtitle: 'Selesai ${_formatTime(_completedAt!)}',
+              timestamp: _completedAt,
               isCompleted: true,
             ),
           ],
@@ -211,6 +286,10 @@ class PickupController extends ChangeNotifier {
     _selectedCategory = null;
     _selectedAgentId = null;
     _activeOrder = null;
+    _activeRoute = null;
+    _acceptedAt = null;
+    _processingAt = null;
+    _completedAt = null;
     _paymentMode = 'price';
     notifyListeners();
   }

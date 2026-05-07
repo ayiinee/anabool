@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart' hide Path;
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
@@ -60,7 +62,6 @@ class _PickupTrackingPageState extends State<PickupTrackingPage> {
                 // ── App Bar ──
                 _TrackingAppBar(
                   onBack: () {
-                    _ctrl.reset();
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       RouteConstants.home,
                       (route) => false,
@@ -71,7 +72,8 @@ class _PickupTrackingPageState extends State<PickupTrackingPage> {
                 // ── Map Area ──
                 Expanded(
                   flex: 5,
-                  child: _AnimatedMapArea(
+                  child: _LiveTrackingMap(
+                    route: _ctrl.activeRoute,
                     simulationPhase: _ctrl.simulationPhase,
                   ),
                 ),
@@ -177,292 +179,245 @@ class _TrackingAppBar extends StatelessWidget {
 // Animated Map Area
 // ──────────────────────────────────────────────────────────────────────────────
 
-class _AnimatedMapArea extends StatelessWidget {
-  const _AnimatedMapArea({required this.simulationPhase});
+class _LiveTrackingMap extends StatefulWidget {
+  const _LiveTrackingMap({
+    required this.route,
+    required this.simulationPhase,
+  });
 
+  final PickupRouteSnapshot? route;
   final int simulationPhase;
 
   @override
-  Widget build(BuildContext context) {
-    // We create a mock map appearance with a route and an animating car.
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        color: Color(0xFFE8EDF2), // Light map-like background
-      ),
-      child: Stack(
-        children: [
-          // Background grids / shapes to look like a map
-          Positioned.fill(
-            child: CustomPaint(
-              painter: _MapBackgroundPainter(),
-            ),
-          ),
-
-          // The animated route and car
-          Positioned.fill(
-            child: AnimatedMapRoute(
-              phase: simulationPhase,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  State<_LiveTrackingMap> createState() => _LiveTrackingMapState();
 }
 
-class AnimatedMapRoute extends StatefulWidget {
-  const AnimatedMapRoute({super.key, required this.phase});
-
-  final int phase;
-
-  @override
-  State<AnimatedMapRoute> createState() => _AnimatedMapRouteState();
-}
-
-class _AnimatedMapRouteState extends State<AnimatedMapRoute>
+class _LiveTrackingMapState extends State<_LiveTrackingMap>
     with SingleTickerProviderStateMixin {
-  late AnimationController _ctrl;
+  late final AnimationController _animationController;
+  late Animation<double> _progressAnimation;
+  double _progress = 0.03;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
+    _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
-    );
-    _updateAnimation();
+      duration: const Duration(seconds: 4),
+    )..addListener(() {
+        setState(() => _progress = _progressAnimation.value);
+      });
+    _progressAnimation = AlwaysStoppedAnimation(_progress);
+    _animateToPhase(widget.simulationPhase, animate: false);
   }
 
   @override
-  void didUpdateWidget(covariant AnimatedMapRoute oldWidget) {
+  void didUpdateWidget(covariant _LiveTrackingMap oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.phase != widget.phase) {
-      _updateAnimation();
+    if (oldWidget.simulationPhase != widget.simulationPhase) {
+      _animateToPhase(widget.simulationPhase);
     }
   }
 
-  void _updateAnimation() {
-    if (widget.phase == 0) {
-      _ctrl.value = 0.0;
-    } else if (widget.phase == 1) {
-      _ctrl.animateTo(0.6,
-          duration: const Duration(seconds: 4), curve: Curves.easeInOut);
-    } else {
-      _ctrl.animateTo(1.0,
-          duration: const Duration(seconds: 3), curve: Curves.easeInOut);
+  void _animateToPhase(int phase, {bool animate = true}) {
+    final target = switch (phase) {
+      0 => 0.08,
+      1 => 0.68,
+      _ => 1.0,
+    };
+
+    if (!animate) {
+      _animationController.stop();
+      setState(() => _progress = target);
+      return;
     }
+
+    _progressAnimation = Tween<double>(
+      begin: _progress,
+      end: target,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOutCubic,
+      ),
+    );
+    _animationController
+      ..duration = Duration(seconds: phase == 1 ? 5 : 4)
+      ..forward(from: 0);
   }
 
   @override
   void dispose() {
-    _ctrl.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _ctrl,
-      builder: (context, child) {
-        return CustomPaint(
-          painter: _RoutePainter(progress: _ctrl.value),
+    final route = widget.route ?? _fallbackRoute;
+    final routePoints = route.routePoints.length >= 2
+        ? route.routePoints
+        : [route.agentPoint, route.userPoint];
+    final agentPoint = _interpolateRoutePoint(routePoints, _progress);
+    final center = LatLng(
+      (route.userPoint.latitude + route.agentPoint.latitude) / 2,
+      (route.userPoint.longitude + route.agentPoint.longitude) / 2,
+    );
+
+    return FlutterMap(
+      options: MapOptions(
+        initialCenter: center,
+        initialZoom: 14.5,
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.all & ~InteractiveFlag.rotate,
+        ),
+      ),
+      children: [
+        TileLayer(
+          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+          userAgentPackageName: 'com.anabool.app',
+          tileProvider: NetworkTileProvider(),
+        ),
+        PolylineLayer(
+          polylines: [
+            Polyline(
+              points: routePoints,
+              color: AnaboolColors.brown,
+              strokeWidth: 4,
+            ),
+          ],
+        ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              point: route.userPoint,
+              width: 54,
+              height: 54,
+              child: const _TrackingUserMarker(),
+            ),
+            Marker(
+              point: agentPoint,
+              width: 58,
+              height: 58,
+              child: const _TrackingAgentMarker(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  LatLng _interpolateRoutePoint(List<LatLng> points, double progress) {
+    if (points.length < 2) return points.first;
+
+    const distance = Distance();
+    final segmentLengths = <double>[];
+    var totalLength = 0.0;
+    for (var i = 0; i < points.length - 1; i++) {
+      final length = distance.as(LengthUnit.Meter, points[i], points[i + 1]);
+      segmentLengths.add(length);
+      totalLength += length;
+    }
+
+    if (totalLength <= 0) return points.last;
+
+    var targetLength = totalLength * progress.clamp(0.0, 1.0);
+    for (var i = 0; i < segmentLengths.length; i++) {
+      final length = segmentLengths[i];
+      if (targetLength <= length) {
+        final ratio = length == 0 ? 0.0 : targetLength / length;
+        final start = points[i];
+        final end = points[i + 1];
+        return LatLng(
+          start.latitude + (end.latitude - start.latitude) * ratio,
+          start.longitude + (end.longitude - start.longitude) * ratio,
         );
-      },
+      }
+      targetLength -= length;
+    }
+
+    return points.last;
+  }
+}
+
+const _fallbackRoute = PickupRouteSnapshot(
+  userPoint: LatLng(-8.670458, 115.212629),
+  agentPoint: LatLng(-8.665658, 115.215829),
+  routePoints: [
+    LatLng(-8.665658, 115.215829),
+    LatLng(-8.6671, 115.2149),
+    LatLng(-8.6685, 115.2142),
+    LatLng(-8.670458, 115.212629),
+  ],
+  distanceMeters: 850,
+  durationSeconds: 780,
+  isFromOsrm: false,
+);
+
+class _TrackingUserMarker extends StatelessWidget {
+  const _TrackingUserMarker();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: AnaboolColors.green.withValues(alpha: 0.18),
+        shape: BoxShape.circle,
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AnaboolColors.green,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 3),
+        ),
+        child: const Icon(
+          Icons.my_location_rounded,
+          color: Colors.white,
+          size: 24,
+        ),
+      ),
     );
   }
 }
 
-class _MapBackgroundPainter extends CustomPainter {
+class _TrackingAgentMarker extends StatelessWidget {
+  const _TrackingAgentMarker();
+
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 8
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    // Draw some fake streets
-    canvas.drawLine(Offset(0, size.height * 0.3),
-        Offset(size.width, size.height * 0.4), paint);
-    canvas.drawLine(Offset(size.width * 0.4, 0),
-        Offset(size.width * 0.5, size.height), paint);
-    canvas.drawLine(Offset(size.width * 0.2, size.height * 0.2),
-        Offset(size.width * 0.8, size.height * 0.8), paint);
-    canvas.drawLine(Offset(size.width * 0.7, 0),
-        Offset(size.width * 0.6, size.height), paint);
-
-    // Draw some green areas
-    final greenPaint = Paint()
-      ..color = const Color(0xFFC8E6C9).withValues(alpha: 0.6)
-      ..style = PaintingStyle.fill;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-          Rect.fromLTWH(size.width * 0.1, size.height * 0.5, 80, 60),
-          const Radius.circular(12)),
-      greenPaint,
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: AnaboolColors.brown.withValues(alpha: 0.22),
+        shape: BoxShape.circle,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border: Border.all(color: AnaboolColors.brown, width: 2.5),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x22000000),
+                blurRadius: 8,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          child: const ClipOval(
+            child: Padding(
+              padding: EdgeInsets.all(4),
+              child: DesignImage(
+                asset: HomeAssets.pickupCat,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-          Rect.fromLTWH(size.width * 0.7, size.height * 0.2, 100, 80),
-          const Radius.circular(12)),
-      greenPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _RoutePainter extends CustomPainter {
-  _RoutePainter({required this.progress});
-
-  final double progress;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final path = Path();
-    // Start point (user location)
-    final startPt = Offset(size.width * 0.35, size.height * 0.35);
-
-    // Build a jagged path for the route
-    final points = [
-      startPt,
-      Offset(size.width * 0.45, size.height * 0.38),
-      Offset(size.width * 0.6, size.height * 0.35),
-      Offset(size.width * 0.62, size.height * 0.45),
-      Offset(size.width * 0.7, size.height * 0.46),
-      Offset(
-          size.width * 0.72, size.height * 0.65), // End point (driver origin)
-    ];
-
-    path.moveTo(points.first.dx, points.first.dy);
-    for (int i = 1; i < points.length; i++) {
-      path.lineTo(points[i].dx, points[i].dy);
-    }
-
-    // Draw the route line (Green)
-    final routePaint = Paint()
-      ..color = const Color(0xFF00BFA5)
-      ..strokeWidth = 5
-      ..style = PaintingStyle.stroke
-      ..strokeJoin = StrokeJoin.round;
-    canvas.drawPath(path, routePaint);
-
-    // Draw a glow under the start point
-    final glowPaint = Paint()
-      ..color = const Color(0xFF2196F3).withValues(alpha: 0.2)
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(startPt, 24, glowPaint);
-    final glowPaint2 = Paint()
-      ..color = const Color(0xFF2196F3).withValues(alpha: 0.4)
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(startPt, 12, glowPaint2);
-
-    // Draw Start Marker (Green circle with arrow up)
-    final markerPaint = Paint()
-      ..color = const Color(0xFF00C853)
-      ..style = PaintingStyle.fill;
-    final markerCenter = Offset(startPt.dx, startPt.dy - 20);
-    canvas.drawCircle(markerCenter, 16, markerPaint);
-
-    // White outline for marker
-    final markerOutline = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
-    canvas.drawCircle(markerCenter, 16, markerOutline);
-
-    // Draw Arrow in marker
-    final arrowPaint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-    canvas.drawLine(Offset(markerCenter.dx, markerCenter.dy + 6),
-        Offset(markerCenter.dx, markerCenter.dy - 6), arrowPaint);
-    canvas.drawLine(Offset(markerCenter.dx - 5, markerCenter.dy - 1),
-        Offset(markerCenter.dx, markerCenter.dy - 6), arrowPaint);
-    canvas.drawLine(Offset(markerCenter.dx + 5, markerCenter.dy - 1),
-        Offset(markerCenter.dx, markerCenter.dy - 6), arrowPaint);
-
-    // Calculate Car Position
-    // The driver starts from the end of the path and moves towards the start.
-    final totalLength = _getPathLength(path);
-    // Reverse progress: 0 progress means car is at the end, 1 means at start
-    final currentDistance = totalLength * (1.0 - progress);
-
-    // Extract position and tangent
-    final metrics = path.computeMetrics().first;
-    final extract = metrics.getTangentForOffset(currentDistance);
-
-    if (extract != null) {
-      final carPos = extract.position;
-      final angle = extract.vector.direction; // Add pi to face travel direction
-
-      // Draw Car
-      canvas.save();
-      canvas.translate(carPos.dx, carPos.dy);
-      canvas.rotate(angle + 3.14159); // Facing forward
-      _drawCar(canvas);
-      canvas.restore();
-    }
-  }
-
-  double _getPathLength(Path path) {
-    double len = 0.0;
-    for (final metric in path.computeMetrics()) {
-      len += metric.length;
-    }
-    return len;
-  }
-
-  void _drawCar(Canvas canvas) {
-    // A simple top-down car drawing
-    final shadowPaint = Paint()
-      ..color = Colors.black26
-      ..style = PaintingStyle.fill;
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            const Rect.fromLTWH(-10, -16, 20, 32), const Radius.circular(6)),
-        shadowPaint);
-
-    final carPaint = Paint()
-      ..color = Colors.white
-      ..style = PaintingStyle.fill;
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            const Rect.fromLTWH(-12, -18, 24, 36), const Radius.circular(8)),
-        carPaint);
-
-    final outline = Paint()
-      ..color = Colors.grey.shade400
-      ..strokeWidth = 1
-      ..style = PaintingStyle.stroke;
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            const Rect.fromLTWH(-12, -18, 24, 36), const Radius.circular(8)),
-        outline);
-
-    // Windshield
-    final windowPaint = Paint()
-      ..color = Colors.black87
-      ..style = PaintingStyle.fill;
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            const Rect.fromLTWH(-8, -8, 16, 8), const Radius.circular(2)),
-        windowPaint);
-
-    // Rear window
-    canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            const Rect.fromLTWH(-8, 10, 16, 4), const Radius.circular(2)),
-        windowPaint);
-  }
-
-  @override
-  bool shouldRepaint(covariant _RoutePainter oldDelegate) {
-    return oldDelegate.progress != progress;
   }
 }
 

@@ -28,8 +28,8 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
 
   final Dio _dio = Dio(
     BaseOptions(
-      connectTimeout: const Duration(seconds: 8),
-      receiveTimeout: const Duration(seconds: 8),
+      connectTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 5),
     ),
   );
 
@@ -68,14 +68,19 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
 
     final detectedPoint = await _detectUserPoint();
     final agentPoints = _buildDummyAgentPoints(detectedPoint);
-    final routeEntries = <String, _AgentRouteInfo>{};
-
-    for (final entry in agentPoints.entries) {
-      routeEntries[entry.key] = await _loadOsrmRoute(
-        userPoint: detectedPoint,
-        agentPoint: entry.value,
-      );
-    }
+    final routeEntries = Map<String, _AgentRouteInfo>.fromEntries(
+      await Future.wait(
+        agentPoints.entries.map(
+          (entry) async => MapEntry(
+            entry.key,
+            await _loadOsrmRoute(
+              userPoint: detectedPoint,
+              agentPoint: entry.value,
+            ),
+          ),
+        ),
+      ),
+    );
 
     if (!mounted) return;
     setState(() {
@@ -106,10 +111,20 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
       final position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 4),
         ),
       );
       return LatLng(position.latitude, position.longitude);
     } catch (_) {
+      try {
+        final lastKnownPosition = await Geolocator.getLastKnownPosition();
+        if (lastKnownPosition != null) {
+          return LatLng(
+              lastKnownPosition.latitude, lastKnownPosition.longitude);
+        }
+      } catch (_) {
+        // Fallback below keeps the map usable without location access.
+      }
       return _fallbackUserPoint;
     }
   }
@@ -175,6 +190,14 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
 
   Future<void> _continueToProcessing() async {
     if (_ctrl.selectedAgent == null || _ctrl.isOrdering) return;
+    final routeInfo = _routeInfoByAgent[_ctrl.selectedAgent!.id] ??
+        _AgentRouteInfo.fallback(
+          _userPoint,
+          _buildDummyAgentPoints(_userPoint)[_ctrl.selectedAgent!.id] ??
+              _userPoint,
+        );
+
+    _ctrl.updateActiveRoute(routeInfo.toSnapshot(_userPoint));
 
     await _ctrl.createOrder();
     if (!mounted || _ctrl.activeOrder == null) return;
@@ -423,6 +446,7 @@ class _PickupMap extends StatelessWidget {
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.anabool.app',
+              tileProvider: NetworkTileProvider(),
             ),
             if (selectedRoute != null)
               PolylineLayer(
@@ -440,11 +464,7 @@ class _PickupMap extends StatelessWidget {
                   point: userPoint,
                   width: 54,
                   height: 54,
-                  child: const _MapPin(
-                    icon: Icons.my_location_rounded,
-                    color: AnaboolColors.green,
-                    isSelected: true,
-                  ),
+                  child: const _UserLocationMarker(),
                 ),
                 for (final entry in agentPoints.entries)
                   Marker(
@@ -453,9 +473,7 @@ class _PickupMap extends StatelessWidget {
                     height: 58,
                     child: GestureDetector(
                       onTap: () => onSelectAgent(entry.key),
-                      child: _MapPin(
-                        icon: Icons.delivery_dining_rounded,
-                        color: AnaboolColors.brown,
+                      child: _AgentMapMarker(
                         isSelected: entry.key == selectedAgentId,
                       ),
                     ),
@@ -525,36 +543,71 @@ class _PickupMap extends StatelessWidget {
   }
 }
 
-class _MapPin extends StatelessWidget {
-  const _MapPin({
-    required this.icon,
-    required this.color,
-    required this.isSelected,
-  });
+class _UserLocationMarker extends StatelessWidget {
+  const _UserLocationMarker();
 
-  final IconData icon;
-  final Color color;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: AnaboolColors.green.withValues(alpha: 0.18),
+        shape: BoxShape.circle,
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AnaboolColors.green,
+          shape: BoxShape.circle,
+          border: Border.all(color: Colors.white, width: 3),
+        ),
+        child: const Icon(
+          Icons.my_location_rounded,
+          color: Colors.white,
+          size: 24,
+        ),
+      ),
+    );
+  }
+}
+
+class _AgentMapMarker extends StatelessWidget {
+  const _AgentMapMarker({required this.isSelected});
+
   final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 180),
-      padding: const EdgeInsets.all(6),
+      padding: EdgeInsets.all(isSelected ? 4 : 7),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: isSelected ? 0.2 : 0.1),
+        color: AnaboolColors.brown.withValues(alpha: isSelected ? 0.22 : 0.12),
         shape: BoxShape.circle,
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: isSelected ? color : Colors.white,
+          color: Colors.white,
           shape: BoxShape.circle,
-          border: Border.all(color: color, width: 2),
+          border: Border.all(
+            color: isSelected ? AnaboolColors.brown : Colors.white,
+            width: isSelected ? 2.5 : 1.5,
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x22000000),
+              blurRadius: 8,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
-        child: Icon(
-          icon,
-          color: isSelected ? Colors.white : color,
-          size: 24,
+        child: const ClipOval(
+          child: Padding(
+            padding: EdgeInsets.all(4),
+            child: DesignImage(
+              asset: HomeAssets.pickupCat,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ),
     );
@@ -665,7 +718,7 @@ class _AgentBottomSheet extends StatelessWidget {
                     ),
                   ),
                 ),
-                _PaymentModeToggle(controller: controller),
+                _PaymentModeBadge(category: controller.selectedCategory),
               ],
             ),
           ),
@@ -796,85 +849,39 @@ class _PickupActionBar extends StatelessWidget {
   }
 }
 
-class _PaymentModeToggle extends StatelessWidget {
-  const _PaymentModeToggle({required this.controller});
+class _PaymentModeBadge extends StatelessWidget {
+  const _PaymentModeBadge({required this.category});
 
-  final PickupController controller;
+  final String? category;
 
   @override
   Widget build(BuildContext context) {
+    final isFertilizer = category == 'pupuk';
     return Container(
       height: 36,
-      width: 170,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: const Color(0xFFF5F0EB),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: _ToggleTab(
-              label: 'Harga',
-              icon: Icons.payments_outlined,
-              isActive: controller.paymentMode == 'price',
-              onTap: () => controller.togglePaymentMode('price'),
-            ),
+          Icon(
+            isFertilizer ? Icons.star_rounded : Icons.payments_outlined,
+            size: 16,
+            color: AnaboolColors.brown,
           ),
-          Expanded(
-            child: _ToggleTab(
-              label: 'Poin',
-              icon: Icons.star_rounded,
-              isActive: controller.paymentMode == 'meowpoint',
-              onTap: () => controller.togglePaymentMode('meowpoint'),
+          const SizedBox(width: 6),
+          Text(
+            isFertilizer ? 'Poin' : 'Harga',
+            style: const TextStyle(
+              color: AnaboolColors.brown,
+              fontSize: 12,
+              fontWeight: FontWeight.w900,
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ToggleTab extends StatelessWidget {
-  const _ToggleTab({
-    required this.label,
-    required this.icon,
-    required this.isActive,
-    required this.onTap,
-  });
-
-  final String label;
-  final IconData icon;
-  final bool isActive;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        margin: const EdgeInsets.all(3),
-        decoration: BoxDecoration(
-          color: isActive ? AnaboolColors.brown : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon,
-                size: 14, color: isActive ? Colors.white : AnaboolColors.muted),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: isActive ? Colors.white : AnaboolColors.muted,
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -1204,7 +1211,7 @@ class _AgentRouteInfo {
   factory _AgentRouteInfo.fallback(LatLng userPoint, LatLng agentPoint) {
     final distance =
         const Distance().as(LengthUnit.Meter, userPoint, agentPoint);
-    final seconds = (distance / 450 * 60).round().clamp(240, 1800);
+    final seconds = (distance / 450 * 60).round().clamp(240, 1800).toInt();
     return _AgentRouteInfo(
       point: agentPoint,
       distanceMeters: distance.round(),
@@ -1220,8 +1227,19 @@ class _AgentRouteInfo {
   final List<LatLng> routePoints;
   final bool isFromOsrm;
 
+  PickupRouteSnapshot toSnapshot(LatLng userPoint) {
+    return PickupRouteSnapshot(
+      userPoint: userPoint,
+      agentPoint: point,
+      routePoints: routePoints,
+      distanceMeters: distanceMeters,
+      durationSeconds: durationSeconds,
+      isFromOsrm: isFromOsrm,
+    );
+  }
+
   String get etaLabel {
-    final minutes = (durationSeconds / 60).ceil().clamp(1, 99);
+    final minutes = (durationSeconds / 60).ceil().clamp(1, 99).toInt();
     return '$minutes menit';
   }
 

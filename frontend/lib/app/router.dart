@@ -10,6 +10,7 @@ import '../features/education/presentation/pages/education_complete_page.dart';
 import '../features/education/presentation/pages/education_detail_page.dart';
 import '../features/education/presentation/pages/education_page.dart';
 import '../features/pickup/presentation/controllers/pickup_controller.dart';
+import '../features/pickup/presentation/controllers/pickup_session.dart';
 import '../features/pickup/presentation/pages/pickup_agents_page.dart';
 import '../features/pickup/presentation/pages/pickup_category_page.dart';
 import '../features/pickup/presentation/pages/pickup_tracking_page.dart';
@@ -96,14 +97,16 @@ class AppRouter {
 
         return const ScanCameraPage();
       },
-      RouteConstants.pickup: (_) => const PickupCategoryPage(),
+      RouteConstants.pickup: (_) => PickupCategoryPage(
+            controller: pickupSessionController,
+          ),
       RouteConstants.pickupAgents: (context) {
         final arguments = ModalRoute.of(context)?.settings.arguments;
         if (arguments is PickupController) {
           return PickupAgentsPage(controller: arguments);
         }
 
-        return const PickupCategoryPage();
+        return PickupCategoryPage(controller: pickupSessionController);
       },
       RouteConstants.pickupTracking: (context) {
         final arguments = ModalRoute.of(context)?.settings.arguments;
@@ -111,7 +114,7 @@ class AppRouter {
           return PickupTrackingPage(controller: arguments);
         }
 
-        return const PickupCategoryPage();
+        return PickupCategoryPage(controller: pickupSessionController);
       },
       RouteConstants.marketplace: (_) => const MarketplacePage(),
       RouteConstants.marketplaceDetail: (context) {
