@@ -95,9 +95,10 @@ class _DetailContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final progress = controller.progressFor(content.id);
     final lesson = module.lessonAt(controller.currentLessonIndex);
-    final lessonTotal = module.lessons.length;
-    final completedLessonCount = controller.completedLessonCountFor(content.id);
-    final displayedProgress = completedLessonCount / lessonTotal;
+    final lessonTotal =
+        progress.totalSteps > 0 ? progress.totalSteps : module.lessons.length;
+    final displayedStepOrder = controller.displayStepOrderFor(content.id);
+    final displayedProgress = progress.progressPct.clamp(0, 100) / 100;
 
     return SafeArea(
       bottom: false,
@@ -110,7 +111,7 @@ class _DetailContent extends StatelessWidget {
                     ? '${content.rewardPoints} XP'
                     : module.hero.badgeText,
                 progressValue: displayedProgress,
-                progressText: '$completedLessonCount/$lessonTotal',
+                progressText: '$displayedStepOrder dari $lessonTotal step',
               ),
               Expanded(
                 child: SingleChildScrollView(

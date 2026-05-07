@@ -120,7 +120,7 @@ class EducationController extends ChangeNotifier {
       progress = catalog.progress;
       selectedContent = await _getEducationDetail(contentId);
       selectedModule = await _getLearningModule(contentId);
-      currentLessonIndex = 0;
+      currentLessonIndex = resumeLessonIndexFor(contentId);
     } catch (error) {
       errorMessage = error.toString();
     } finally {
@@ -160,19 +160,12 @@ class EducationController extends ChangeNotifier {
     final lesson = module.lessonAt(currentLessonIndex);
     isCompleting = true;
     errorMessage = null;
+    _applyLocalLessonCompletion(module, lesson);
     notifyListeners();
 
     try {
       final updated = await _completeLearningLesson(module.id, lesson.id);
-      progress = [
-        for (final item in progress)
-          if (item.contentId != updated.contentId) item,
-        updated,
-      ];
-
-      if (currentLessonIndex < module.lessons.length - 1) {
-        currentLessonIndex += 1;
-      }
+      _replaceProgress(updated);
 
       return true;
     } catch (error) {
@@ -204,21 +197,38 @@ class EducationController extends ChangeNotifier {
     return UserEduProgress(
       contentId: contentId,
       progressPct: 0,
+      currentStepOrder: 0,
+      totalSteps: selectedModule?.lessons.length ?? 0,
       isCompleted: false,
     );
   }
 
-  int completedLessonCountFor(String contentId) {
+  int resumeLessonIndexFor(String contentId) {
     final module = selectedModule;
     if (module == null || module.lessons.isEmpty) {
       return 0;
     }
 
-    final pct = progressFor(contentId).progressPct.clamp(0, 100);
-    return (pct / 100 * module.lessons.length).round().clamp(
-          0,
-          module.lessons.length,
-        );
+    final currentStepOrder = progressFor(contentId).currentStepOrder;
+    if (currentStepOrder <= 0) {
+      return 0;
+    }
+
+    return (currentStepOrder - 1).clamp(0, module.lessons.length - 1);
+  }
+
+  int displayStepOrderFor(String contentId) {
+    final module = selectedModule;
+    if (module == null || module.lessons.isEmpty) {
+      return 1;
+    }
+
+    final currentStepOrder = progressFor(contentId).currentStepOrder;
+    if (currentStepOrder <= 0) {
+      return 1;
+    }
+
+    return currentStepOrder.clamp(1, module.lessons.length);
   }
 
   int nextLessonIndexFor(String contentId) {
@@ -227,12 +237,12 @@ class EducationController extends ChangeNotifier {
       return 0;
     }
 
-    final completedLessons = completedLessonCountFor(contentId);
-    if (completedLessons >= module.lessons.length) {
+    final currentStepOrder = displayStepOrderFor(contentId);
+    if (currentStepOrder >= module.lessons.length) {
       return module.lessons.length - 1;
     }
 
-    return completedLessons;
+    return currentStepOrder;
   }
 
   void goToPreviousLesson() {
@@ -241,7 +251,58 @@ class EducationController extends ChangeNotifier {
     }
 
     currentLessonIndex -= 1;
+    _applyCurrentStepOrder(selectedContent?.id, currentLessonIndex + 1);
     notifyListeners();
+  }
+
+  void _applyLocalLessonCompletion(
+    LearningModule module,
+    ModuleLesson lesson,
+  ) {
+    final totalSteps = module.lessons.length;
+    final previous = progressFor(module.id);
+    final completedStepOrder = lesson.order.clamp(1, totalSteps);
+    final nextStepOrder =
+        completedStepOrder >= totalSteps ? totalSteps : completedStepOrder + 1;
+    final progressPct = completedStepOrder / totalSteps * 100;
+    final updated = UserEduProgress(
+      contentId: module.id,
+      progressPct: progressPct > previous.progressPct
+          ? progressPct
+          : previous.progressPct,
+      currentStepOrder: nextStepOrder,
+      totalSteps: totalSteps,
+      isCompleted: completedStepOrder >= totalSteps,
+    );
+
+    _replaceProgress(updated);
+    currentLessonIndex = (nextStepOrder - 1).clamp(0, totalSteps - 1);
+  }
+
+  void _applyCurrentStepOrder(String? contentId, int stepOrder) {
+    final module = selectedModule;
+    if (contentId == null || module == null || module.lessons.isEmpty) {
+      return;
+    }
+
+    final previous = progressFor(contentId);
+    _replaceProgress(
+      UserEduProgress(
+        contentId: contentId,
+        progressPct: previous.progressPct,
+        currentStepOrder: stepOrder.clamp(1, module.lessons.length),
+        totalSteps: module.lessons.length,
+        isCompleted: previous.isCompleted,
+      ),
+    );
+  }
+
+  void _replaceProgress(UserEduProgress updated) {
+    progress = [
+      for (final item in progress)
+        if (item.contentId != updated.contentId) item,
+      updated,
+    ];
   }
 
   String categoryNameFor(String slug) {

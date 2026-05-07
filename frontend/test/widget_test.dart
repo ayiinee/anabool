@@ -356,8 +356,9 @@ void main() {
 
     expect(find.text('Detail Modul'), findsOneWidget);
     expect(find.text('Poin penting'), findsWidgets);
-    expect(find.text('2/9'), findsOneWidget);
-    expect(find.text('1. Kenali Toxoplasma gondii'), findsOneWidget);
+    expect(find.text('3 dari 9 step'), findsOneWidget);
+    expect(
+        find.text('3. Kapan Kotoran Kucing Menjadi Berisiko?'), findsOneWidget);
     expect(find.byKey(const ValueKey('education-complete-button')),
         findsOneWidget);
 
@@ -366,21 +367,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('education-complete-button')));
     await tester.pumpAndSettle();
 
-    expect(find.text('2/9'), findsOneWidget);
-    expect(find.text('2. Pahami Peran Kucing sebagai Inang Utama'),
-        findsOneWidget);
-
-    await tester.tap(find.byKey(const ValueKey('education-complete-button')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('2/9'), findsOneWidget);
-    expect(
-        find.text('3. Kapan Kotoran Kucing Menjadi Berisiko?'), findsOneWidget);
-
-    await tester.tap(find.byKey(const ValueKey('education-complete-button')));
-    await tester.pumpAndSettle();
-
-    expect(find.text('3/9'), findsOneWidget);
+    expect(find.text('4 dari 9 step'), findsOneWidget);
     expect(find.text('4. Kenali Jalur Penularan Utama'), findsOneWidget);
 
     for (var i = 0; i < 6; i += 1) {

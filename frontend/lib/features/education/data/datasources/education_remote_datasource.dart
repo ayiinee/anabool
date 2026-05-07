@@ -41,8 +41,14 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
 
   List<LearningModuleModel>? _moduleCache;
 
-  final Map<String, int> _completedLessons = {
-    'module_1_toxoplasma_gondii': 2,
+  final Map<String, UserEduProgressModel> _progressByModule = {
+    'module_1_toxoplasma_gondii': const UserEduProgressModel(
+      contentId: 'module_1_toxoplasma_gondii',
+      progressPct: 22.22222222222222,
+      currentStepOrder: 3,
+      totalSteps: 9,
+      isCompleted: false,
+    ),
   };
 
   @override
@@ -87,12 +93,15 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
   @override
   Future<UserEduProgressModel> completeContent(String contentId) async {
     final module = await getLearningModule(contentId);
-    _completedLessons[module.id] = module.lessons.length;
-    return UserEduProgressModel(
+    final completed = UserEduProgressModel(
       contentId: module.id,
       progressPct: 100,
+      currentStepOrder: module.lessons.length,
+      totalSteps: module.lessons.length,
       isCompleted: true,
     );
+    _progressByModule[module.id] = completed;
+    return completed;
   }
 
   @override
@@ -109,12 +118,24 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       throw const EducationRemoteException('Pelajaran tidak ditemukan.');
     }
 
-    final previousCompleted = _completedLessons[module.id] ?? 0;
-    _completedLessons[module.id] = previousCompleted > lessonIndex + 1
-        ? previousCompleted
-        : lessonIndex + 1;
+    final currentProgress = _progressForModule(module);
+    final totalLessons = module.lessons.length;
+    final completedLessonOrder = lessonIndex + 1;
+    final nextStepOrder = completedLessonOrder >= totalLessons
+        ? totalLessons
+        : completedLessonOrder + 1;
+    final completedPct = completedLessonOrder / totalLessons * 100;
+    final updated = currentProgress.copyWith(
+      progressPct: completedPct > currentProgress.progressPct
+          ? completedPct
+          : currentProgress.progressPct,
+      currentStepOrder: nextStepOrder,
+      totalSteps: totalLessons,
+      isCompleted: completedLessonOrder >= totalLessons,
+    );
 
-    return _progressForModule(module);
+    _progressByModule[module.id] = updated;
+    return updated;
   }
 
   Future<List<LearningModuleModel>> _loadModules() async {
@@ -154,16 +175,21 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
 
   UserEduProgressModel _progressForModule(LearningModuleModel module) {
     final totalLessons = module.lessons.isEmpty ? 1 : module.lessons.length;
-    final completedLessons = (_completedLessons[module.id] ?? 0).clamp(
-      0,
-      totalLessons,
-    );
-    final progressPct = completedLessons / totalLessons * 100;
+    final existing = _progressByModule[module.id];
+    if (existing != null) {
+      return existing.copyWith(
+        currentStepOrder: existing.currentStepOrder.clamp(0, totalLessons),
+        totalSteps: totalLessons,
+        isCompleted: existing.progressPct >= 100,
+      );
+    }
 
     return UserEduProgressModel(
       contentId: module.id,
-      progressPct: progressPct,
-      isCompleted: completedLessons >= totalLessons,
+      progressPct: 0,
+      currentStepOrder: 0,
+      totalSteps: totalLessons,
+      isCompleted: false,
     );
   }
 }
