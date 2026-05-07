@@ -1,33 +1,13 @@
 import os
 import tempfile
-from functools import lru_cache
 from typing import Any
 
 from fastapi import UploadFile
-from fastapi.concurrency import run_in_threadpool
+import httpx
 
 from app.ai.cv.label_mapper import map_detected_class
 from app.core.config import settings
 from app.core.exceptions import AppException
-
-
-@lru_cache
-def get_roboflow_client():
-    try:
-        from inference_sdk import InferenceHTTPClient
-    except ImportError as exc:
-        raise AppException(
-            "inference-sdk is not installed. Install backend requirements first.",
-            status_code=503,
-        ) from exc
-
-    if not settings.ROBOFLOW_API_KEY:
-        raise AppException("Roboflow API key is not configured.", status_code=503)
-
-    return InferenceHTTPClient(
-        api_url=settings.ROBOFLOW_API_URL,
-        api_key=settings.ROBOFLOW_API_KEY,
-    )
 
 
 async def predict_waste_class(file: UploadFile) -> dict:
@@ -43,11 +23,10 @@ async def predict_waste_class(file: UploadFile) -> dict:
 
     temp_path = _write_temp_image(image_bytes, file.filename)
     try:
-        client = get_roboflow_client()
-        roboflow_result = await run_in_threadpool(
-            client.infer,
+        roboflow_result = await _infer_with_roboflow_http(
             temp_path,
-            model_id=settings.ROBOFLOW_MODEL_ID,
+            filename=file.filename,
+            content_type=file.content_type,
         )
     except AppException:
         raise
@@ -76,6 +55,43 @@ async def predict_waste_class(file: UploadFile) -> dict:
         "raw_detected_label": raw_detected_label,
         "roboflow": roboflow_result,
     }
+
+
+async def _infer_with_roboflow_http(
+    image_path: str,
+    *,
+    filename: str | None,
+    content_type: str | None,
+) -> dict[str, Any]:
+    if not settings.ROBOFLOW_API_KEY:
+        raise AppException("Roboflow API key is not configured.", status_code=503)
+
+    base_url = settings.ROBOFLOW_API_URL.rstrip("/")
+    model_id = settings.ROBOFLOW_MODEL_ID.strip("/")
+    url = f"{base_url}/{model_id}"
+
+    with open(image_path, "rb") as image_file:
+        files = {
+            "file": (
+                filename or "scan.jpg",
+                image_file,
+                content_type or "image/jpeg",
+            )
+        }
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.post(
+                url,
+                params={"api_key": settings.ROBOFLOW_API_KEY},
+                files=files,
+            )
+
+    if response.status_code >= 400:
+        raise AppException(
+            f"Roboflow inference failed with status {response.status_code}.",
+            status_code=502,
+        )
+
+    return response.json()
 
 
 def _write_temp_image(image_bytes: bytes, filename: str | None) -> str:

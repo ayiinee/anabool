@@ -1,0 +1,16 @@
+-r requirements.txt
+
+# Local development / maintenance tools.
+# These are intentionally excluded from the Vercel runtime bundle.
+pytest
+pypdf
+
+# Optional Roboflow SDK. The deployed API calls Roboflow through httpx.
+inference-sdk; python_version < "3.13"
+
+# Optional local embedding backend. The deployed MVP uses EMBEDDING_PROVIDER=hash.
+langchain
+numpy
+pillow
+sentence-transformers
+torch

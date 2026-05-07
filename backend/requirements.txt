@@ -7,13 +7,5 @@ supabase
 firebase-admin
 python-multipart
 httpx
-pillow
-numpy
-langchain
-inference-sdk; python_version < "3.13"
-sentence-transformers
-torch
-pypdf
 groq
-pytest
 
