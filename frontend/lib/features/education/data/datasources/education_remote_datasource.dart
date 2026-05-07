@@ -44,7 +44,8 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
   final Map<String, UserEduProgressModel> _progressByModule = {
     'module_1_toxoplasma_gondii': const UserEduProgressModel(
       contentId: 'module_1_toxoplasma_gondii',
-      progressPct: 22.22222222222222,
+      progressPct: 33.33333333333333,
+      completedSteps: 3,
       currentStepOrder: 3,
       totalSteps: 9,
       isCompleted: false,
@@ -96,6 +97,7 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
     final completed = UserEduProgressModel(
       contentId: module.id,
       progressPct: 100,
+      completedSteps: module.lessons.length,
       currentStepOrder: module.lessons.length,
       totalSteps: module.lessons.length,
       isCompleted: true,
@@ -118,20 +120,25 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       throw const EducationRemoteException('Pelajaran tidak ditemukan.');
     }
 
-    final currentProgress = _progressForModule(module);
     final totalLessons = module.lessons.length;
     final completedLessonOrder = lessonIndex + 1;
     final nextStepOrder = completedLessonOrder >= totalLessons
         ? totalLessons
         : completedLessonOrder + 1;
-    final completedPct = completedLessonOrder / totalLessons * 100;
+    final currentProgress = _progressForModule(module);
+    final completedSteps = completedLessonOrder > currentProgress.completedSteps
+        ? completedLessonOrder
+        : currentProgress.completedSteps;
+    final completedPct = _calculateProgressPct(
+      completedSteps: completedSteps,
+      totalSteps: totalLessons,
+    );
     final updated = currentProgress.copyWith(
-      progressPct: completedPct > currentProgress.progressPct
-          ? completedPct
-          : currentProgress.progressPct,
+      progressPct: completedPct,
+      completedSteps: completedSteps,
       currentStepOrder: nextStepOrder,
       totalSteps: totalLessons,
-      isCompleted: completedLessonOrder >= totalLessons,
+      isCompleted: completedSteps >= totalLessons,
     );
 
     _progressByModule[module.id] = updated;
@@ -178,19 +185,37 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
     final existing = _progressByModule[module.id];
     if (existing != null) {
       return existing.copyWith(
+        progressPct: _calculateProgressPct(
+          completedSteps: existing.completedSteps,
+          totalSteps: totalLessons,
+        ),
+        completedSteps: existing.completedSteps.clamp(0, totalLessons),
         currentStepOrder: existing.currentStepOrder.clamp(0, totalLessons),
         totalSteps: totalLessons,
-        isCompleted: existing.progressPct >= 100,
+        isCompleted: existing.completedSteps >= totalLessons,
       );
     }
 
     return UserEduProgressModel(
       contentId: module.id,
       progressPct: 0,
+      completedSteps: 0,
       currentStepOrder: 0,
       totalSteps: totalLessons,
       isCompleted: false,
     );
+  }
+
+  double _calculateProgressPct({
+    required int completedSteps,
+    required int totalSteps,
+  }) {
+    if (totalSteps <= 0) {
+      return 0;
+    }
+
+    final normalizedCompletedSteps = completedSteps.clamp(0, totalSteps);
+    return normalizedCompletedSteps / totalSteps * 100;
   }
 }
 

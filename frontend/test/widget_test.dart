@@ -6,12 +6,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:frontend/app/app.dart';
 import 'package:frontend/core/constants/route_constants.dart';
 import 'package:frontend/core/constants/asset_constants.dart';
+import 'package:frontend/features/education/presentation/controllers/education_controller.dart';
 import 'package:frontend/features/education/presentation/pages/education_complete_page.dart';
 import 'package:frontend/features/education/presentation/pages/education_detail_page.dart';
 import 'package:frontend/features/education/presentation/pages/education_page.dart';
 import 'package:frontend/features/home/presentation/pages/home_page.dart';
 
 void main() {
+  Future<void> pumpEducationUi(WidgetTester tester) async {
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+  }
+
   test('home assets are bundled', () async {
     TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -285,7 +291,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byIcon(Icons.school_rounded));
-    await tester.pumpAndSettle();
+    await pumpEducationUi(tester);
 
     expect(find.text('Lanjut belajar'), findsOneWidget);
     expect(
@@ -293,12 +299,13 @@ void main() {
   });
 
   testWidgets('education page renders and filters modules', (tester) async {
+    EducationController.resetSharedStateForTests();
     await tester.pumpWidget(
       const MaterialApp(
         home: EducationPage(),
       ),
     );
-    await tester.pumpAndSettle();
+    await pumpEducationUi(tester);
 
     expect(find.text('Lanjut belajar'), findsOneWidget);
     expect(find.text('Daftar Modul'), findsOneWidget);
@@ -309,7 +316,15 @@ void main() {
     expect(find.byKey(const ValueKey('education-category-tutorial')),
         findsOneWidget);
     expect(find.text('Memahami Toxoplasma gondii'), findsWidgets);
-    expect(find.text('22%'), findsWidgets);
+    expect(find.text('33%'), findsWidgets);
+    final progressBars = tester.widgetList<LinearProgressIndicator>(
+      find.byType(LinearProgressIndicator),
+    );
+    expect(
+      progressBars
+          .any((bar) => (bar.value ?? 0) > 0.32 && (bar.value ?? 0) < 0.34),
+      isTrue,
+    );
 
     await tester.enterText(
       find.byKey(const ValueKey('education-search-field')),
@@ -331,6 +346,7 @@ void main() {
 
   testWidgets('education detail completes module and opens reward page',
       (tester) async {
+    EducationController.resetSharedStateForTests();
     await tester.pumpWidget(
       MaterialApp(
         home: const EducationPage(),
@@ -348,11 +364,11 @@ void main() {
         },
       ),
     );
-    await tester.pumpAndSettle();
+    await pumpEducationUi(tester);
 
     await tester.ensureVisible(find.text('Memahami Toxoplasma gondii').first);
     await tester.tap(find.text('Memahami Toxoplasma gondii').first);
-    await tester.pumpAndSettle();
+    await pumpEducationUi(tester);
 
     expect(find.text('Detail Modul'), findsOneWidget);
     expect(find.text('Poin penting'), findsWidgets);
@@ -365,19 +381,58 @@ void main() {
     await tester
         .ensureVisible(find.byKey(const ValueKey('education-complete-button')));
     await tester.tap(find.byKey(const ValueKey('education-complete-button')));
-    await tester.pumpAndSettle();
+    await pumpEducationUi(tester);
 
     expect(find.text('4 dari 9 step'), findsOneWidget);
     expect(find.text('4. Kenali Jalur Penularan Utama'), findsOneWidget);
 
     for (var i = 0; i < 6; i += 1) {
       await tester.tap(find.byKey(const ValueKey('education-complete-button')));
-      await tester.pumpAndSettle();
+      await pumpEducationUi(tester);
     }
 
     expect(find.text('Modul selesai!'), findsOneWidget);
     expect(find.text('Reward berhasil diklaim'), findsOneWidget);
     expect(find.text('+25 MeowPoints untuk progres belajar kamu.'),
         findsOneWidget);
+  });
+
+  testWidgets('education catalog progress updates after lesson completion',
+      (tester) async {
+    EducationController.resetSharedStateForTests();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: const EducationPage(),
+        routes: {
+          RouteConstants.educationDetail: (context) {
+            final arguments = ModalRoute.of(context)?.settings.arguments;
+            return EducationDetailPage(contentId: arguments as String);
+          },
+        },
+      ),
+    );
+    await pumpEducationUi(tester);
+
+    await tester.ensureVisible(find.text('Memahami Toxoplasma gondii').first);
+    await tester.tap(find.text('Memahami Toxoplasma gondii').first);
+    await pumpEducationUi(tester);
+
+    await tester.tap(find.byKey(const ValueKey('education-complete-button')));
+    await pumpEducationUi(tester);
+    await tester.tap(find.byKey(const ValueKey('education-complete-button')));
+    await pumpEducationUi(tester);
+    await tester.tap(find.byTooltip('Kembali'));
+    await pumpEducationUi(tester);
+
+    expect(find.text('44%'), findsWidgets);
+    final progressBars = tester.widgetList<LinearProgressIndicator>(
+      find.byType(LinearProgressIndicator),
+    );
+    expect(
+      progressBars.any(
+        (bar) => (bar.value ?? 0) > 0.43 && (bar.value ?? 0) < 0.45,
+      ),
+      isTrue,
+    );
   });
 }

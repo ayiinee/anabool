@@ -318,13 +318,16 @@ class _ContinueCard extends StatelessWidget {
     final progress = controller.progressFor(content.id);
     final progressText = progress.isCompleted
         ? 'Selesai'
-        : '${progress.progressPct.clamp(0, 100).round()}%';
+        : '${controller.progressPercentFor(content.id)}%';
 
     return InkWell(
-      onTap: () => Navigator.of(context).pushNamed(
-        RouteConstants.educationDetail,
-        arguments: content.id,
-      ),
+      onTap: () async {
+        await Navigator.of(context).pushNamed(
+          RouteConstants.educationDetail,
+          arguments: content.id,
+        );
+        await controller.load();
+      },
       borderRadius: BorderRadius.circular(8),
       child: Container(
         width: double.infinity,
@@ -373,7 +376,7 @@ class _ContinueCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(999),
               child: LinearProgressIndicator(
                 minHeight: 7,
-                value: progress.progressPct.clamp(0, 100) / 100,
+                value: controller.progressValueFor(content.id),
                 backgroundColor: const Color(0xFFFFE6D8),
                 color: AnaboolColors.header,
               ),
@@ -552,10 +555,13 @@ class _ModuleList extends StatelessWidget {
             content: content,
             categoryName: controller.categoryNameFor(content.categorySlug),
             progress: controller.progressFor(content.id),
-            onTap: () => Navigator.of(context).pushNamed(
-              RouteConstants.educationDetail,
-              arguments: content.id,
-            ),
+            onTap: () async {
+              await Navigator.of(context).pushNamed(
+                RouteConstants.educationDetail,
+                arguments: content.id,
+              );
+              await controller.load();
+            },
           ),
           const SizedBox(height: 9),
         ],

@@ -24,7 +24,7 @@ class EducationContentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progressPct = progress.progressPct.clamp(0, 100).round();
+    final progressPct = progress.calculatedProgressPct.round();
 
     return Material(
       color: Colors.white,
@@ -35,7 +35,7 @@ class EducationContentCard extends StatelessWidget {
         splashColor: AnaboolColors.header.withValues(alpha: 0.16),
         highlightColor: AnaboolColors.header.withValues(alpha: 0.08),
         child: Container(
-          height: compact ? 78 : 96,
+          height: compact ? 86 : 106,
           padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
           decoration: BoxDecoration(
             border: Border.all(color: AnaboolColors.border),
@@ -112,6 +112,16 @@ class EducationContentCard extends StatelessWidget {
                         const SizedBox(width: 5),
                         _MetaPill(label: '$progressPct%'),
                       ],
+                    ),
+                    const SizedBox(height: 6),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(
+                        minHeight: 6,
+                        value: progress.progressValue,
+                        backgroundColor: const Color(0xFFFFE6D8),
+                        color: AnaboolColors.header,
+                      ),
                     ),
                   ],
                 ),

@@ -37,9 +37,16 @@ class EducationController extends ChangeNotifier {
     );
   }
 
-  static final EducationRepository _sharedRepository = EducationRepositoryImpl(
+  static EducationRepository _sharedRepository = EducationRepositoryImpl(
     remoteDatasource: LocalEducationRemoteDatasource(),
   );
+
+  @visibleForTesting
+  static void resetSharedStateForTests() {
+    _sharedRepository = EducationRepositoryImpl(
+      remoteDatasource: LocalEducationRemoteDatasource(),
+    );
+  }
 
   final GetEducationContents _getEducationContents;
   final GetEducationDetail _getEducationDetail;
@@ -80,7 +87,8 @@ class EducationController extends ChangeNotifier {
   List<EducationContent> get inProgressContents {
     return contents.where((content) {
       final itemProgress = progressFor(content.id);
-      return itemProgress.progressPct > 0 && !itemProgress.isCompleted;
+      return itemProgress.calculatedProgressPct > 0 &&
+          !itemProgress.isCompleted;
     }).toList();
   }
 
@@ -197,6 +205,7 @@ class EducationController extends ChangeNotifier {
     return UserEduProgress(
       contentId: contentId,
       progressPct: 0,
+      completedSteps: 0,
       currentStepOrder: 0,
       totalSteps: selectedModule?.lessons.length ?? 0,
       isCompleted: false,
@@ -264,15 +273,20 @@ class EducationController extends ChangeNotifier {
     final completedStepOrder = lesson.order.clamp(1, totalSteps);
     final nextStepOrder =
         completedStepOrder >= totalSteps ? totalSteps : completedStepOrder + 1;
-    final progressPct = completedStepOrder / totalSteps * 100;
+    final completedSteps = completedStepOrder > previous.completedSteps
+        ? completedStepOrder
+        : previous.completedSteps;
+    final progressPct = _calculateProgressPct(
+      completedSteps: completedSteps,
+      totalSteps: totalSteps,
+    );
     final updated = UserEduProgress(
       contentId: module.id,
-      progressPct: progressPct > previous.progressPct
-          ? progressPct
-          : previous.progressPct,
+      progressPct: progressPct,
+      completedSteps: completedSteps,
       currentStepOrder: nextStepOrder,
       totalSteps: totalSteps,
-      isCompleted: completedStepOrder >= totalSteps,
+      isCompleted: completedSteps >= totalSteps,
     );
 
     _replaceProgress(updated);
@@ -290,6 +304,7 @@ class EducationController extends ChangeNotifier {
       UserEduProgress(
         contentId: contentId,
         progressPct: previous.progressPct,
+        completedSteps: previous.completedSteps,
         currentStepOrder: stepOrder.clamp(1, module.lessons.length),
         totalSteps: module.lessons.length,
         isCompleted: previous.isCompleted,
@@ -303,6 +318,26 @@ class EducationController extends ChangeNotifier {
         if (item.contentId != updated.contentId) item,
       updated,
     ];
+  }
+
+  double progressValueFor(String contentId) {
+    return progressFor(contentId).progressValue;
+  }
+
+  int progressPercentFor(String contentId) {
+    return progressFor(contentId).calculatedProgressPct.round();
+  }
+
+  double _calculateProgressPct({
+    required int completedSteps,
+    required int totalSteps,
+  }) {
+    if (totalSteps <= 0) {
+      return 0;
+    }
+
+    final normalizedCompletedSteps = completedSteps.clamp(0, totalSteps);
+    return normalizedCompletedSteps / totalSteps * 100;
   }
 
   String categoryNameFor(String slug) {

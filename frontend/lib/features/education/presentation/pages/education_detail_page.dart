@@ -98,7 +98,7 @@ class _DetailContent extends StatelessWidget {
     final lessonTotal =
         progress.totalSteps > 0 ? progress.totalSteps : module.lessons.length;
     final displayedStepOrder = controller.displayStepOrderFor(content.id);
-    final displayedProgress = progress.progressPct.clamp(0, 100) / 100;
+    final displayedProgress = progress.progressValue;
 
     return SafeArea(
       bottom: false,
