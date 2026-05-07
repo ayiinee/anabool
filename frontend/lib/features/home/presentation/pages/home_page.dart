@@ -25,6 +25,14 @@ class HomePageArguments {
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _checkedOnboardingArgument = false;
+  bool _shownCatOnboarding = false;
+
   Future<void> _openActivePickupOrder(BuildContext context) async {
     final shouldClearAfterOpen = pickupSessionController.isOrderComplete;
 
@@ -37,14 +45,6 @@ class HomePage extends StatefulWidget {
       pickupSessionController.clearCompletedOrder();
     }
   }
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  bool _checkedOnboardingArgument = false;
-  bool _shownCatOnboarding = false;
 
   @override
   void didChangeDependencies() {
