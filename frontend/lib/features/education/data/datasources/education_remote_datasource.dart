@@ -22,9 +22,8 @@ abstract class EducationRemoteDatasource {
 class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
   LocalEducationRemoteDatasource();
 
-  static const _moduleAssetPaths = [
-    'assets/modules/module_1_toxoplasma_gondii.json',
-  ];
+  static const _moduleAssetDirectory = 'assets/modules/';
+  static const _moduleAssetExtension = '.json';
 
   static const _categories = [
     {
@@ -151,16 +150,58 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
       return cached;
     }
 
-    final modules = <LearningModuleModel>[];
-    for (final assetPath in _moduleAssetPaths) {
+    final assetPaths = await _loadModuleAssetPaths();
+    final modulesById = <String, LearningModuleModel>{};
+    for (final assetPath in assetPaths) {
       final source = await rootBundle.loadString(assetPath);
-      modules.add(
-        LearningModuleModel.fromMap(jsonDecode(source) as Map<String, dynamic>),
+      final module = LearningModuleModel.fromMap(
+        jsonDecode(source) as Map<String, dynamic>,
       );
+      modulesById[module.id] = module;
     }
 
+    final modules = modulesById.values.toList()..sort(_compareModules);
     _moduleCache = List.unmodifiable(modules);
     return _moduleCache!;
+  }
+
+  Future<List<String>> _loadModuleAssetPaths() async {
+    final manifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+    final assetPaths = manifest
+        .listAssets()
+        .where(
+          (path) =>
+              path.startsWith(_moduleAssetDirectory) &&
+              path.endsWith(_moduleAssetExtension),
+        )
+        .toList()
+      ..sort();
+
+    if (assetPaths.isEmpty) {
+      throw const EducationRemoteException('Data modul tidak ditemukan.');
+    }
+
+    return assetPaths;
+  }
+
+  int _compareModules(LearningModuleModel a, LearningModuleModel b) {
+    final aNumber = _moduleNumber(a.id);
+    final bNumber = _moduleNumber(b.id);
+
+    if (aNumber != null && bNumber != null && aNumber != bNumber) {
+      return aNumber.compareTo(bNumber);
+    }
+
+    return a.title.compareTo(b.title);
+  }
+
+  int? _moduleNumber(String id) {
+    final match = RegExp(r'^module_(\d+)_').firstMatch(id);
+    if (match == null) {
+      return null;
+    }
+
+    return int.tryParse(match.group(1)!);
   }
 
   EducationContentModel _contentFromModule(LearningModuleModel module) {

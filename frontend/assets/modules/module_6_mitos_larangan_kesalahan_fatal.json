@@ -1,0 +1,234 @@
+{
+  "id": "module_6_mitos_larangan_kesalahan_fatal",
+  "title": "Mitos, Larangan, dan Kesalahan Fatal yang Sering Terjadi",
+  "subtitle": "Luruskan informasi keliru tentang kucing, toxoplasmosis, dan pembuangan limbah",
+  "slug": "mitos-larangan-dan-kesalahan-fatal-yang-sering-terjadi",
+  "category": "safety",
+  "categoryLabel": "Safety",
+  "level": "basic",
+  "language": "id",
+  "xpReward": 25,
+  "totalLessons": 9,
+  "estimatedDurationMinutes": 9,
+  "isPublished": true,
+  "sourceType": "pdf",
+  "pdfAsset": "assets/modules/modul_6_mitos_larangan_kesalahan_fatal.pdf",
+  "thumbnailAsset": "assets/images/education/modul-image.png",
+  "summary": "Pelajari mitos umum seputar kucing dan toxoplasmosis, larangan keras mengomposkan atau mem-flush kotoran kucing, serta do's and don'ts untuk ibu hamil, pemilik kucing, makanan, pakan kucing, dan aktivitas berkebun.",
+  "hero": {
+    "title": "Bongkar Mitos, Hindari Kesalahan Fatal",
+    "description": "Kenali informasi keliru yang sering beredar agar kamu bisa merawat kucing, menjaga kehamilan, dan membuang limbah dengan cara yang aman bagi keluarga serta lingkungan.",
+    "badgeText": "+25 XP",
+    "safetyLevel": "high"
+  },
+  "learningGoals": [
+    "Meluruskan mitos bahwa kucing indoor selalu aman 100%.",
+    "Memahami bahwa bukan hanya kucing liar yang dapat membawa risiko.",
+    "Memahami bahwa toxoplasmosis disebabkan parasit, bukan racun atau bulu kucing.",
+    "Mengetahui larangan mengomposkan kotoran kucing secara mandiri di rumah.",
+    "Mengetahui larangan mem-flush kotoran kucing ke toilet.",
+    "Menerapkan do's and don'ts untuk litter box, limbah, daging, pakan kucing, dan berkebun."
+  ],
+  "lessons": [
+    {
+      "id": "lesson_1",
+      "order": 1,
+      "title": "Mengapa Mitos Bisa Berbahaya?",
+      "shortTitle": "Bahaya Mitos",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Informasi tentang Toxoplasma gondii sering beredar dengan cepat, tetapi tidak semuanya benar.",
+        "Bagi ibu hamil dan pemilik kucing, mitos atau saran yang keliru dapat menyebabkan keputusan yang tidak aman.",
+        "Mitos bisa membuat seseorang terlalu takut pada kucing, tetapi justru lengah terhadap risiko nyata dari kotoran, daging mentah, tanah, atau pembuangan limbah.",
+        "Modul ini membantu meluruskan pemahaman dan menunjukkan larangan yang tidak boleh dilanggar."
+      ],
+      "safetyNote": "Gunakan fakta ilmiah sebagai dasar keputusan, bukan rumor atau informasi setengah-setengah.",
+      "keyTakeaway": "Informasi yang keliru dapat membuat pencegahan salah sasaran dan meningkatkan risiko bagi ibu hamil, janin, serta lingkungan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_2",
+      "order": 2,
+      "title": "Mitos: Kucing Indoor Pasti Aman 100%",
+      "shortTitle": "Mitos Kucing Indoor",
+      "type": "myth_fact",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Mitos: Kucing yang dipelihara di dalam rumah pasti aman 100% dari Toxoplasma.",
+        "Fakta: Kucing indoor tetap bisa terinfeksi jika diberi daging mentah atau berhasil menangkap tikus yang masuk ke rumah.",
+        "Batas fisik rumah saja tidak cukup jika pola makan kucing tidak dijaga.",
+        "Kucing yang lebih aman adalah kucing indoor yang hanya diberi pakan komersial matang, seperti dry food atau makanan kaleng."
+      ],
+      "safetyNote": "Jangan berikan raw food atau daging mentah kepada kucing, terutama jika ada ibu hamil di rumah.",
+      "keyTakeaway": "Kucing indoor tetap perlu pola makan matang dan pengawasan agar risiko tetap rendah.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_3",
+      "order": 3,
+      "title": "Mitos: Hanya Kucing Liar yang Berbahaya",
+      "shortTitle": "Mitos Kucing Liar",
+      "type": "myth_fact",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Mitos: Hanya kucing liar yang berbahaya dan membawa parasit.",
+        "Fakta: Kucing peliharaan juga bisa menjadi pembawa dan penyebar parasit jika pola makan dan gaya hidupnya tidak dijaga.",
+        "Kucing domestik tetap dapat menjadi sumber risiko jika buang kotoran sembarangan di taman atau jika dibiarkan berburu.",
+        "Risiko dapat dikurangi dengan menjaga kucing tetap indoor, memberi pakan matang, dan mengelola litter box dengan benar."
+      ],
+      "safetyNote": "Kucing peliharaan bukan musuh, tetapi tetap perlu dikelola dengan kebiasaan aman.",
+      "keyTakeaway": "Risiko tidak hanya berasal dari kucing liar; kucing peliharaan juga perlu perawatan dan pengelolaan yang aman.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_4",
+      "order": 4,
+      "title": "Mitos: Toxoplasmosis Disebabkan Racun atau Bulu Kucing",
+      "shortTitle": "Bukan Racun/Bulu",
+      "type": "myth_fact",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Mitos: Toxoplasmosis disebabkan oleh racun atau bulu kucing.",
+        "Fakta: Toxoplasmosis adalah penyakit infeksi yang disebabkan oleh parasit bersel satu bernama Toxoplasma gondii.",
+        "Survei Jones et al. (2003) menemukan bahwa 21% ibu hamil yang pernah mendengar toxoplasmosis salah mengira penyakit ini disebabkan oleh racun.",
+        "Parasit ini tidak menyebar melalui bulu kucing, melainkan melalui kotoran kucing yang sudah dibiarkan berhari-hari hingga oosista matang.",
+        "Pencegahan yang benar bukan menjauhi bulu kucing, tetapi menjaga litter box, makanan, tangan, dan lingkungan tetap bersih."
+      ],
+      "safetyNote": "Membelai kucing bukan jalur utama penularan. Cuci tangan dan kelola kotoran dengan benar.",
+      "keyTakeaway": "Toxoplasmosis disebabkan parasit, bukan racun atau bulu kucing.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_5",
+      "order": 5,
+      "title": "Larangan Keras: Jangan Komposkan Kotoran Kucing di Rumah",
+      "shortTitle": "Jangan Kompos",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Mengomposkan kotoran kucing secara mandiri di halaman rumah adalah larangan keras.",
+        "Oosista Toxoplasma memiliki cangkang kuat, tahan cuaca beku, tahan kaporit atau klorin, dan dapat bertahan di tanah lebih dari satu tahun.",
+        "Untuk membunuh patogen tangguh ini, kompos harus mencapai suhu minimal sekitar 63°C selama beberapa hari secara konsisten, bahkan beberapa pedoman menyebut hingga 73°C.",
+        "Tumpukan kompos rumahan jarang mencapai dan mempertahankan suhu setinggi itu di seluruh bagian kompos.",
+        "Jika kompos gagal matang digunakan untuk tanaman sayur, oosista yang masih hidup dapat mencemari tanah kebun."
+      ],
+      "safetyNote": "Jangan masukkan kotoran kucing ke tong kompos rumahan atau kebun sayur.",
+      "keyTakeaway": "Kompos rumahan tidak cukup aman untuk kotoran kucing karena oosista dapat bertahan dan mencemari tanah.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_6",
+      "order": 6,
+      "title": "Larangan Keras: Jangan Flush ke Toilet",
+      "shortTitle": "Jangan Flush",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Membuang kotoran atau pasir kucing ke toilet adalah kesalahan fatal.",
+        "Sistem pengolahan air limbah kota, termasuk klorin dan sinar UV, tidak mampu membunuh oosista Toxoplasma.",
+        "Parasit dapat mengalir ke sungai hingga laut.",
+        "Di laut, parasit dapat mencemari kerang dan membahayakan mamalia laut seperti berang-berang laut dan anjing laut.",
+        "Cara praktis yang terlihat mudah dapat menjadi masalah besar bagi ekosistem."
+      ],
+      "safetyNote": "Jangan flush kotoran kucing atau pasir kucing, meskipun terlihat lebih praktis.",
+      "keyTakeaway": "Flush kotoran kucing dapat menyebarkan oosista ke lingkungan air dan membahayakan ekosistem.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_7",
+      "order": 7,
+      "title": "Do's: Cara Aman Membuang Kotoran",
+      "shortTitle": "Cara Aman",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Gunakan metode bag & trash: sendok kotoran, masukkan ke kantong plastik yang tidak mudah robek, ikat rapat, lalu buang ke tempat sampah umum.",
+        "Delegasikan tugas membersihkan litter box kepada suami atau anggota keluarga lain, terutama bila sedang hamil.",
+        "Jika ingin mendaur ulang kotoran kucing menjadi pupuk, gunakan fasilitas pengolahan limbah profesional yang memiliki kontrol suhu tinggi presisi.",
+        "Jangan lakukan pengolahan mandiri di halaman rumah.",
+        "Pembuangan yang aman melindungi rumah, ibu hamil, janin, dan lingkungan."
+      ],
+      "safetyNote": "Untuk ibu hamil, pembersihan litter box tetap sebaiknya dilakukan oleh orang lain.",
+      "keyTakeaway": "Metode bag & trash adalah cara mandiri paling aman untuk membuang kotoran kucing.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_8",
+      "order": 8,
+      "title": "Do's and Don'ts Harian",
+      "shortTitle": "Do's & Don'ts",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Jangan membersihkan pasir kucing sendiri tanpa sarung tangan dan masker. Minta orang lain membersihkan setiap hari; jika terpaksa, gunakan pelindung dan cuci tangan dengan sabun.",
+        "Jangan membuang kotoran ke toilet atau taman. Bungkus rapat dalam plastik lalu buang ke tempat sampah umum.",
+        "Jangan memasukkan kotoran kucing ke kompos organik rumahan. Gunakan pengelola limbah profesional atau buang ke tempat sampah.",
+        "Jangan makan daging setengah matang, steak medium-rare, atau mencicipi daging sebelum matang. Masak daging hingga matang sempurna dan tidak berdarah.",
+        "Jangan memberi kucing daging mentah atau membiarkannya berburu di luar. Beri pakan komersial kering atau basah yang matang.",
+        "Jangan berkebun dengan tangan kosong lalu makan tanpa cuci tangan. Gunakan sarung tangan karet dan cuci tangan setelahnya."
+      ],
+      "safetyNote": "Hindari kebiasaan praktis yang berisiko, terutama saat hamil atau tinggal bersama ibu hamil.",
+      "keyTakeaway": "Do's and don'ts membantu menghindari kesalahan fatal di litter box, dapur, kebun, dan pengelolaan limbah.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_9",
+      "order": 9,
+      "title": "Ringkasan Poin Penting",
+      "shortTitle": "Ringkasan",
+      "type": "summary",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Kucing indoor tetap bisa tertular jika diberi daging mentah atau berhasil berburu tikus di dalam rumah.",
+        "Toxoplasmosis adalah infeksi parasit, bukan racun atau penyakit dari bulu kucing.",
+        "Kotoran kucing tidak boleh dikomposkan secara mandiri karena kompos rumahan tidak cukup panas untuk membunuh oosista.",
+        "Kotoran kucing tidak boleh di-flush ke toilet karena oosista dapat bertahan dalam pengolahan air limbah dan mencemari lingkungan air.",
+        "Penularan juga dapat terjadi dari daging kurang matang, sehingga ibu hamil harus memastikan daging matang sempurna.",
+        "Cara mandiri yang paling aman adalah membungkus kotoran rapat di plastik dan membuangnya ke tempat sampah umum.",
+        "Gunakan pakan kucing matang, jaga kucing tetap indoor, pakai sarung tangan saat berkebun, dan cuci tangan dengan sabun."
+      ],
+      "safetyNote": "Keputusan aman lahir dari informasi yang tepat. Hindari mitos, jangan kompos rumahan, jangan flush, dan kelola makanan serta litter box dengan benar.",
+      "keyTakeaway": "Mitos dan kesalahan fatal dapat dicegah dengan memahami fakta, larangan, dan protokol pembuangan yang aman.",
+      "ctaLabel": "Selesaikan modul"
+    }
+  ],
+  "completion": {
+    "title": "Modul Selesai!",
+    "message": "Kamu sudah menyelesaikan modul Mitos, Larangan, dan Kesalahan Fatal yang Sering Terjadi.",
+    "rewardText": "Kamu mendapatkan +25 XP.",
+    "buttonLabel": "Kembali ke Modul"
+  },
+  "chatbotCta": {
+    "title": "Masih bingung?",
+    "description": "Tanya Si Ana tentang isi modul ini.",
+    "buttonLabel": "Tanya Si Ana",
+    "ragFilter": {
+      "module": "toxoplasma_myths_donts_fatal_mistakes",
+      "language": "id",
+      "source_type": "module"
+    }
+  },
+  "pdfViewerCta": {
+    "title": "Lihat Modul Lengkap",
+    "description": "Buka versi PDF lengkap dari modul pembelajaran ini.",
+    "buttonLabel": "Buka PDF"
+  },
+  "references": [
+    "Jones, J. L., et al., 2003. Toxoplasmosis-related knowledge and practices among pregnant women in the United States.",
+    "CDC., 2000. Preventing Congenital Toxoplasmosis.",
+    "Zero Waste Washington. Can pet waste be composted?",
+    "Carmel Area Wastewater District. Did You Know? Flushed Kitty Litter Harms Sea Otters.",
+    "WSU., 1998. Composted Animal Manures: Precautions and Processing.",
+    "FDA., 2018. Toxoplasma Prevention Before You Become Pregnant."
+  ]
+}

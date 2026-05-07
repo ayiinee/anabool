@@ -1,0 +1,234 @@
+{
+  "id": "module_7_limbah_menjadi_pupuk_circular_economy",
+  "title": "Dari Limbah Menjadi Pupuk",
+  "subtitle": "Circular Economy yang Aman dan Berkelanjutan",
+  "slug": "dari-limbah-menjadi-pupuk-circular-economy-yang-aman-dan-berkelanjutan",
+  "category": "sustainability",
+  "categoryLabel": "Sustainability",
+  "level": "basic",
+  "language": "id",
+  "xpReward": 25,
+  "totalLessons": 9,
+  "estimatedDurationMinutes": 9,
+  "isPublished": true,
+  "sourceType": "pdf",
+  "pdfAsset": "assets/modules/modul_7_dari_limbah_menjadi_pupuk_circular_economy.pdf",
+  "thumbnailAsset": "assets/images/education/modul-image.png",
+  "summary": "Pelajari potensi kotoran kucing sebagai sumber nutrisi pupuk, risiko besar pengomposan mandiri, bahaya vermikompos untuk limbah kucing, model pengolahan profesional bersuhu tinggi, aturan penggunaan pupuk hanya untuk tanaman hias, serta peran ANABOOL Pick-up Service dalam circular economy yang aman.",
+  "hero": {
+    "title": "Circular Economy Tanpa Mengorbankan Biosafety",
+    "description": "Kotoran kucing punya potensi nutrisi tinggi, tetapi harus diproses dengan standar keamanan biologis. Kenali cara mendukung lingkungan tanpa mempertaruhkan kesehatan ibu hamil dan keluarga.",
+    "badgeText": "+25 XP",
+    "safetyLevel": "high"
+  },
+  "learningGoals": [
+    "Memahami potensi nutrisi kotoran kucing sebagai pupuk.",
+    "Mengetahui mengapa pengomposan kotoran kucing secara mandiri di rumah sangat berisiko.",
+    "Memahami kebutuhan suhu tinggi untuk membunuh oosista Toxoplasma gondii.",
+    "Mengetahui mengapa vermikompos tidak aman untuk kotoran kucing peliharaan.",
+    "Memahami model pengolahan profesional dengan kontrol suhu tinggi.",
+    "Menerapkan aturan penggunaan pupuk kotoran kucing hanya untuk tanaman hias atau lanskap.",
+    "Memahami peran ANABOOL Pick-up Service dalam circular economy yang aman dan bertanggung jawab."
+  ],
+  "lessons": [
+    {
+      "id": "lesson_1",
+      "order": 1,
+      "title": "Circular Economy yang Tetap Aman",
+      "shortTitle": "Circular Economy",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Mengubah kotoran kucing menjadi pupuk terdengar seperti ide ramah lingkungan yang mendukung circular economy.",
+        "Namun, kotoran kucing juga dapat menyimpan risiko parasit yang berbahaya, terutama bagi ibu hamil jika diolah dengan cara yang salah.",
+        "Modul ini membahas potensi kotoran kucing sebagai pupuk, alasan pengolahan mandiri di rumah dilarang, dan bagaimana layanan profesional dapat menjadi solusi.",
+        "Tujuannya adalah mendukung pelestarian bumi tanpa mengorbankan kesehatan kehamilan dan biosafety."
+      ],
+      "safetyNote": "Circular economy harus berjalan bersama standar biosafety, bukan menggantikan prinsip keamanan biologis.",
+      "keyTakeaway": "Kotoran kucing bisa bernilai, tetapi hanya aman bila diproses dengan pengolahan profesional yang terkendali.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_2",
+      "order": 2,
+      "title": "Potensi Nutrisi Kotoran Kucing",
+      "shortTitle": "Potensi Nutrisi",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Kotoran hewan peliharaan seperti anjing dan kucing memiliki profil nutrisi yang tinggi dibandingkan beberapa kotoran ternak biasa.",
+        "Kucing adalah hewan karnivora yang mengonsumsi makanan komersial tinggi protein dan mineral.",
+        "Studi Wuthisuthimethavee et al. (2024) menunjukkan bahwa kompos dari kotoran anjing dan kucing mengandung nutrisi yang tinggi.",
+        "Kotoran kucing terbukti memiliki kandungan Nitrogen, Fosfor, Kalsium, dan Sulfur yang lebih tinggi dibandingkan kotoran sapi atau babi."
+      ],
+      "safetyNote": "Nilai nutrisi tidak otomatis berarti aman digunakan. Risiko patogen tetap harus dikendalikan terlebih dahulu.",
+      "keyTakeaway": "Kotoran kucing kaya nutrisi, tetapi membutuhkan pengolahan yang aman sebelum bisa dimanfaatkan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_3",
+      "order": 3,
+      "title": "Manfaat Nutrisi bagi Tanaman",
+      "shortTitle": "Manfaat Tanaman",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Nitrogen berperan penting dalam pembelahan sel dan pertumbuhan daun.",
+        "Fosfor membantu memperkuat akar dan mendukung pembentukan bunga serta buah.",
+        "Kalsium membantu memperkuat dinding sel dan struktur tanaman.",
+        "Sulfur membantu pembentukan protein dan enzim tanaman.",
+        "Dalam uji coba pada jagung manis, tanaman yang diberi kompos kotoran hewan peliharaan tumbuh lebih tinggi, memiliki akar lebih panjang, dan daun lebih lebat dibandingkan tanaman yang diberi pupuk kotoran ternak."
+      ],
+      "safetyNote": "Manfaat pertumbuhan tanaman hanya layak dimanfaatkan setelah kompos dipastikan matang dan bebas patogen.",
+      "keyTakeaway": "Secara nutrisi, kotoran kucing punya potensi besar untuk mendukung pertumbuhan tanaman.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_4",
+      "order": 4,
+      "title": "Mengapa Kompos Rumahan Sangat Berisiko?",
+      "shortTitle": "Risiko DIY",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Pengomposan kotoran kucing secara mandiri di rumah sangat berisiko dan tidak dianjurkan.",
+        "Oosista Toxoplasma gondii memiliki cangkang ganda yang tahan terhadap cuaca dingin, disinfektan biasa, dan bahan kimia penjernih air.",
+        "Untuk membunuh parasit ini, tumpukan kompos harus mencapai suhu termofilik minimal 63°C yang dipertahankan merata selama beberapa hari.",
+        "Beberapa ahli bahkan menyarankan suhu hingga 70°C.",
+        "Pada backyard composting, tumpukan organik jarang mencapai dan mempertahankan suhu setinggi itu secara merata."
+      ],
+      "safetyNote": "Jangan menimbun kotoran kucing di halaman belakang untuk dijadikan kompos mandiri.",
+      "keyTakeaway": "Kompos rumahan tidak cukup aman karena suhu dan pemerataan panasnya tidak terjamin.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_5",
+      "order": 5,
+      "title": "Bahaya Kompos Gagal Matang di Kebun",
+      "shortTitle": "Bahaya Kebun",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Dalam studi Wuthisuthimethavee et al. (2024), proses pengomposan kotoran kucing secara alami hanya mencapai sekitar 40°C.",
+        "Suhu tersebut tidak cukup untuk menghancurkan Toxoplasma gondii.",
+        "Jika kompos rumahan yang gagal matang digunakan di kebun, parasit dapat tetap hidup di tanah.",
+        "Saat seseorang berkebun lalu menyentuh wajah atau makanan tanpa cuci tangan, parasit dapat masuk ke tubuh.",
+        "Jika kompos yang mengandung kotoran kucing dipakai pada sayuran atau buah, jalur penularan dapat sampai ke meja makan."
+      ],
+      "safetyNote": "Jangan gunakan kompos kotoran kucing rumahan untuk tanaman pangan seperti sayur, buah, cabai, atau tomat.",
+      "keyTakeaway": "Kompos yang tidak benar-benar steril dapat memindahkan risiko dari litter box ke tanah kebun dan makanan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_6",
+      "order": 6,
+      "title": "Mitos Vermikompos untuk Kotoran Kucing",
+      "shortTitle": "Vermikompos",
+      "type": "myth_fact",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Mitos: Vermicomposting dengan cacing tanah aman untuk mengolah kotoran kucing peliharaan.",
+        "Fakta: Vermicomposting adalah proses mesofilik bersuhu rendah, biasanya sekitar 20°C hingga 30°C.",
+        "Suhu ini nyaman untuk cacing, tetapi tidak mampu membunuh parasit Toxoplasma.",
+        "Cacing tanah dapat memakan oosista dan mengeluarkannya kembali dalam kondisi tetap hidup melalui kotoran cacing.",
+        "Cacing yang membawa parasit juga berisiko dimakan burung, sehingga parasit dapat menyebar lebih luas ke lingkungan."
+      ],
+      "safetyNote": "Jangan gunakan vermikompos tradisional untuk kotoran kucing yang belum disterilkan.",
+      "keyTakeaway": "Cacing tidak mensterilkan kotoran kucing; proses bersuhu rendah justru dapat mempertahankan risiko parasit.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_7",
+      "order": 7,
+      "title": "Model Pengolahan Profesional yang Aman",
+      "shortTitle": "Profesional Aman",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Kotoran kucing dapat diubah menjadi pupuk dengan aman melalui pengolahan profesional yang terkontrol dengan suhu tinggi.",
+        "Fasilitas profesional memastikan seluruh bagian limbah dipanaskan di atas 63°C selama berhari-hari.",
+        "Setelah dipastikan bebas dari Toxoplasma gondii, limbah dapat diproses lebih lanjut untuk menghasilkan pupuk premium.",
+        "Kompos yang matang sempurna dan bebas patogen dapat membantu menjaga kelembapan tanah dan mendukung ekosistem tanah yang lebih subur.",
+        "Pengolahan profesional dapat menggabungkan manfaat nutrisi dengan standar biosafety."
+      ],
+      "safetyNote": "Pengolahan profesional harus memastikan suhu, durasi, dan pemerataan panas terkendali.",
+      "keyTakeaway": "Pupuk dari kotoran kucing hanya aman jika proses sterilisasi suhu tinggi dilakukan secara profesional.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_8",
+      "order": 8,
+      "title": "Aturan Pakai Pupuk Kucing",
+      "shortTitle": "Aturan Pakai",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Meskipun pupuk kotoran kucing telah diproses secara profesional dan disterilkan, penggunaannya tetap harus dibatasi.",
+        "Gunakan pupuk ini hanya untuk tanaman hias, bunga, pohon peneduh, atau lanskap.",
+        "Jangan gunakan untuk tanaman pangan seperti tomat, cabai, salad, atau sayuran yang daun atau buahnya akan dimakan.",
+        "Pembatasan ini adalah langkah biosafety ganda untuk melindungi keluarga, terutama ibu hamil.",
+        "Pupuk yang diformulasikan untuk tanaman hias tetap dapat memberi manfaat lingkungan tanpa membuka jalur risiko ke makanan."
+      ],
+      "safetyNote": "Gunakan prinsip aman berlapis: meskipun sudah diproses, tetap hindari penggunaan pada tanaman pangan.",
+      "keyTakeaway": "Pupuk dari limbah kucing sebaiknya hanya digunakan untuk tanaman hias dan lanskap, bukan tanaman pangan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_9",
+      "order": 9,
+      "title": "ANABOOL Pick-up Service dan Ringkasan",
+      "shortTitle": "Ringkasan",
+      "type": "summary",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "ANABOOL Pick-up Service menjembatani circular economy dengan biosafety melalui penjemputan limbah pasir dan kotoran kucing langsung dari rumah.",
+        "Layanan penjemputan rutin membantu ibu hamil menghindari risiko menyendok kotoran atau menghirup debu pasir.",
+        "Limbah diproses dengan sterilisasi suhu tinggi melewati ambang aman di atas 63°C agar oosista dan patogen lain hancur.",
+        "Limbah yang tadinya berbahaya dapat diubah menjadi pupuk organik kaya nutrisi untuk tanaman hias.",
+        "Kompos rumahan hanya mencapai suhu hangat sekitar 40°C dan berisiko mempertahankan parasit hidup.",
+        "Vermikompos tradisional tidak aman karena cacing tidak membunuh parasit dan dapat menyebarkannya.",
+        "Solusi yang bertanggung jawab adalah pengolahan profesional, penggunaan pupuk hanya untuk tanaman hias, dan perlindungan kontak bagi ibu hamil."
+      ],
+      "safetyNote": "Circular economy yang baik harus tetap memprioritaskan biosafety, terutama untuk ibu hamil dan lingkungan rumah.",
+      "keyTakeaway": "ANABOOL Pick-up Service membantu mengubah limbah menjadi pupuk bernilai guna melalui proses profesional yang aman dan berkelanjutan.",
+      "ctaLabel": "Selesaikan modul"
+    }
+  ],
+  "completion": {
+    "title": "Modul Selesai!",
+    "message": "Kamu sudah menyelesaikan modul Dari Limbah Menjadi Pupuk – Circular Economy yang Aman dan Berkelanjutan.",
+    "rewardText": "Kamu mendapatkan +25 XP.",
+    "buttonLabel": "Kembali ke Modul"
+  },
+  "chatbotCta": {
+    "title": "Masih bingung?",
+    "description": "Tanya Si Ana tentang isi modul ini.",
+    "buttonLabel": "Tanya Si Ana",
+    "ragFilter": {
+      "module": "toxoplasma_circular_economy_safe_compost",
+      "language": "id",
+      "source_type": "module"
+    }
+  },
+  "pdfViewerCta": {
+    "title": "Lihat Modul Lengkap",
+    "description": "Buka versi PDF lengkap dari modul pembelajaran ini.",
+    "buttonLabel": "Buka PDF"
+  },
+  "references": [
+    "Wuthisuthimethavee, S., et al., 2024. Do Not Throw Pet Faeces Away: Composted Manures Obtained from Dog and Cat Faeces Contain High Nutrients and Effectively Cultivate Plants.",
+    "Zero Waste Washington. Can pet waste be composted?",
+    "WSU., 1998. Composted Animal Manures: Precautions and Processing.",
+    "Comprehensive Assessment. Zoonotic Pathogen Risks, Environmental Toxicology, and Bio-Resource Recovery in Feline and Canine Waste Management.",
+    "Dropp. The Environmental Impact of Pet Waste: Beyond Your Backyard."
+  ]
+}

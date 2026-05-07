@@ -1,0 +1,233 @@
+{
+  "id": "module_4_protokol_aman_membersihkan_membuang_kotoran_kucing",
+  "title": "Protokol Aman Membersihkan & Membuang Kotoran Kucing",
+  "subtitle": "Safety Mode untuk ibu hamil dan pemilik kucing",
+  "slug": "protokol-aman-membersihkan-membuang-kotoran-kucing",
+  "category": "safety",
+  "categoryLabel": "Safety",
+  "level": "basic",
+  "language": "id",
+  "xpReward": 25,
+  "totalLessons": 9,
+  "estimatedDurationMinutes": 9,
+  "isPublished": true,
+  "sourceType": "pdf",
+  "pdfAsset": "assets/modules/modul_4_protokol_aman_membersihkan_membuang_kotoran_kucing.pdf",
+  "thumbnailAsset": "assets/images/education/modul-image.png",
+  "summary": "Pelajari protokol Safety Mode untuk membersihkan dan membuang kotoran kucing dengan aman, terutama bagi ibu hamil. Modul ini mencakup aturan delegasi litter box, pembersihan harian, larangan flush ke kloset, penggunaan APD, metode bag & trash, cuci tangan 20 detik, serta fitur Safety Mode ANABOOL.",
+  "hero": {
+    "title": "Safety Mode untuk Litter Box",
+    "description": "Ikuti langkah aman membersihkan dan membuang kotoran kucing agar kamu tetap bisa merawat anabool kesayangan sambil menjaga kesehatan diri, keluarga, janin, dan lingkungan.",
+    "badgeText": "+25 XP",
+    "safetyLevel": "high"
+  },
+  "learningGoals": [
+    "Memahami alasan ibu hamil sebaiknya tidak membersihkan litter box sendiri.",
+    "Mengetahui pentingnya membersihkan litter box setiap hari sebelum oosista matang.",
+    "Memahami larangan membuang kotoran atau pasir kucing ke kloset dan kompos rumahan.",
+    "Menerapkan protokol APD sederhana saat terpaksa membersihkan litter box sendiri.",
+    "Menerapkan metode pembuangan bag & trash dengan benar.",
+    "Memahami dukungan fitur Safety Mode ANABOOL untuk pengingat, edukasi, dan penjemputan limbah."
+  ],
+  "lessons": [
+    {
+      "id": "lesson_1",
+      "order": 1,
+      "title": "Kenapa Perlu Protokol Safety Mode?",
+      "shortTitle": "Safety Mode",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Mengurus kucing saat hamil bisa menimbulkan kecemasan, terutama karena banyak mitos dan fakta seputar toxoplasmosis.",
+        "Kamu tidak perlu khawatir berlebihan atau berpisah dengan anabool kesayangan di rumah.",
+        "Yang paling penting adalah memahami protokol keamanan tingkat tinggi saat mengelola kotoran kucing.",
+        "Dengan langkah kebersihan yang tepat, kamu bisa melindungi diri, janin, keluarga, dan lingkungan."
+      ],
+      "safetyNote": "Modul ini berfokus pada pencegahan harian. Jika sedang hamil dan khawatir terhadap risiko infeksi, konsultasikan dengan tenaga kesehatan.",
+      "keyTakeaway": "Safety Mode membantu pemilik kucing menerapkan kebiasaan aman tanpa harus menjauhi kucing kesayangan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_2",
+      "order": 2,
+      "title": "Aturan Emas Ibu Hamil: Hindari Litter Box",
+      "shortTitle": "Hindari Litter Box",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Rekomendasi utama untuk ibu hamil adalah tidak membersihkan kotak pasir kucing atau litter box sendiri jika memungkinkan.",
+        "Kotoran kucing adalah media tempat Toxoplasma gondii dapat menyebar ke lingkungan dalam bentuk oosista.",
+        "Saat menyendok pasir kucing, debu yang mungkin mengandung oosista dapat beterbangan, terhirup, atau menempel di tangan.",
+        "Langkah paling aman adalah mendelegasikan tugas ini kepada suami, anggota keluarga lain, atau rekan serumah selama masa kehamilan."
+      ],
+      "safetyNote": "Jika ada orang lain di rumah, jadikan pembersihan litter box sebagai tugas orang tersebut selama masa kehamilan.",
+      "keyTakeaway": "Ibu hamil sebaiknya menghindari membersihkan litter box sendiri dan mendelegasikannya bila memungkinkan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_3",
+      "order": 3,
+      "title": "Mengapa Harus Dibersihkan Setiap Hari?",
+      "shortTitle": "Setiap Hari",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Ketika kucing yang terinfeksi membuang kotoran, oosista di dalam kotoran segar belum langsung berbahaya.",
+        "Oosista membutuhkan waktu sekitar 1 hingga 5 hari di lingkungan terbuka untuk matang atau bersporulasi.",
+        "Setelah matang, oosista berubah menjadi bentuk infeksius yang siap menular ke manusia.",
+        "Karena itu, litter box perlu dibersihkan setiap hari, idealnya kurang dari 24 jam setelah kotoran dikeluarkan.",
+        "Membersihkan setiap hari membantu memotong siklus hidup parasit sebelum oosista sempat aktif."
+      ],
+      "safetyNote": "Jangan biarkan kotoran menumpuk berhari-hari karena risiko meningkat setelah oosista matang.",
+      "keyTakeaway": "Membersihkan litter box setiap hari adalah cara utama untuk membuang oosista sebelum menjadi infeksius.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_4",
+      "order": 4,
+      "title": "Jangan Flush Kotoran Kucing ke Kloset",
+      "shortTitle": "Jangan Flush",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Kotoran atau pasir kucing tidak boleh dibuang ke toilet atau di-flush.",
+        "Sistem pengolahan air limbah, termasuk klorinasi, tidak mampu membunuh oosista Toxoplasma yang memiliki cangkang sangat tangguh.",
+        "Jika masuk ke saluran air, oosista dapat terbawa ke sungai, laut, dan mengganggu hewan laut seperti berang-berang laut atau anjing laut.",
+        "Kotoran kucing juga tidak boleh dibuang ke kompos rumahan biasa karena suhu kompos rumahan tidak cukup panas.",
+        "Untuk membunuh parasit, suhu minimal yang dibutuhkan sekitar 63°C, sedangkan kompos biasa belum tentu mencapai kondisi tersebut."
+      ],
+      "safetyNote": "Pembuangan aman adalah bungkus rapat lalu buang ke tempat sampah umum, bukan ke kloset dan bukan ke kompos rumahan.",
+      "keyTakeaway": "Jangan flush kotoran kucing ke kloset karena oosista dapat bertahan dan mencemari lingkungan air.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_5",
+      "order": 5,
+      "title": "Jika Terpaksa Membersihkan Sendiri",
+      "shortTitle": "Protokol Darurat",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Jika tidak ada orang lain yang bisa membantu, ibu hamil tetap harus menerapkan protokol keamanan ekstra.",
+        "Gunakan masker wajah untuk membantu mencegah terhirupnya debu pasir.",
+        "Gunakan sarung tangan karet atau plastik sekali pakai agar tangan tidak kontak langsung dengan pasir dan kotoran.",
+        "Gunakan pelapis plastik atau pan liner di dasar litter box agar isi pasir lebih mudah dibuang tanpa terlalu banyak mengeruk.",
+        "Hindari gerakan yang membuat debu pasir beterbangan."
+      ],
+      "safetyNote": "Protokol ini hanya untuk kondisi terpaksa. Delegasi tetap menjadi pilihan paling aman bagi ibu hamil.",
+      "keyTakeaway": "Jika harus membersihkan sendiri, gunakan masker, sarung tangan, dan pelapis agar kontak serta debu dapat dikurangi.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_6",
+      "order": 6,
+      "title": "Metode Pembuangan Bag & Trash",
+      "shortTitle": "Bag & Trash",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Sendok kotoran dengan hati-hati dan masukkan ke dalam kantong plastik yang kuat.",
+        "Ikat kantong plastik dengan sangat rapat agar isi tidak tumpah atau menyebarkan debu.",
+        "Buang kantong ke tempat sampah umum di luar rumah agar dapat dibawa ke Tempat Pembuangan Akhir.",
+        "Jangan membuka kantong kembali setelah diikat.",
+        "Setelah selesai, lepaskan sarung tangan dengan hati-hati agar bagian luar sarung tangan tidak menyentuh kulit."
+      ],
+      "safetyNote": "Pastikan kantong tertutup rapat sebelum dibuang ke tempat sampah luar rumah.",
+      "keyTakeaway": "Metode bag & trash membantu membuang kotoran secara tertutup, aman, dan tidak mencemari air.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_7",
+      "order": 7,
+      "title": "Cuci Tangan Minimal 20 Detik",
+      "shortTitle": "Cuci Tangan",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Cuci tangan adalah langkah paling krusial setelah membersihkan atau membuang kotoran kucing.",
+        "Segera setelah selesai dan setelah membuang sarung tangan, cuci tangan dengan sabun dan air hangat yang mengalir.",
+        "Lakukan minimal selama 20 detik.",
+        "Pastikan menyabuni sela-sela jari, punggung tangan, telapak tangan, dan bagian bawah kuku.",
+        "Kebiasaan ini penting untuk mencegah oosista atau kotoran yang tidak terlihat masuk ke mulut melalui tangan."
+      ],
+      "safetyNote": "Jangan menyentuh wajah, mulut, makanan, atau peralatan dapur sebelum mencuci tangan.",
+      "keyTakeaway": "Cuci tangan 20 detik dengan sabun dan air mengalir adalah langkah wajib setelah kontak dengan litter box.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_8",
+      "order": 8,
+      "title": "Fitur Safety Mode ANABOOL",
+      "shortTitle": "Safety Mode App",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "ANABOOL menghadirkan fitur Safety Mode untuk membantu kelompok rentan seperti ibu hamil menjaga rutinitas kebersihan.",
+        "Prioritas Pick-Up memungkinkan pengguna hamil mendapatkan layanan penjemputan limbah pasir kucing secara prioritas, harian atau dua hari sekali.",
+        "Smart Reminder mengirimkan notifikasi real-time setiap 24 jam ke ponsel pengguna atau pasangan agar pembuangan tidak melewati batas aman.",
+        "Edukasi khusus terpersonalisasi menyediakan panduan pop-up, video singkat, dan modul interaktif tentang biosafety di rumah selama kehamilan.",
+        "Fitur ini juga mengingatkan tentang cuci tangan dan bahaya daging mentah."
+      ],
+      "safetyNote": "Fitur aplikasi membantu rutinitas, tetapi kebiasaan aman tetap perlu dilakukan konsisten di rumah.",
+      "keyTakeaway": "Safety Mode ANABOOL mendukung pencegahan lewat prioritas penjemputan, pengingat harian, dan edukasi interaktif.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_9",
+      "order": 9,
+      "title": "Ringkasan dan Checklist Harian",
+      "shortTitle": "Ringkasan",
+      "type": "summary",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Ibu hamil sebaiknya menghindari tugas membersihkan litter box dan mendelegasikannya kepada suami atau anggota keluarga lain.",
+        "Jika terpaksa membersihkan sendiri, gunakan sarung tangan sekali pakai, masker, dan cuci tangan dengan sabun serta air hangat mengalir minimal 20 detik.",
+        "Litter box harus dibersihkan setiap hari karena oosista baru menjadi berbahaya setelah 1 hingga 5 hari di lingkungan luar.",
+        "Kotoran kucing tidak boleh di-flush ke kloset atau dibuang ke kompos rumahan biasa.",
+        "Kucing sebaiknya tetap indoor dan hanya diberi makanan komersial yang matang.",
+        "Saat berkebun, gunakan sarung tangan tebal dan cuci tangan setelah selesai.",
+        "Safety Mode ANABOOL dapat membantu melalui penjemputan prioritas, pengingat harian, dan panduan edukasi interaktif."
+      ],
+      "safetyNote": "Checklist harian: litter box dibersihkan oleh orang lain, kotoran dibungkus rapat, tangan dicuci 20 detik, kucing diberi pakan matang, dan kucing tetap indoor.",
+      "keyTakeaway": "Protokol aman menjaga ibu hamil, keluarga, kucing, dan lingkungan melalui delegasi, pembersihan harian, pembuangan tertutup, dan cuci tangan.",
+      "ctaLabel": "Selesaikan modul"
+    }
+  ],
+  "completion": {
+    "title": "Modul Selesai!",
+    "message": "Kamu sudah menyelesaikan modul Protokol Aman Membersihkan & Membuang Kotoran Kucing.",
+    "rewardText": "Kamu mendapatkan +25 XP.",
+    "buttonLabel": "Kembali ke Modul"
+  },
+  "chatbotCta": {
+    "title": "Masih bingung?",
+    "description": "Tanya Si Ana tentang isi modul ini.",
+    "buttonLabel": "Tanya Si Ana",
+    "ragFilter": {
+      "module": "toxoplasma_litter_box_safety_protocol",
+      "language": "id",
+      "source_type": "module"
+    }
+  },
+  "pdfViewerCta": {
+    "title": "Lihat Modul Lengkap",
+    "description": "Buka versi PDF lengkap dari modul pembelajaran ini.",
+    "buttonLabel": "Buka PDF"
+  },
+  "references": [
+    "CDC., 2024. Preventing Toxoplasmosis | Parasites.",
+    "FDA., 2018. Toxoplasma Prevention Before You Become Pregnant.",
+    "Comprehensive Assessment. Zoonotic Pathogen Risks, Environmental Toxicology, and Bio-Resource Recovery in Feline and Canine Waste Management.",
+    "Pets on Broadway. How Cat Poop Affects Marine Animals.",
+    "CDC., 2000. Preventing Congenital Toxoplasmosis."
+  ]
+}

@@ -15,7 +15,8 @@ import 'package:frontend/features/home/presentation/pages/home_page.dart';
 void main() {
   Future<void> pumpEducationUi(WidgetTester tester) async {
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump();
   }
 
   test('home assets are bundled', () async {

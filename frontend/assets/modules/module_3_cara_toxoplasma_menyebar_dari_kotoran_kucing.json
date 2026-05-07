@@ -1,0 +1,232 @@
+{
+  "id": "module_3_cara_toxoplasma_menyebar",
+  "title": "Cara Toxoplasma Menyebar dari Kotoran Kucing",
+  "subtitle": "Pahami jalur penyebaran oosista dan cara pencegahannya",
+  "slug": "cara-toxoplasma-menyebar-dari-kotoran-kucing",
+  "category": "safety",
+  "categoryLabel": "Safety",
+  "level": "basic",
+  "language": "id",
+  "xpReward": 25,
+  "totalLessons": 9,
+  "estimatedDurationMinutes": 9,
+  "isPublished": true,
+  "sourceType": "pdf",
+  "pdfAsset": "assets/modules/modul_3_cara_toxoplasma_menyebar_dari_kotoran_kucing.pdf",
+  "thumbnailAsset": "assets/images/education/modul-image.png",
+  "summary": "Pelajari bagaimana Toxoplasma gondii menyebar melalui kotoran kucing, kapan oosista menjadi infeksius, faktor risiko dari litter box dan tanah, serta jalur penularan lain melalui daging, sayur, dan air terkontaminasi.",
+  "hero": {
+    "title": "Cegah Penularan dari Sumbernya",
+    "description": "Pahami perjalanan Toxoplasma dari kotoran kucing ke lingkungan, makanan, dan manusia agar kamu bisa menjaga diri tanpa harus menjauhi kucing kesayangan.",
+    "badgeText": "+25 XP",
+    "safetyLevel": "high"
+  },
+  "learningGoals": [
+    "Memahami apa itu oosista Toxoplasma gondii.",
+    "Mengetahui peran kucing sebagai inang utama dalam penyebaran oosista.",
+    "Memahami waktu kritis 1-5 hari sebelum oosista menjadi infeksius.",
+    "Mengenali risiko dari litter box, tanah, dan aktivitas berkebun.",
+    "Mengenali jalur penularan lain melalui daging, sayuran, buah, dan air.",
+    "Menerapkan kebiasaan aman saat mengurus kucing, makanan, dan kebun."
+  ],
+  "lessons": [
+    {
+      "id": "lesson_1",
+      "order": 1,
+      "title": "Bagaimana Toxoplasma Bisa Menyebar?",
+      "shortTitle": "Cara Menyebar",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Toxoplasma gondii dapat berpindah dari kucing ke lingkungan melalui kotoran yang mengandung oosista.",
+        "Modul ini membahas perjalanan parasit dari kotoran kucing, tanah, makanan, hingga akhirnya bisa masuk ke tubuh manusia.",
+        "Tujuannya bukan untuk membuat takut pada kucing, tetapi membantu kamu memahami langkah pencegahan yang tepat.",
+        "Dengan memahami jalur penyebarannya, kamu bisa melindungi diri dan janin tanpa harus berpisah dari kucing kesayangan."
+      ],
+      "safetyNote": "Kucing tidak perlu dijauhi. Fokus pencegahan adalah kebersihan litter box, kebersihan tangan, makanan matang, dan lingkungan yang aman.",
+      "keyTakeaway": "Toxoplasma menyebar melalui oosista di kotoran kucing yang kemudian dapat mencemari tanah, makanan, air, atau tangan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_2",
+      "order": 2,
+      "title": "Kenali Oosista: Telur Parasit yang Tangguh",
+      "shortTitle": "Oosista",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Oosista adalah bentuk seperti telur mikroskopis dari Toxoplasma gondii yang keluar melalui kotoran kucing.",
+        "Kucing adalah inang utama atau inang definitif, yaitu tempat parasit ini dapat berkembang biak secara seksual.",
+        "Kucing biasanya tertular setelah memakan tikus, burung, atau daging mentah yang sudah terinfeksi.",
+        "Setelah kucing terinfeksi pertama kali, kucing dapat mengeluarkan jutaan oosista melalui kotorannya selama sekitar 1 hingga 2 minggu."
+      ],
+      "safetyNote": "Oosista tidak terlihat oleh mata, sehingga pencegahan harus dilakukan lewat kebiasaan bersih yang konsisten.",
+      "keyTakeaway": "Oosista adalah bentuk parasit yang keluar melalui kotoran kucing dan menjadi awal penting dari penyebaran di lingkungan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_3",
+      "order": 3,
+      "title": "Mengapa Oosista Sulit Hilang di Lingkungan?",
+      "shortTitle": "Tangguh di Lingkungan",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Oosista memiliki lapisan pelindung yang kuat sehingga mampu bertahan dalam kondisi lingkungan yang keras.",
+        "Di tanah yang hangat dan lembap, oosista dapat tetap hidup dan menular selama berbulan-bulan, bahkan lebih dari satu tahun.",
+        "Oosista juga tidak mudah mati oleh suhu dingin biasa dan dapat tahan terhadap banyak bahan kimia pembersih.",
+        "Karena itu, tanah, taman, atau pasir yang tercemar kotoran kucing dapat menjadi tempat penyimpanan oosista dalam waktu lama."
+      ],
+      "safetyNote": "Jangan mengandalkan bahan pembersih saja. Pencegahan utama adalah membuang kotoran sebelum oosista matang dan menjaga kebersihan tangan.",
+      "keyTakeaway": "Oosista sangat kuat dan dapat bertahan lama di tanah atau lingkungan yang tercemar.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_4",
+      "order": 4,
+      "title": "Siklus Penyebaran dari Kucing ke Manusia",
+      "shortTitle": "Siklus Penyebaran",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Siklus dapat dimulai ketika kucing berburu dan memakan tikus atau burung yang membawa parasit di tubuhnya.",
+        "Parasit lalu berkembang biak di usus kucing dan keluar bersama kotoran di litter box atau tanah.",
+        "Oosista yang awalnya belum matang membutuhkan waktu untuk berubah menjadi bentuk yang siap menular.",
+        "Setelah matang, oosista dapat menyebar melalui tanah, air hujan, sayuran, atau dimakan oleh hewan ternak yang kemudian membawa parasit di dagingnya.",
+        "Manusia bisa tertular ketika tidak sengaja menelan oosista dari tangan, makanan, air, atau daging yang kurang matang."
+      ],
+      "safetyNote": "Risiko dapat diputus di beberapa titik: jaga kucing tetap indoor, bersihkan litter box setiap hari, cuci sayur, dan masak daging sampai matang.",
+      "keyTakeaway": "Penyebaran tidak selalu terjadi langsung dari kucing ke manusia, tetapi bisa melalui lingkungan, tanaman, air, dan daging.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_5",
+      "order": 5,
+      "title": "Waktu Kritis 1-5 Hari",
+      "shortTitle": "1-5 Hari",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Kotoran kucing yang baru keluar atau masih segar tidak langsung menular.",
+        "Oosista yang baru keluar masih belum matang atau belum bersporulasi.",
+        "Oosista membutuhkan waktu sekitar 1 hingga 5 hari di lingkungan luar untuk matang dan menjadi infeksius.",
+        "Proses pematangan dipengaruhi oleh suhu dan kelembapan lingkungan.",
+        "Membersihkan litter box setiap hari atau kurang dari 24 jam membantu membuang oosista sebelum menjadi ancaman."
+      ],
+      "safetyNote": "Jangan biarkan kotoran menumpuk. Bahaya meningkat jika kotoran dibiarkan berhari-hari di litter box atau tanah.",
+      "keyTakeaway": "Membersihkan litter box setiap hari adalah kunci karena oosista butuh 1-5 hari untuk menjadi infeksius.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_6",
+      "order": 6,
+      "title": "Kucing di Rumah dan Berkebun sebagai Faktor Risiko",
+      "shortTitle": "Faktor Risiko",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Memelihara kucing di rumah dapat meningkatkan risiko jika kebersihan litter box dan lingkungan tidak dikelola dengan baik.",
+        "Studi Zemene et al. (2012) di Ethiopia menemukan bahwa ibu hamil dengan kucing peliharaan memiliki peluang 5,8 kali lebih tinggi untuk terinfeksi dibandingkan yang tidak memelihara kucing.",
+        "Studi Mulugeta et al. (2020) juga menunjukkan bahwa kucing di rumah menjadi faktor risiko signifikan, dengan risiko sekitar 2,45 kali lebih besar.",
+        "Berkebun juga berisiko karena kucing dapat mengubur kotoran di tanah atau pasir yang gembur, sehingga oosista dapat bertahan di area kebun.",
+        "Membersihkan litter box tanpa sarung tangan dan masker dapat meningkatkan risiko tertelannya oosista dari debu pasir atau tangan yang terkontaminasi."
+      ],
+      "safetyNote": "Untuk ibu hamil, lebih aman mendelegasikan pembersihan litter box dan memakai sarung tangan saat berkebun.",
+      "keyTakeaway": "Risiko dari kucing dan tanah dapat dikurangi dengan pengelolaan litter box, perlindungan diri, dan kebiasaan cuci tangan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_7",
+      "order": 7,
+      "title": "Jalur Penularan Lain yang Sering Terlupakan",
+      "shortTitle": "Jalur Lain",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Banyak orang terinfeksi bukan dari kontak langsung dengan kotoran kucing, tetapi dari makanan dan lingkungan yang terkontaminasi.",
+        "Jika oosista di tanah dimakan oleh hewan ternak seperti kambing, domba, sapi, atau babi, parasit dapat bersembunyi di otot dalam bentuk kista jaringan.",
+        "Daging mentah atau setengah matang dapat menjadi sumber penularan, terutama jika suhu memasak belum cukup untuk membunuh kista parasit.",
+        "Sayuran dan buah yang tidak dicuci bersih juga bisa membawa oosista dari tanah.",
+        "Air mentah atau air tanah yang terkontaminasi dapat menjadi media penularan karena oosista dapat bertahan dari klorinasi dan bahan kimia penjernih air standar."
+      ],
+      "safetyNote": "Masak daging sampai matang, cuci sayur dan buah di air mengalir, serta hindari minum air mentah.",
+      "keyTakeaway": "Penularan Toxoplasma juga dapat terjadi melalui daging kurang matang, sayuran tidak dicuci, dan air terkontaminasi.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_8",
+      "order": 8,
+      "title": "Checklist Kebiasaan Aman",
+      "shortTitle": "Checklist Aman",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Bersihkan pasir kucing setiap hari dan, jika sedang hamil, minta orang lain untuk melakukannya.",
+        "Jangan memberi kucing daging mentah dan jangan biarkan kucing berburu tikus atau burung.",
+        "Jaga kucing tetap indoor dan berikan makanan komersial yang matang.",
+        "Gunakan sarung tangan tebal saat berkebun dan cuci tangan dengan sabun setelah selesai.",
+        "Cuci sayur di air mengalir dan masak daging hingga matang sempurna sampai tidak ada bagian merah atau darah.",
+        "Gunakan talenan terpisah untuk daging mentah dan sayuran, lalu cuci pisau serta tangan dengan air sabun hangat."
+      ],
+      "safetyNote": "Kebiasaan kecil yang dilakukan konsisten dapat memutus banyak jalur penularan sekaligus.",
+      "keyTakeaway": "Pencegahan terbaik adalah kombinasi kebersihan litter box, kucing indoor, perlindungan saat berkebun, dan keamanan makanan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_9",
+      "order": 9,
+      "title": "Ringkasan Poin Penting",
+      "shortTitle": "Ringkasan",
+      "type": "summary",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Oosista Toxoplasma keluar melalui kotoran kucing dan sangat kuat, sehingga dapat bertahan di tanah selama berbulan-bulan hingga lebih dari satu tahun.",
+        "Kotoran segar tidak langsung menular karena oosista membutuhkan waktu sekitar 1 hingga 5 hari untuk matang dan menjadi infeksius.",
+        "Membersihkan pasir kucing setiap hari adalah langkah penting untuk membuang oosista sebelum menjadi berbahaya.",
+        "Memiliki kucing di rumah dan berkebun dapat menjadi faktor risiko jika kebersihan dan perlindungan diri tidak dijaga.",
+        "Jalur penularan juga dapat berasal dari daging kurang matang, sayuran atau buah yang tidak dicuci bersih, dan air mentah yang terkontaminasi.",
+        "Pencegahan dapat dilakukan dengan mendelegasikan pembersihan litter box, memakai sarung tangan, mencuci tangan, memasak daging sampai matang, serta menjaga kucing tetap indoor."
+      ],
+      "safetyNote": "Gunakan modul ini sebagai panduan pencegahan harian. Untuk kondisi hamil atau kekhawatiran medis, konsultasikan dengan tenaga kesehatan.",
+      "keyTakeaway": "Toxoplasma dapat dicegah dengan memahami waktu matang oosista, menjaga litter box, dan mengelola kebersihan makanan serta lingkungan.",
+      "ctaLabel": "Selesaikan modul"
+    }
+  ],
+  "completion": {
+    "title": "Modul Selesai!",
+    "message": "Kamu sudah menyelesaikan modul Cara Toxoplasma Menyebar dari Kotoran Kucing.",
+    "rewardText": "Kamu mendapatkan +25 XP.",
+    "buttonLabel": "Kembali ke Modul"
+  },
+  "chatbotCta": {
+    "title": "Masih bingung?",
+    "description": "Tanya Si Ana tentang isi modul ini.",
+    "buttonLabel": "Tanya Si Ana",
+    "ragFilter": {
+      "module": "toxoplasma_cat_feces_transmission",
+      "language": "id",
+      "source_type": "module"
+    }
+  },
+  "pdfViewerCta": {
+    "title": "Lihat Modul Lengkap",
+    "description": "Buka versi PDF lengkap dari modul pembelajaran ini.",
+    "buttonLabel": "Buka PDF"
+  },
+  "references": [
+    "CDC., 2024. Preventing Toxoplasmosis | Parasites.",
+    "FDA., 2018. Toxoplasma Prevention Before You Become Pregnant.",
+    "Mulugeta, S., et al., 2020. Seroprevalence of Anti-Toxoplasma gondii Antibodies and Associated Factors Among Pregnant Women.",
+    "Zemene, E., et al., 2012. Seroprevalence of Toxoplasma gondii and associated risk factors among pregnant women in Jimma town, Southwestern Ethiopia.",
+    "Smith, N. C., et al., 2021. Control of human toxoplasmosis."
+  ]
+}

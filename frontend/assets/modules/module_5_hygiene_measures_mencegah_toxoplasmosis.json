@@ -1,0 +1,234 @@
+{
+  "id": "module_5_hygiene_measures_mencegah_toxoplasmosis",
+  "title": "Hygiene Measures yang Terbukti Efektif Mencegah Toxoplasmosis",
+  "subtitle": "Kebiasaan bersih sederhana untuk memutus rantai penularan",
+  "slug": "hygiene-measures-yang-terbukti-efektif-mencegah-toxoplasmosis",
+  "category": "safety",
+  "categoryLabel": "Safety",
+  "level": "basic",
+  "language": "id",
+  "xpReward": 25,
+  "totalLessons": 9,
+  "estimatedDurationMinutes": 9,
+  "isPublished": true,
+  "sourceType": "pdf",
+  "pdfAsset": "assets/modules/modul_5_hygiene_measures_mencegah_toxoplasmosis.pdf",
+  "thumbnailAsset": "assets/images/education/modul-image.png",
+  "summary": "Pelajari hygiene measures yang terbukti efektif mencegah toxoplasmosis, mulai dari cuci tangan 20 detik, keamanan dapur, memasak daging matang sempurna, mencuci sayur dan buah, menghindari air mentah, hingga mencegah kontaminasi silang.",
+  "hero": {
+    "title": "Kebersihan Adalah Perisai Utama",
+    "description": "Cegah toxoplasmosis dengan rutinitas harian yang sederhana, murah, dan terbukti efektif: cuci tangan, amankan dapur, masak daging matang, cuci sayur, dan gunakan air bersih.",
+    "badgeText": "+25 XP",
+    "safetyLevel": "high"
+  },
+  "learningGoals": [
+    "Memahami pentingnya hygiene measures sebagai pencegahan utama toxoplasmosis.",
+    "Mengetahui kapan wajib mencuci tangan dengan sabun dan air mengalir.",
+    "Memahami alasan hand sanitizer saja tidak cukup untuk oosista Toxoplasma.",
+    "Menerapkan keamanan dapur saat menangani daging mentah.",
+    "Memasak daging, mencuci sayur dan buah, serta memilih air minum dengan aman.",
+    "Mencegah kontaminasi silang antara bahan mentah dan makanan siap makan."
+  ],
+  "lessons": [
+    {
+      "id": "lesson_1",
+      "order": 1,
+      "title": "Hygiene Measures: Pencegahan yang Ada di Rumah",
+      "shortTitle": "Hygiene Measures",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Melindungi diri dan janin dari Toxoplasma gondii tidak harus rumit, mahal, atau membuat kamu menjauhi kucing kesayangan.",
+        "Senjata paling ampuh untuk mencegah infeksi ini adalah kebersihan sehari-hari atau hygiene measures.",
+        "Langkah sederhana seperti mencuci tangan, memasak daging matang, mencuci sayur, dan menjaga kebersihan dapur dapat memutus rantai penularan parasit.",
+        "Modul ini membantu kamu memahami kebiasaan praktis yang bisa langsung diterapkan di rumah."
+      ],
+      "safetyNote": "Pencegahan terbaik adalah rutinitas kecil yang dilakukan konsisten setiap hari.",
+      "keyTakeaway": "Hygiene measures adalah pencegahan utama yang praktis untuk menurunkan risiko toxoplasmosis.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_2",
+      "order": 2,
+      "title": "Cuci Tangan sebagai Perisai Utama",
+      "shortTitle": "Cuci Tangan",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Cuci tangan adalah garis pertahanan pertama melawan toxoplasmosis.",
+        "Oosista dapat menempel di tanah, pasir kucing, atau permukaan yang tercemar.",
+        "Kista parasit juga dapat berada pada daging mentah dan berpindah ke tangan saat kamu menyiapkan makanan.",
+        "Jika tangan yang terkontaminasi menyentuh mulut, wajah, atau makanan, parasit dapat masuk ke tubuh.",
+        "Karena itu, cuci tangan dengan sabun dan air mengalir harus menjadi kebiasaan wajib."
+      ],
+      "safetyNote": "Jangan menyentuh wajah, makanan, atau peralatan makan sebelum mencuci tangan setelah kontak dengan sumber risiko.",
+      "keyTakeaway": "Cuci tangan mencegah parasit berpindah dari tangan ke mulut atau makanan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_3",
+      "order": 3,
+      "title": "Kapan Wajib Cuci Tangan?",
+      "shortTitle": "Kapan Cuci Tangan",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Cuci tangan wajib dilakukan setelah memegang daging mentah, baik daging sapi, kambing, unggas, maupun babi.",
+        "Cuci tangan juga wajib dilakukan setelah berkebun atau menyentuh tanah karena oosista bisa bertahan lama di tanah dan menyelip di bawah kuku.",
+        "Setelah membersihkan litter box, cuci tangan tetap wajib dilakukan meskipun kamu sudah memakai sarung tangan.",
+        "Cuci tangan setelah melepas sarung tangan membantu membersihkan residu debu pasir yang mungkin masih menempel.",
+        "Gunakan sabun dan air mengalir selama minimal 20 detik."
+      ],
+      "safetyNote": "Untuk ibu hamil, pembersihan litter box sebaiknya didelegasikan. Jika terpaksa, gunakan sarung tangan, masker, dan cuci tangan setelahnya.",
+      "keyTakeaway": "Cuci tangan wajib setelah kontak dengan daging mentah, tanah, kebun, dan litter box.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_4",
+      "order": 4,
+      "title": "Sabun Lebih Penting daripada Hand Sanitizer",
+      "shortTitle": "Sabun vs Sanitizer",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Hand sanitizer berbahan dasar alkohol tidak boleh menjadi satu-satunya perlindungan.",
+        "Oosista Toxoplasma memiliki cangkang pelindung yang kuat dan resisten terhadap banyak bahan kimia.",
+        "Sabun dan air mengalir dibutuhkan untuk membantu meluruhkan oosista dari kulit secara mekanis.",
+        "Gosok tangan minimal 20 detik, termasuk sela jari, punggung tangan, telapak tangan, dan bawah kuku.",
+        "Hand sanitizer dapat menjadi tambahan, tetapi bukan pengganti cuci tangan dengan sabun."
+      ],
+      "safetyNote": "Gunakan sabun dan air mengalir sebagai langkah utama, terutama setelah kontak dengan tanah, litter box, atau daging mentah.",
+      "keyTakeaway": "Hand sanitizer saja tidak cukup; cuci tangan dengan sabun dan air mengalir tetap wajib.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_5",
+      "order": 5,
+      "title": "Masak Daging Sampai Matang Sempurna",
+      "shortTitle": "Masak Daging",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Daging setengah matang seperti sate, steak medium-rare, atau daging asap dapat menjadi kendaraan utama parasit.",
+        "Gunakan termometer makanan jika memungkinkan.",
+        "Daging sapi, kambing, dan babi sebaiknya mencapai suhu internal minimal 67°C hingga 71°C.",
+        "Jika tidak ada termometer, pastikan tidak ada cairan merah atau darah muda yang menetes ketika daging dipotong.",
+        "Jangan pernah mencicipi bumbu atau masakan yang berisi daging saat masih mentah atau setengah matang.",
+        "Membekukan daging mentah pada suhu di bawah -12°C selama beberapa hari sebelum dimasak dapat membantu merusak kista parasit."
+      ],
+      "safetyNote": "Untuk ibu hamil, hindari daging setengah matang dan pastikan daging matang sempurna sebelum dimakan.",
+      "keyTakeaway": "Memasak daging hingga matang sempurna membantu membunuh kista parasit di dalam otot daging.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_6",
+      "order": 6,
+      "title": "Cuci Sayur, Buah, dan Pilih Air Minum Aman",
+      "shortTitle": "Sayur & Air",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Sayuran mentah, lalapan, daun selada, atau buah yang jatuh ke tanah dapat tercemar oosista dari tanah.",
+        "Cuci sayuran dan buah di bawah air bersih yang mengalir deras sambil menggosok permukaannya secara perlahan.",
+        "Jika memungkinkan, kupas buah sebelum dimakan.",
+        "Hindari minum air mentah, air sumur dangkal, air sungai, atau es batu yang terbuat dari air mentah.",
+        "Oosista dapat tahan terhadap klorin, sehingga air minum sebaiknya direbus hingga mendidih atau berasal dari kemasan yang terjamin kebersihannya."
+      ],
+      "safetyNote": "Air yang terlihat jernih belum tentu aman dari oosista. Rebus air hingga mendidih atau gunakan air kemasan yang terpercaya.",
+      "keyTakeaway": "Cuci sayur dan buah dengan air mengalir, serta hindari air mentah untuk mengurangi risiko penularan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_7",
+      "order": 7,
+      "title": "Cegah Kontaminasi Silang di Dapur",
+      "shortTitle": "Kontaminasi Silang",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Pisahkan peralatan untuk bahan mentah dan makanan siap makan.",
+        "Jangan menggunakan pisau atau talenan bekas daging mentah untuk memotong sayuran salad.",
+        "Segera cuci talenan, pisau, meja dapur, dan tangan dengan air panas bersabun setelah menangani daging mentah.",
+        "Gunakan talenan terpisah jika memungkinkan.",
+        "Kebiasaan ini membantu mencegah parasit dari daging mentah berpindah ke makanan yang tidak dimasak lagi."
+      ],
+      "safetyNote": "Makanan siap makan seperti salad harus dijauhkan dari peralatan bekas daging mentah.",
+      "keyTakeaway": "Pisahkan peralatan mentah dan matang untuk mencegah parasit berpindah ke makanan siap makan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_8",
+      "order": 8,
+      "title": "Mengapa Hygiene Measures Terbukti Efektif?",
+      "shortTitle": "Bukti Efektif",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Hygiene measures terbukti sebagai pencegahan primer untuk menghindari infeksi selama kehamilan.",
+        "Tinjauan sistematis Wehbe et al. (2022) mengonfirmasi bahwa edukasi kebersihan dapat membantu ibu hamil mengubah perilaku secara signifikan.",
+        "Edukasi tentang cuci tangan, memasak daging dengan benar, dan menghindari litter box dapat menurunkan risiko infeksi baru.",
+        "Sebuah studi di Belgia yang dikutip dalam literatur menemukan penurunan serokonversi hingga 63% setelah edukasi kebersihan diterapkan.",
+        "Kurangnya kebersihan dapur dan kebiasaan tidak mencuci tangan menjadi faktor risiko penting di banyak negara."
+      ],
+      "safetyNote": "Edukasi perlu diikuti dengan praktik harian agar manfaat pencegahan benar-benar tercapai.",
+      "keyTakeaway": "Hygiene measures efektif karena mengubah titik-titik kebiasaan yang paling sering menjadi jalur masuk parasit.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_9",
+      "order": 9,
+      "title": "Ringkasan Poin Penting",
+      "shortTitle": "Ringkasan",
+      "type": "summary",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Kebersihan diri dan sanitasi makanan adalah pencegahan utama toxoplasmosis selama kehamilan.",
+        "Cuci tangan dengan sabun dan air mengalir minimal 20 detik setelah menyentuh daging mentah, tanah, kebun, atau litter box.",
+        "Hand sanitizer saja tidak cukup karena oosista memiliki cangkang kuat dan tahan terhadap banyak bahan kimia.",
+        "Masak daging hingga matang sempurna sampai tidak ada warna merah muda atau darah.",
+        "Cuci buah dan sayur di bawah air mengalir karena oosista dapat menempel dari tanah yang tercemar.",
+        "Hindari air mentah dan gunakan air yang sudah direbus atau air kemasan yang terjamin.",
+        "Pisahkan alat dapur untuk daging mentah dan makanan siap makan agar tidak terjadi kontaminasi silang."
+      ],
+      "safetyNote": "Jadikan cuci tangan, memasak matang, mencuci sayur, dan memisahkan peralatan dapur sebagai rutinitas harian.",
+      "keyTakeaway": "Toxoplasmosis dapat dicegah dengan kebiasaan higienis yang sederhana, konsisten, dan dilakukan setiap hari.",
+      "ctaLabel": "Selesaikan modul"
+    }
+  ],
+  "completion": {
+    "title": "Modul Selesai!",
+    "message": "Kamu sudah menyelesaikan modul Hygiene Measures yang Terbukti Efektif Mencegah Toxoplasmosis.",
+    "rewardText": "Kamu mendapatkan +25 XP.",
+    "buttonLabel": "Kembali ke Modul"
+  },
+  "chatbotCta": {
+    "title": "Masih bingung?",
+    "description": "Tanya Si Ana tentang isi modul ini.",
+    "buttonLabel": "Tanya Si Ana",
+    "ragFilter": {
+      "module": "toxoplasma_hygiene_measures",
+      "language": "id",
+      "source_type": "module"
+    }
+  },
+  "pdfViewerCta": {
+    "title": "Lihat Modul Lengkap",
+    "description": "Buka versi PDF lengkap dari modul pembelajaran ini.",
+    "buttonLabel": "Buka PDF"
+  },
+  "references": [
+    "Wehbe, K., et al., 2022. Hygiene measures as primary prevention of toxoplasmosis during pregnancy: A systematic review.",
+    "Jones, J. L., et al., 2003. Toxoplasmosis-related knowledge and practices among pregnant women in the United States.",
+    "CDC., 2024. Preventing Toxoplasmosis | Parasites.",
+    "FDA., 2018. Toxoplasma Prevention Before You Become Pregnant."
+  ]
+}

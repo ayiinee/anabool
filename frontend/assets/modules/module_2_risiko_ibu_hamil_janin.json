@@ -1,0 +1,299 @@
+{
+  "id": "module_2_risiko_ibu_hamil_janin",
+  "title": "Siapa yang Paling Berisiko?",
+  "subtitle": "Fokus pada Ibu Hamil dan Janin",
+  "slug": "siapa-yang-paling-berisiko-ibu-hamil-dan-janin",
+  "category": "safety",
+  "categoryLabel": "Safety",
+  "level": "basic",
+  "language": "id",
+  "xpReward": 25,
+  "totalLessons": 9,
+  "estimatedDurationMinutes": 8,
+  "isPublished": true,
+  "sourceType": "pdf",
+  "pdfAsset": "assets/modules/modul_2_resiko_ibu_hamil.pdf",
+  "thumbnailAsset": "assets/images/education/modul-image.png",
+  "summary": "Pelajari siapa yang paling rentan terhadap Toxoplasma gondii, mengapa ibu hamil dan janin perlu mendapat perhatian khusus, bagaimana risiko berubah berdasarkan trimester, serta langkah pencegahan praktis bagi ibu hamil yang memiliki kucing.",
+  "hero": {
+    "title": "Belajar Aman Bersama Si Ana",
+    "description": "Kenali risiko toxoplasmosis pada ibu hamil, janin, dan kelompok imun rendah tanpa perlu takut berlebihan pada kucing kesayangan.",
+    "badgeText": "+25 XP",
+    "safetyLevel": "high"
+  },
+  "learningGoals": [
+    "Memahami mengapa ibu hamil dan janin menjadi kelompok yang sangat rentan terhadap Toxoplasma gondii.",
+    "Mengetahui bahwa infeksi pertama kali saat hamil atau tepat sebelum pembuahan dapat menular ke janin melalui plasenta.",
+    "Membedakan risiko penularan dan tingkat keparahan dampak berdasarkan trimester kehamilan.",
+    "Mengenali dampak toxoplasmosis kongenital pada bayi, termasuk gangguan otak, mata, dan gejala fisik lain.",
+    "Memahami pentingnya deteksi dini melalui konsultasi medis dan pemeriksaan darah bila memiliki faktor risiko.",
+    "Mengenali kelompok rentan lain seperti ODHA, pasien kemoterapi, dan pasien transplantasi organ.",
+    "Menerapkan tips aman bagi ibu hamil yang memiliki kucing."
+  ],
+  "lessons": [
+    {
+      "id": "lesson_1",
+      "order": 1,
+      "title": "Siapa yang Paling Berisiko?",
+      "shortTitle": "Kelompok Berisiko",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Membicarakan risiko penyakit saat hamil memang sering kali membuat cemas, tetapi tujuan modul ini bukan untuk menakut-nakuti.",
+        "Modul ini membekali pengguna dengan pengetahuan agar dapat mengenali siapa yang paling rentan terhadap Toxoplasma gondii dan bagaimana cara kerjanya.",
+        "Dengan pemahaman yang tepat, pengguna dapat mengambil langkah pencegahan tanpa perlu menjauhi kucing kesayangan secara berlebihan.",
+        "Fokus utama modul ini adalah ibu hamil, janin, dan kelompok dengan sistem imun rendah."
+      ],
+      "safetyNote": "Kucing bukan alasan untuk panik. Fokus utama pencegahan adalah memahami risiko dan menjaga kebersihan dengan tepat.",
+      "keyTakeaway": "Pengetahuan membantu pengguna mencegah infeksi secara tenang, tepat, dan tidak berlebihan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_2",
+      "order": 2,
+      "title": "Mengapa Ibu Hamil dan Janin Sangat Rentan?",
+      "shortTitle": "Ibu Hamil & Janin",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Pada kebanyakan orang dewasa yang sehat, infeksi Toxoplasma gondii sering kali tidak disadari karena sistem kekebalan tubuh dapat melawan parasit tersebut.",
+        "Parasit dapat dipaksa berada dalam bentuk kista di dalam otot tanpa menimbulkan gejala berarti.",
+        "Risiko menjadi berbeda jika infeksi pertama kali terjadi pada ibu hamil atau tepat sebelum pembuahan.",
+        "Janin yang sedang berkembang belum memiliki sistem kekebalan tubuh sendiri. Jika parasit aktif di darah ibu menembus plasenta dan masuk ke tubuh janin, kondisi ini disebut toxoplasmosis kongenital atau bawaan lahir.",
+        "Jika ibu sudah pernah terinfeksi jauh sebelum hamil, tubuhnya sudah memiliki antibodi pelindung sehingga janin di dalam kandungan akan aman."
+      ],
+      "safetyNote": "Infeksi primer saat hamil perlu diperhatikan karena parasit dapat menembus plasenta dan berdampak pada janin.",
+      "keyTakeaway": "Risiko utama terjadi ketika ibu baru pertama kali terinfeksi saat hamil atau tepat sebelum pembuahan.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_3",
+      "order": 3,
+      "title": "Risiko Infeksi Berdasarkan Trimester",
+      "shortTitle": "Risiko Trimester",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Waktu ibu terinfeksi selama kehamilan sangat menentukan besar risiko penularan ke janin dan seberapa parah dampaknya.",
+        "Pada trimester pertama atau bulan 1-3, risiko parasit menembus plasenta ke janin sekitar 25%. Namun, jika penularan terjadi, dampaknya paling parah dan fatal karena organ penting janin baru mulai terbentuk.",
+        "Pada trimester kedua atau bulan 4-6, risiko penularan meningkat menjadi sekitar 54%. Dampaknya mungkin tidak sefatal trimester pertama, tetapi tetap dapat menimbulkan kelainan bawaan serius.",
+        "Pada trimester ketiga atau bulan 7-9, risiko penularan mencapai sekitar 65%. Bayi yang tertular pada trimester ini sering tampak sehat saat lahir, tetapi gangguan penglihatan atau keterlambatan perkembangan belajar dapat muncul bertahun-tahun kemudian."
+      ],
+      "safetyNote": "Semakin akhir kehamilan, risiko penularan meningkat. Namun, infeksi pada awal kehamilan dapat memberikan dampak paling berat.",
+      "keyTakeaway": "Risiko penularan dan tingkat keparahan dampak berubah sesuai trimester kehamilan.",
+      "trimesterRiskTable": [
+        {
+          "trimester": "Trimester 1",
+          "period": "Bulan 1-3",
+          "transmissionRisk": "Rendah (~25%)",
+          "severity": "Sangat parah",
+          "possibleImpacts": [
+            "Keguguran",
+            "Kelainan otak seperti hidrosefalus atau mikrosefali",
+            "Lahir mati"
+          ]
+        },
+        {
+          "trimester": "Trimester 2",
+          "period": "Bulan 4-6",
+          "transmissionRisk": "Menengah (~54%)",
+          "severity": "Parah hingga menengah",
+          "possibleImpacts": [
+            "Kerusakan retina mata",
+            "Gangguan perkembangan organ"
+          ]
+        },
+        {
+          "trimester": "Trimester 3",
+          "period": "Bulan 7-9",
+          "transmissionRisk": "Tinggi (~65%)",
+          "severity": "Tampak ringan saat lahir",
+          "possibleImpacts": [
+            "Kebutaan lambat",
+            "Keterlambatan intelektual yang muncul saat anak mulai besar"
+          ]
+        }
+      ],
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_4",
+      "order": 4,
+      "title": "Dampak Nyata pada Sang Buah Hati",
+      "shortTitle": "Dampak pada Bayi",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Jika tidak didiagnosis dan tidak diobati, Toxoplasma yang menginfeksi janin dapat merusak sel-sel tubuh dengan cepat.",
+        "Dampak serius pada bayi dapat mencakup keguguran atau lahir mati, terutama jika infeksi terjadi di awal kehamilan.",
+        "Gangguan otak dapat berupa hidrosefalus, yaitu penumpukan cairan di otak yang membuat kepala membesar, atau mikrosefali, yaitu ukuran kepala yang sangat kecil karena otak tidak berkembang.",
+        "Gangguan mata dapat berupa chorioretinitis atau peradangan pada retina mata yang dapat memicu kebutaan permanen.",
+        "Gejala fisik lain dapat meliputi keterlambatan mental atau intelektual, pembengkakan hati dan limpa, penyakit kuning atau jaundice, serta epilepsi atau kejang."
+      ],
+      "safetyNote": "Dampak pada janin dapat serius, sehingga diagnosis dan penanganan medis tidak boleh ditunda bila ada kekhawatiran atau faktor risiko.",
+      "keyTakeaway": "Toxoplasmosis kongenital dapat berdampak pada otak, mata, perkembangan, dan keselamatan bayi.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_5",
+      "order": 5,
+      "title": "Deteksi Dini adalah Kunci",
+      "shortTitle": "Deteksi Dini",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Hanya sekitar 10% ibu hamil yang menunjukkan gejala saat terinfeksi, seperti demam, kelelahan, atau kelenjar getah bening bengkak di leher.",
+        "Sebagian besar ibu hamil yang terinfeksi dapat merasa sehat-sehat saja, sehingga infeksi ini berbahaya jika diabaikan.",
+        "Jika pengguna ragu atau merasa memiliki faktor risiko, pengguna perlu berkonsultasi dengan dokter kandungan untuk melakukan tes darah seperti TORCH atau Toxoplasma.",
+        "Pengobatan dengan antibiotik khusus selama kehamilan dapat secara drastis mengurangi kerusakan pada janin."
+      ],
+      "safetyNote": "Modul ini bersifat edukatif dan preventif, bukan diagnosis medis. Untuk kekhawatiran selama kehamilan, konsultasikan dengan dokter kandungan.",
+      "keyTakeaway": "Gejala bisa tidak muncul, sehingga deteksi dini penting bagi ibu hamil yang memiliki faktor risiko.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_6",
+      "order": 6,
+      "title": "Kelompok Rentan Lainnya: Imun Rendah dan ODHA",
+      "shortTitle": "Imun Rendah",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Selain ibu hamil, individu dengan sistem kekebalan tubuh yang sangat lemah juga termasuk kelompok sangat berisiko.",
+        "Kelompok ini mencakup orang yang hidup dengan HIV/AIDS atau ODHA, pasien kanker yang sedang menjalani terapi kemoterapi, dan pasien yang baru menerima transplantasi organ.",
+        "Pada kelompok ini, parasit Toxoplasma yang sebelumnya tertidur di dalam tubuh dari infeksi masa lalu dapat aktif kembali atau mengalami reaktivasi.",
+        "Ketika tidak ada pertahanan imun yang cukup kuat, infeksi dapat menyebar dan menyerang sistem saraf pusat serta otak.",
+        "Kondisi tersebut dapat menyebabkan meningoencephalitis atau radang otak, kejang, disorientasi, hingga kematian jika tidak segera ditangani."
+      ],
+      "safetyNote": "Orang dengan sistem imun sangat lemah perlu lebih waspada terhadap reaktivasi infeksi dan segera mencari bantuan medis bila mengalami gejala serius.",
+      "keyTakeaway": "Toxoplasma dapat aktif kembali pada kelompok imun rendah dan menyerang otak jika tidak segera ditangani.",
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_7",
+      "order": 7,
+      "title": "Tips Praktis untuk Ibu Hamil yang Memiliki Kucing",
+      "shortTitle": "Tips Ibu Hamil",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Ibu hamil tidak perlu panik atau membuang kucing. Pencegahan dapat dilakukan dengan langkah konkret sehari-hari.",
+        "Delegasikan tugas membersihkan litter box kepada suami atau anggota keluarga lain setiap hari.",
+        "Parasit membutuhkan waktu 1-5 hari untuk menetas di luar tubuh kucing, sehingga kotoran perlu dibuang setiap hari sebelum menjadi menular.",
+        "Jika terpaksa membersihkan sendiri, gunakan sarung tangan karet sekali pakai dan masker wajah, lalu cuci tangan dengan sabun dan air mengalir segera setelah selesai.",
+        "Berikan kucing makanan kering atau makanan kalengan yang sudah matang. Jangan memberikan daging mentah.",
+        "Pelihara kucing di dalam rumah agar tidak berburu tikus atau burung liar yang membawa parasit."
+      ],
+      "safetyNote": "Untuk ibu hamil, hindari kontak langsung dengan kotoran kucing jika memungkinkan dan bersihkan litter box setiap hari.",
+      "keyTakeaway": "Ibu hamil tetap bisa aman bersama kucing dengan delegasi tugas, alat pelindung, kebersihan tangan, diet kucing yang aman, dan pemeliharaan indoor.",
+      "steps": [
+        "Minta bantuan keluarga untuk membersihkan litter box setiap hari.",
+        "Gunakan sarung tangan karet sekali pakai dan masker jika harus membersihkan sendiri.",
+        "Cuci tangan dengan sabun dan air mengalir setelah selesai.",
+        "Berikan makanan kering atau kalengan yang sudah matang kepada kucing.",
+        "Jangan beri kucing daging mentah.",
+        "Jaga kucing tetap di dalam rumah."
+      ],
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_8",
+      "order": 8,
+      "title": "Mengapa Pengetahuan Ibu Hamil Masih Sangat Rendah?",
+      "shortTitle": "Literasi Ibu Hamil",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Di balik tingginya angka infeksi, minimnya edukasi menjadi masalah penting.",
+        "Survei Jones et al. (2003) terhadap ibu hamil di Amerika Serikat menunjukkan bahwa meskipun 48% ibu hamil pernah mendengar tentang toxoplasmosis, hanya 7% yang sadar bahwa mereka pernah dites untuk penyakit ini.",
+        "Pemahaman medis juga masih keliru. Hanya 40% yang tahu bahwa toxoplasmosis adalah penyakit infeksi, sementara 21% ibu hamil mengira toxoplasmosis disebabkan oleh racun.",
+        "Pemahaman tentang risiko kucing sekitar 60%, tetapi pemahaman tentang daging mentah sangat rendah. Hanya 30% ibu hamil yang tahu bahwa parasit ini bisa bersembunyi di dalam daging yang dimasak kurang matang.",
+        "Rendahnya literasi menyebabkan tingginya kasus yang sebenarnya dapat dicegah melalui perubahan perilaku."
+      ],
+      "safetyNote": "Edukasi yang tepat membantu pengguna memahami bahwa risiko tidak hanya berasal dari kucing, tetapi juga dari daging kurang matang dan kebiasaan kebersihan.",
+      "keyTakeaway": "Literasi yang rendah membuat banyak ibu hamil belum memahami sumber risiko dan pentingnya pemeriksaan.",
+      "statistics": [
+        {
+          "label": "Pernah mendengar toxoplasmosis",
+          "value": "48%"
+        },
+        {
+          "label": "Sadar pernah dites",
+          "value": "7%"
+        },
+        {
+          "label": "Tahu toxoplasmosis adalah penyakit infeksi",
+          "value": "40%"
+        },
+        {
+          "label": "Mengira toxoplasmosis disebabkan oleh racun",
+          "value": "21%"
+        },
+        {
+          "label": "Tahu risiko dari kucing",
+          "value": "Sekitar 60%"
+        },
+        {
+          "label": "Tahu risiko dari daging kurang matang",
+          "value": "30%"
+        }
+      ],
+      "ctaLabel": "Selanjutnya"
+    },
+    {
+      "id": "lesson_9",
+      "order": 9,
+      "title": "Ringkasan Poin Penting",
+      "shortTitle": "Ringkasan",
+      "type": "summary",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Toxoplasma gondii sangat berbahaya jika menginfeksi ibu hamil yang belum memiliki kekebalan karena dapat merusak perkembangan organ vital janin.",
+        "Infeksi pada trimester pertama memiliki risiko penularan yang lebih rendah, tetapi dampaknya paling fatal, termasuk keguguran.",
+        "Bayi yang tertular pada trimester ketiga sering terlihat sehat saat lahir, tetapi dapat mengalami masalah saraf dan kebutaan di kemudian hari.",
+        "Selain ibu hamil, penderita HIV/AIDS atau pasien kanker sangat berisiko mengalami reaktivasi parasit yang dapat berujung pada radang otak mematikan.",
+        "Secara global, 36,6% ibu hamil pernah terpapar. Di wilayah tropis seperti Ethiopia, angkanya mencapai 67-83%. Pengetahuan ibu hamil masih rendah, termasuk tentang daging mentah sebagai sumber utama dan kesadaran pernah dites."
+      ],
+      "safetyNote": "Jadikan pencegahan sebagai kebiasaan harian: delegasikan pembersihan litter box bila hamil, gunakan pelindung jika perlu, cuci tangan, pastikan makanan matang, dan konsultasikan ke dokter bila memiliki faktor risiko.",
+      "keyTakeaway": "Risiko toxoplasmosis dapat ditekan melalui edukasi, deteksi dini, dan perilaku pencegahan yang konsisten.",
+      "ctaLabel": "Selesaikan modul"
+    }
+  ],
+  "completion": {
+    "title": "Modul Selesai!",
+    "message": "Kamu sudah menyelesaikan modul Siapa yang Paling Berisiko? Fokus pada Ibu Hamil dan Janin.",
+    "rewardText": "Kamu mendapatkan +25 XP.",
+    "buttonLabel": "Kembali ke Modul"
+  },
+  "chatbotCta": {
+    "title": "Masih bingung?",
+    "description": "Tanya Si Ana tentang isi modul ini.",
+    "buttonLabel": "Tanya Si Ana",
+    "ragFilter": {
+      "module": "toxoplasma_risiko_ibu_hamil_janin",
+      "language": "id",
+      "source_type": "module"
+    }
+  },
+  "pdfViewerCta": {
+    "title": "Lihat Modul Lengkap",
+    "description": "Buka versi PDF lengkap dari modul pembelajaran ini.",
+    "buttonLabel": "Buka PDF"
+  },
+  "references": [
+    "CDC., 2000. Preventing Congenital Toxoplasmosis.",
+    "Salari N. et al., 2025. Global seroprevalence of Toxoplasma gondii in pregnant women: a systematic review and meta-analysis.",
+    "Zemene E. et al., 2012. Seroprevalence of Toxoplasma gondii and associated risk factors among pregnant women in Jimma town, Southwestern Ethiopia.",
+    "Mulugeta S. et al., 2020. Seroprevalence of Anti-Toxoplasma gondii Antibodies and Associated Factors Among Pregnant Women Attending Antenatal Care at Debre Markos Referral Hospital, Northwest Ethiopia.",
+    "Jones J.L. et al., 2003. Toxoplasmosis-related knowledge and practices among pregnant women in the United States."
+  ]
+}

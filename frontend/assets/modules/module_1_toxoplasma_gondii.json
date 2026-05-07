@@ -215,7 +215,8 @@
   "pdfViewerCta": {
     "title": "Lihat Modul Lengkap",
     "description": "Buka versi PDF lengkap dari modul pembelajaran ini.",
-    "buttonLabel": "Buka PDF"
+    "buttonLabel": "Buka PDF",
+    "url": "https://drive.google.com/file/d/16SY_AxLBC_OlKG-cg7EzGrfs_N4wbK5r/view?usp=sharing"
   },
   "references": [
     "Jones, J. L., et al., 2003. Toxoplasmosis-related knowledge and practices among pregnant women in the United States.",

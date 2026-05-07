@@ -115,9 +115,11 @@ class ModuleCta {
     required this.title,
     required this.description,
     required this.buttonLabel,
+    this.url,
   });
 
   final String title;
   final String description;
   final String buttonLabel;
+  final String? url;
 }

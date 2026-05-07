@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/route_constants.dart';
@@ -361,7 +362,7 @@ class _LessonCard extends StatelessWidget {
             const SizedBox(height: 12),
             _LearningGoals(goals: module.learningGoals),
           ],
-          if (module.pdfAsset != null &&
+          if ((module.pdfAsset != null || module.pdfViewerCta.url != null) &&
               module.pdfViewerCta.buttonLabel.isNotEmpty) ...[
             const SizedBox(height: 12),
             _PdfAssetButton(module: module),
@@ -498,45 +499,7 @@ class _PdfAssetButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton.icon(
-      onPressed: () => showModalBottomSheet<void>(
-        context: context,
-        backgroundColor: AnaboolColors.canvas,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
-        ),
-        builder: (context) => Padding(
-          padding: EdgeInsets.fromLTRB(
-            22,
-            18,
-            22,
-            22 + MediaQuery.paddingOf(context).bottom,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                module.pdfViewerCta.title,
-                style: const TextStyle(
-                  color: AnaboolColors.brownDark,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '${module.pdfViewerCta.description}\n\nAsset: ${module.pdfAsset}',
-                style: const TextStyle(
-                  color: AnaboolColors.brownDark,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  height: 1.3,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      onPressed: () => _openGoogleDrivePdf(context),
       style: OutlinedButton.styleFrom(
         foregroundColor: AnaboolColors.brown,
         side: const BorderSide(color: AnaboolColors.border),
@@ -548,6 +511,50 @@ class _PdfAssetButton extends StatelessWidget {
         style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900),
       ),
     );
+  }
+
+  Future<void> _openGoogleDrivePdf(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final pdfUri = _googleDrivePdfUri;
+
+    if (pdfUri == null) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Link Google Drive untuk PDF belum tersedia.'),
+        ),
+      );
+      return;
+    }
+
+    final launched = await launchUrl(
+      pdfUri,
+      mode: LaunchMode.externalApplication,
+    );
+
+    if (!launched) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Tidak bisa membuka link Google Drive.'),
+        ),
+      );
+    }
+  }
+
+  Uri? get _googleDrivePdfUri {
+    final rawUrl = module.pdfViewerCta.url ?? module.pdfAsset;
+    if (rawUrl == null || rawUrl.trim().isEmpty) {
+      return null;
+    }
+
+    final uri = Uri.tryParse(rawUrl.trim());
+    if (uri == null || !uri.hasScheme || !uri.hasAuthority) {
+      return null;
+    }
+
+    final host = uri.host.toLowerCase();
+    final isGoogleDriveUrl =
+        host == 'drive.google.com' || host == 'docs.google.com';
+    return isGoogleDriveUrl ? uri : null;
   }
 }
 

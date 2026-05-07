@@ -98,6 +98,13 @@ class LearningModuleModel extends LearningModule {
       title: map?['title'] as String? ?? '',
       description: map?['description'] as String? ?? '',
       buttonLabel: map?['buttonLabel'] as String? ?? '',
+      url: map?['url'] as String? ??
+          map?['pdfUrl'] as String? ??
+          map?['pdf_url'] as String? ??
+          map?['driveUrl'] as String? ??
+          map?['drive_url'] as String? ??
+          map?['googleDriveUrl'] as String? ??
+          map?['google_drive_url'] as String?,
     );
   }
 
