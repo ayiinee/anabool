@@ -75,3 +75,14 @@ class PickupAssets {
   /// Reuse the home pickup cat as the mascot for category selection.
   static const pickupMascot = HomeAssets.pickupCat;
 }
+
+class MarketplaceAssets {
+  const MarketplaceAssets._();
+
+  static const imageBase = 'assets/images/marketplace';
+
+  static const sellerPetshopIndonesia = '$imageBase/petshop-indonesia.png';
+  static const nabilaReview = '$imageBase/nabila-review.png';
+  static const fishOilProduct = HomeAssets.product7;
+  static const putuReview = HomeAssets.profilePhoto;
+}

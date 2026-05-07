@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../../../app/theme.dart';
-import '../../domain/entities/marketplace_product.dart';
 import 'package:intl/intl.dart';
+
+import '../../domain/entities/marketplace_product.dart';
+import 'marketplace_product_image.dart';
 
 class MarketplaceProductCard extends StatelessWidget {
   const MarketplaceProductCard({
@@ -22,177 +21,265 @@ class MarketplaceProductCard extends StatelessWidget {
       symbol: 'Rp ',
       decimalDigits: 0,
     );
+    final subtitle = _shortSubtitle(product);
+    final imageUrl =
+        product.imageUrls.isNotEmpty ? product.imageUrls.first : '';
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFFDFCD),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE5E5E5)),
+          border: Border.all(color: const Color(0xFFE0C0AF), width: 0.9),
           boxShadow: const [
             BoxShadow(
-              color: Color(0x0A000000),
-              blurRadius: 10,
+              color: Color(0x1A000000),
+              blurRadius: 8,
               offset: Offset(0, 4),
             ),
           ],
         ),
         clipBehavior: Clip.hardEdge,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Image Section
-            Expanded(
-              flex: 5,
-              child: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    color: const Color(0xFFF6F6F6),
-                    child: product.imageUrls.isNotEmpty
-                        ? CachedNetworkImage(
-                            imageUrl: product.imageUrls.first,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => const Icon(Icons.error),
-                          )
-                        : const Icon(Icons.image, color: Colors.grey),
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: AnaboolColors.brownDark,
-                        borderRadius: BorderRadius.circular(999),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x22000000),
-                            blurRadius: 8,
-                            offset: Offset(0, 3),
-                          ),
-                        ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final imageHeight =
+                (constraints.maxWidth * 0.94).clamp(154.0, 170.0);
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: imageHeight,
+                  width: double.infinity,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      MarketplaceProductImage(
+                        imageUrl: imageUrl,
+                        fit: BoxFit.cover,
+                        alignment: Alignment.topCenter,
                       ),
-                      child: const Text(
-                        '14%',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Content Section
-            Expanded(
-              flex: 5,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product.name,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                        height: 1.2,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      product.description,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AnaboolColors.muted,
-                        fontSize: 9,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      currencyFormatter.format(product.priceIdr),
-                      style: const TextStyle(
-                        color: AnaboolColors.brownDark,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      const Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: const Color(0xFFE5E5E5)),
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          child: const Text(
-                            'Bisa COD',
-                            style: TextStyle(
-                              fontSize: 7,
-                              fontWeight: FontWeight.w600,
-                              color: AnaboolColors.muted,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Color(0x00FFFFFF),
+                                Color(0xD9FFFFFF),
+                              ],
                             ),
                           ),
+                          child: SizedBox(height: 18),
                         ),
-                        const SizedBox(width: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: const Color(0xFFE5E5E5)),
-                            borderRadius: BorderRadius.circular(6),
+                      ),
+                      const Positioned(
+                        top: 0,
+                        right: 0,
+                        child: _DiscountBadge(),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.white,
+                    padding: const EdgeInsets.fromLTRB(7, 6, 7, 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Color(0xFF5C2700),
+                            fontSize: 8,
+                            fontWeight: FontWeight.w800,
+                            height: 1.12,
                           ),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.location_on, size: 8, color: AnaboolColors.muted),
-                              SizedBox(width: 2),
-                              Text(
-                                'Jakarta Utara',
-                                style: TextStyle(
-                                  fontSize: 7,
-                                  fontWeight: FontWeight.w600,
-                                  color: AnaboolColors.muted,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Color(0xFF5C2700),
+                            fontSize: 6,
+                            fontWeight: FontWeight.w400,
+                            height: 1.1,
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                currencyFormatter.format(product.priceIdr),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Color(0xFF5C2700),
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w800,
+                                  height: 1,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.star_rounded,
+                                  size: 7,
+                                  color: Color(0xFFFFA000),
+                                ),
+                                const SizedBox(width: 1),
+                                Text(
+                                  product.avgRating > 0
+                                      ? product.avgRating.toStringAsFixed(1)
+                                      : '-',
+                                  style: const TextStyle(
+                                    color: Color(0xFF5C2700),
+                                    fontSize: 6,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                         const Spacer(),
-                        Row(
+                        const Row(
                           children: [
-                            const Icon(Icons.star_rounded, size: 10, color: Color(0xFFF59E0B)),
-                            const SizedBox(width: 2),
-                            Text(
-                              product.avgRating > 0 ? product.avgRating.toStringAsFixed(1) : '-',
-                              style: const TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                              ),
+                            _MetaPill(label: 'Bisa COD'),
+                            SizedBox(width: 4),
+                            _MetaPill(
+                              label: 'Jakarta Utara',
+                              icon: Icons.location_on,
+                              wider: true,
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
   }
+}
+
+class _DiscountBadge extends StatelessWidget {
+  const _DiscountBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 23,
+      decoration: const BoxDecoration(
+        color: Color(0xFF9A4600),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(14),
+          bottomLeft: Radius.circular(10),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x40000000),
+            blurRadius: 4,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      alignment: Alignment.center,
+      child: const Text(
+        '14%',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 7,
+          fontWeight: FontWeight.w800,
+          height: 1,
+        ),
+      ),
+    );
+  }
+}
+
+class _MetaPill extends StatelessWidget {
+  const _MetaPill({
+    required this.label,
+    this.icon,
+    this.wider = false,
+  });
+
+  final String label;
+  final IconData? icon;
+  final bool wider;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 9,
+      width: wider ? 35 : 22,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: const Color(0xFF9A4600), width: 0.2),
+        borderRadius: BorderRadius.circular(2),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 4.5, color: const Color(0xFF5C2700)),
+            const SizedBox(width: 1),
+          ],
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+              style: const TextStyle(
+                color: Color(0xFF5C2700),
+                fontSize: 4,
+                fontWeight: FontWeight.w400,
+                height: 1,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+String _shortSubtitle(MarketplaceProduct product) {
+  if (product.name.toLowerCase().contains('fish oil')) {
+    return 'Biodegradable & ramah lingkungan';
+  }
+
+  final trimmed = product.description.trim();
+  if (trimmed.isEmpty) {
+    return 'Biodegradable & ramah lingkungan';
+  }
+
+  final firstSentence = trimmed.split(RegExp(r'[.!?]')).first.trim();
+  if (firstSentence.length <= 48) {
+    return firstSentence;
+  }
+  return '${firstSentence.substring(0, 45)}...';
 }

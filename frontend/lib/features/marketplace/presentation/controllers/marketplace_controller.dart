@@ -4,6 +4,7 @@ import '../../data/datasources/marketplace_remote_datasource.dart';
 import '../../data/repositories/marketplace_repository_impl.dart';
 import '../../domain/entities/marketplace_category.dart';
 import '../../domain/entities/marketplace_product.dart';
+import '../../domain/entities/marketplace_whatsapp_order.dart';
 import '../../domain/repositories/marketplace_repository.dart';
 import '../../domain/usecases/get_marketplace_catalog.dart';
 import '../../domain/usecases/get_marketplace_product_detail.dart';
@@ -23,7 +24,8 @@ class MarketplaceController extends ChangeNotifier {
     );
   }
 
-  static final MarketplaceRepository _sharedRepository = MarketplaceRepositoryImpl(
+  static final MarketplaceRepository _sharedRepository =
+      MarketplaceRepositoryImpl(
     remoteDatasource: MarketplaceRemoteDatasourceImpl(),
   );
 
@@ -31,6 +33,7 @@ class MarketplaceController extends ChangeNotifier {
   final GetMarketplaceProductDetail _getMarketplaceProductDetail;
 
   bool isLoading = false;
+  bool isOrdering = false;
   String? errorMessage;
   String searchQuery = '';
   String selectedCategorySlug = 'semua';
@@ -105,5 +108,27 @@ class MarketplaceController extends ChangeNotifier {
   void selectCategory(String slug) {
     selectedCategorySlug = slug;
     notifyListeners();
+  }
+
+  Future<MarketplaceWhatsAppOrder> createWhatsAppOrder(
+    MarketplaceProduct product,
+  ) async {
+    isOrdering = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      return await _sharedRepository.createWhatsAppOrder(product.id);
+    } catch (_) {
+      final fallback = MarketplaceWhatsAppOrder.fromProductFallback(product);
+      if (fallback.waUrl.isEmpty) {
+        errorMessage = 'Nomor WhatsApp penjual belum tersedia.';
+        throw Exception(errorMessage);
+      }
+      return fallback;
+    } finally {
+      isOrdering = false;
+      notifyListeners();
+    }
   }
 }

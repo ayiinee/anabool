@@ -40,19 +40,27 @@ def main():
     # ------------------------------------------------------------------ #
     categories = [
         {
-            "name": "Makanan Kucing",
-            "slug": "makanan-kucing",
-            "description": "Makanan kering, makanan basah, dan camilan untuk kucing.",
-            "icon_url": "https://img.icons8.com/fluency/96/cat-food.png",
+            "name": "Vitamin",
+            "slug": "vitamin",
+            "description": "Vitamin, minyak ikan, dan suplemen harian untuk kucing.",
+            "icon_url": "https://img.icons8.com/fluency/96/heart-with-pulse.png",
             "display_order": 1,
             "is_active": True,
         },
         {
-            "name": "Aksesoris Kucing",
-            "slug": "aksesoris-kucing",
-            "description": "Kalung, baju, topi, dan aksesoris lucu untuk kucing.",
-            "icon_url": "https://img.icons8.com/fluency/96/pet-commands-stay.png",
+            "name": "Makanan Kucing",
+            "slug": "makanan-kucing",
+            "description": "Makanan kering, makanan basah, dan camilan untuk kucing.",
+            "icon_url": "https://img.icons8.com/fluency/96/cat-food.png",
             "display_order": 2,
+            "is_active": True,
+        },
+        {
+            "name": "Kandang Kucing",
+            "slug": "kandang-kucing",
+            "description": "Kandang, rumah, kasur, dan tempat istirahat kucing.",
+            "icon_url": "https://img.icons8.com/fluency/96/dog-house.png",
+            "display_order": 3,
             "is_active": True,
         },
         {
@@ -60,15 +68,15 @@ def main():
             "slug": "peralatan-kebersihan",
             "description": "Litter box, sekop pasir, dan alat kebersihan kucing lainnya.",
             "icon_url": "https://img.icons8.com/fluency/96/broom.png",
-            "display_order": 3,
+            "display_order": 4,
             "is_active": True,
         },
         {
-            "name": "Kesehatan Kucing",
-            "slug": "kesehatan-kucing",
-            "description": "Vitamin, obat cacing, dan produk kesehatan kucing.",
-            "icon_url": "https://img.icons8.com/fluency/96/heart-with-pulse.png",
-            "display_order": 4,
+            "name": "Aksesoris Kucing",
+            "slug": "aksesoris-kucing",
+            "description": "Kalung, baju, topi, dan aksesoris lucu untuk kucing.",
+            "icon_url": "https://img.icons8.com/fluency/96/pet-commands-stay.png",
+            "display_order": 5,
             "is_active": True,
         },
         {
@@ -76,14 +84,6 @@ def main():
             "slug": "mainan-kucing",
             "description": "Bola, tongkat bulu, dan mainan interaktif untuk kucing.",
             "icon_url": "https://img.icons8.com/fluency/96/cat-toy.png",
-            "display_order": 5,
-            "is_active": True,
-        },
-        {
-            "name": "Tempat Tidur & Rumah Kucing",
-            "slug": "tempat-tidur-kucing",
-            "description": "Kasur, rumah kucing, cat tree, dan tempat istirahat.",
-            "icon_url": "https://img.icons8.com/fluency/96/dog-house.png",
             "display_order": 6,
             "is_active": True,
         },
@@ -108,8 +108,8 @@ def main():
         {
             "firebase_uid": "seed_seller_001",
             "email": "petshop.meow@example.com",
-            "display_name": "PetShop Meow",
-            "avatar_url": "https://api.dicebear.com/9.x/initials/svg?seed=PM&backgroundColor=f59e0b",
+            "display_name": "PETSHOP INDONESIA",
+            "avatar_url": "assets/images/marketplace/petshop-indonesia.png",
             "phone_number": "081234567890",
             "role": "user",
         },
@@ -135,9 +135,18 @@ def main():
     buyer = {
         "firebase_uid": "seed_buyer_001",
         "email": "catlover@example.com",
-        "display_name": "Cat Lover",
-        "avatar_url": "https://api.dicebear.com/9.x/initials/svg?seed=CL&backgroundColor=ec4899",
+        "display_name": "Putu Alvin Mahendra",
+        "avatar_url": "assets/images/home/putu-alvin.png",
         "phone_number": "081111222333",
+        "role": "user",
+    }
+
+    buyer_2 = {
+        "firebase_uid": "seed_buyer_002",
+        "email": "nabila@example.com",
+        "display_name": "Nabila Wijaya Putri",
+        "avatar_url": "assets/images/marketplace/nabila-review.png",
+        "phone_number": "081111222444",
         "role": "user",
     }
 
@@ -155,6 +164,10 @@ def main():
         buyer, on_conflict="firebase_uid"
     ).execute()
     buyer_user = buyer_response.data[0]
+    buyer_2_response = client.table("users").upsert(
+        buyer_2, on_conflict="firebase_uid"
+    ).execute()
+    buyer_user_2 = buyer_2_response.data[0]
     print(f"   ✓ Buyer: {buyer_user['display_name']} (id={buyer_user['id']})\n")
 
     # ------------------------------------------------------------------ #
@@ -274,7 +287,7 @@ def main():
         # --- Kesehatan Kucing ---
         {
             "seller_id": seller2["id"],
-            "category_id": cat_map["kesehatan-kucing"]["id"],
+            "category_id": cat_map["vitamin"]["id"],
             "name": "Obat Cacing Kucing Drontal Cat",
             "description": "Obat cacing untuk kucing dewasa. Efektif mengatasi cacing gelang, cacing pita, dan cacing tambang. Dosis 1 tablet per 4 kg berat badan.",
             "price_idr": 28000,
@@ -288,7 +301,7 @@ def main():
         },
         {
             "seller_id": seller3["id"],
-            "category_id": cat_map["kesehatan-kucing"]["id"],
+            "category_id": cat_map["vitamin"]["id"],
             "name": "Vitamin Bulu Kucing - Salmon Oil 100ml",
             "description": "Minyak ikan salmon murni untuk kucing. Kaya omega 3 & 6 yang membantu menjaga kesehatan bulu, kulit, dan sendi kucing. Cukup teteskan di makanan.",
             "price_idr": 85000,
@@ -335,7 +348,7 @@ def main():
         # --- Tempat Tidur & Rumah Kucing ---
         {
             "seller_id": seller2["id"],
-            "category_id": cat_map["tempat-tidur-kucing"]["id"],
+            "category_id": cat_map["kandang-kucing"]["id"],
             "name": "Cat Tree Tower 3 Tingkat - Abu-abu",
             "description": "Cat tree 3 tingkat dengan tiang garukan sisal, tempat tidur empuk, dan mainan bola gantung. Tinggi 120cm. Cocok untuk 1-2 kucing. Kokoh dan stabil.",
             "price_idr": 450000,
@@ -349,7 +362,7 @@ def main():
         },
         {
             "seller_id": seller1["id"],
-            "category_id": cat_map["tempat-tidur-kucing"]["id"],
+            "category_id": cat_map["kandang-kucing"]["id"],
             "name": "Kasur Kucing Donut Bulu Lembut - Pink",
             "description": "Kasur kucing model donut dengan bulu sherpa super lembut. Desain melingkar memberikan rasa aman untuk kucing. Diameter 50cm, bisa dicuci mesin.",
             "price_idr": 120000,
@@ -361,12 +374,42 @@ def main():
                 "https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=600",
             ],
         },
+
+        # --- Produk utama sesuai desain marketplace Figma ---
+        {
+            "seller_id": seller1["id"],
+            "category_id": cat_map["vitamin"]["id"],
+            "name": "Minyak Ikan untuk Kucing Kelinci Hamster Hewan Fish Oil salmon Vit Murah Omega 3",
+            "description": (
+                "Minyak ikan berkualitas tinggi khusus diformulasikan untuk hewan peliharaan "
+                "kesayangan Anda. Mengandung Omega 3. 6. dan 9 yang sangat baik untuk "
+                "kesehatan bulu dan kulit.\n\n"
+                "Manfaat:\n"
+                "1. Melebatkan dan mengkilapkan bulu\n"
+                "2. Mencegah kerontokan bulu\n"
+                "3. Meningkatkan nafsu makan\n"
+                "4. Menjaga kesehatan jantung\n\n"
+                "Dosis:\n"
+                "- Kucing dewasa: 1-2 kapsul/hari\n"
+                "- Kitten: 1 kapsul/hari"
+            ),
+            "price_idr": 49500,
+            "stock": 120,
+            "unit": "botol",
+            "wa_number": "081234567890",
+            "wa_template": "Halo PETSHOP INDONESIA, saya tertarik dengan {product_name} seharga Rp {price_idr}. Apakah masih tersedia?",
+            "images": [
+                "assets/images/home/product-7.png",
+            ],
+        },
     ]
 
     print("3. Menyimpan produk marketplace...")
     product_ids: list[str] = []
+    product_ids_by_name: dict[str, str] = {}
     for product_data in products_data:
         images = product_data.pop("images", [])
+        product_name = product_data["name"]
 
         # Cek apakah produk dengan nama & seller yang sama sudah ada
         existing = (
@@ -386,6 +429,7 @@ def main():
             print(f"   ✓ Dibuat: {product_data['name']} (id={product_id})")
 
         product_ids.append(product_id)
+        product_ids_by_name[product_name] = product_id
 
         # Simpan gambar (hapus dulu yang lama untuk idempotency)
         client.table("product_images").delete().eq("product_id", product_id).execute()
@@ -405,7 +449,27 @@ def main():
     # ------------------------------------------------------------------ #
     # 4. Review Contoh
     # ------------------------------------------------------------------ #
+    figma_fish_oil_product_id = product_ids_by_name[
+        "Minyak Ikan untuk Kucing Kelinci Hamster Hewan Fish Oil salmon Vit Murah Omega 3"
+    ]
+
     reviews_data = [
+        # Review untuk produk utama sesuai desain Figma
+        {
+            "product_id": figma_fish_oil_product_id,
+            "user_id": buyer_user["id"],
+            "rating": 5,
+            "body": "Kucingku suka banget! Bulunya jadi lebih halus dan rontoknya berkurang drastis setelah sebulan pemakaian rutin. Pengiriman juga cepat.",
+            "created_at": "2026-05-04T09:00:00+00:00",
+        },
+        {
+            "product_id": figma_fish_oil_product_id,
+            "user_id": buyer_user_2["id"],
+            "rating": 5,
+            "body": "Mantap, kapsulnya gampang ditelan sama kucingku. Wanginya juga nggak terlalu amis jadi dia mau makan kalau dicampur di dry food.",
+            "created_at": "2026-05-01T09:00:00+00:00",
+        },
+
         # Review untuk produk pertama (Royal Canin)
         {"product_id": product_ids[0], "user_id": buyer_user["id"], "rating": 5, "body": "Kucing saya sangat suka! Sudah repeat order 3 kali. Pengiriman juga cepat."},
         {"product_id": product_ids[0], "user_id": seller2["id"], "rating": 4, "body": "Produk bagus, kemasan rapi. Kucing saya jadi lebih aktif setelah makan ini."},
@@ -466,6 +530,11 @@ def main():
             avg = round(mean(ratings), 2)
             client.table("products").update({"avg_rating": avg}).eq("id", pid).execute()
             print(f"   ✓ product_id={pid[:8]}... avg_rating={avg} ({len(ratings)} reviews)")
+
+    client.table("products").update({"avg_rating": 4.9}).eq(
+        "id",
+        figma_fish_oil_product_id,
+    ).execute()
 
     print("\n=== Seeding selesai! ===")
     print(f"   Kategori : {len(cat_map)}")

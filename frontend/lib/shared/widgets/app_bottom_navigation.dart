@@ -20,6 +20,7 @@ class AppBottomNavigation extends StatelessWidget {
     this.onMarketTap,
     this.onProfileTap,
     this.onScanTap,
+    this.useFigmaLabels = false,
   });
 
   static const baseHeight = 102.0;
@@ -30,6 +31,7 @@ class AppBottomNavigation extends StatelessWidget {
   final VoidCallback? onMarketTap;
   final VoidCallback? onProfileTap;
   final VoidCallback? onScanTap;
+  final bool useFigmaLabels;
 
   static double heightWithInset(BuildContext context) {
     return baseHeight + MediaQuery.paddingOf(context).bottom;
@@ -71,14 +73,14 @@ class AppBottomNavigation extends StatelessWidget {
                   children: [
                     _BottomNavItem(
                       icon: Icons.home_rounded,
-                      label: 'Beranda',
+                      label: useFigmaLabels ? 'Home' : 'Beranda',
                       active: activeDestination ==
                           AppBottomNavigationDestination.home,
                       onTap: onHomeTap ?? () => _goHome(context),
                     ),
                     _BottomNavItem(
                       icon: Icons.school_rounded,
-                      label: 'Modul',
+                      label: useFigmaLabels ? 'Education' : 'Modul',
                       active: activeDestination ==
                           AppBottomNavigationDestination.education,
                       onTap: onEducationTap ?? () => _goEducation(context),
@@ -86,14 +88,14 @@ class AppBottomNavigation extends StatelessWidget {
                     SizedBox(width: centerGap),
                     _BottomNavItem(
                       icon: Icons.storefront_rounded,
-                      label: 'Produk',
+                      label: useFigmaLabels ? 'Market' : 'Produk',
                       active: activeDestination ==
                           AppBottomNavigationDestination.market,
                       onTap: onMarketTap ?? () => _goMarket(context),
                     ),
                     _BottomNavItem(
                       icon: Icons.person_rounded,
-                      label: 'Profil',
+                      label: useFigmaLabels ? 'Profile' : 'Profil',
                       active: activeDestination ==
                           AppBottomNavigationDestination.profile,
                       onTap: onProfileTap ?? () => _goProfile(context),
