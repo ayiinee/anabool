@@ -87,6 +87,18 @@ def create_marketplace_product_review(
     return success_response("Marketplace product review created", result.model_dump(mode="json"))
 
 
+@router.get("/products/{product_id}/reviews")
+def list_marketplace_product_reviews(
+    product_id: str,
+    limit: int = Query(default=10, ge=1, le=50),
+):
+    result = _service.list_reviews(product_id, limit=limit)
+    return success_response(
+        "Marketplace product reviews loaded",
+        [review.model_dump(mode="json") for review in result],
+    )
+
+
 @router.post("/products/{product_id}/whatsapp-order-logs")
 def create_marketplace_whatsapp_order_log(
     product_id: str,

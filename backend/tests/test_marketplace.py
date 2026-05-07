@@ -78,6 +78,18 @@ def test_create_marketplace_review_uses_user_id_fallback(monkeypatch):
     assert response.json()["data"]["rating"] == 5
 
 
+def test_list_marketplace_reviews_returns_enriched_users(monkeypatch):
+    repository = FakeMarketplaceRepository()
+    monkeypatch.setattr(marketplace_routes, "_service", MarketplaceService(repository))
+
+    response = client.get("/api/v1/marketplace/products/product-1/reviews")
+
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert data[0]["body"] == "Bagus."
+    assert data[0]["user"]["display_name"] == "Buyer Ana"
+
+
 def test_create_whatsapp_order_log_returns_deeplink(monkeypatch):
     repository = FakeMarketplaceRepository()
     monkeypatch.setattr(marketplace_routes, "_service", MarketplaceService(repository))
@@ -253,6 +265,24 @@ class FakeMarketplaceRepository:
             "body": body,
             "created_at": "2026-05-05T00:00:00+00:00",
         }
+
+    def list_reviews(self, product_id, *, limit=10):
+        return [
+            {
+                "id": "review-1",
+                "product_id": product_id,
+                "user_id": "buyer-1",
+                "rating": 5,
+                "body": "Bagus.",
+                "created_at": "2026-05-05T00:00:00+00:00",
+                "user": {
+                    "id": "buyer-1",
+                    "display_name": "Buyer Ana",
+                    "avatar_url": None,
+                    "phone_number": None,
+                },
+            }
+        ][:limit]
 
     def create_whatsapp_order_log(
         self,

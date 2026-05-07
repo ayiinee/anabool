@@ -1,6 +1,7 @@
 import '../../domain/entities/marketplace_category.dart';
 import '../../domain/entities/marketplace_product.dart';
 import '../../domain/entities/marketplace_review.dart';
+import '../../domain/entities/marketplace_whatsapp_order.dart';
 import '../../domain/repositories/marketplace_repository.dart';
 import '../datasources/marketplace_remote_datasource.dart';
 
@@ -35,5 +36,16 @@ class MarketplaceRepositoryImpl implements MarketplaceRepository {
   @override
   Future<List<MarketplaceReview>> getProductReviews(String productId) {
     return _remoteDatasource.getProductReviews(productId);
+  }
+
+  @override
+  Future<MarketplaceWhatsAppOrder> createWhatsAppOrder(
+    String productId, {
+    String? templateMessage,
+  }) {
+    return _remoteDatasource.createWhatsAppOrder(
+      productId,
+      templateMessage: templateMessage,
+    );
   }
 }

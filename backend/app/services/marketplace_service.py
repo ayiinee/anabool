@@ -70,6 +70,14 @@ class MarketplaceService:
             raise AppException("Produk marketplace tidak ditemukan.", status_code=404)
         return _product_from_row(row)
 
+    def list_reviews(self, product_id: str, *, limit: int = 10) -> list[ProductReview]:
+        self.get_product(product_id)
+        rows = self._repository.list_reviews(product_id, limit=limit)
+        return [
+            ProductReview.model_validate(_normalize_numbers(row))
+            for row in rows
+        ]
+
     def create_product(
         self,
         request: ProductCreateRequest,

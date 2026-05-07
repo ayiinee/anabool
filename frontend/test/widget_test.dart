@@ -58,6 +58,8 @@ void main() {
       EducationAssets.moduleCat,
       EducationAssets.moduleThinkingCat,
       EducationAssets.moduleMaterial,
+      MarketplaceAssets.sellerPetshopIndonesia,
+      MarketplaceAssets.nabilaReview,
     ];
 
     for (final asset in assets) {
