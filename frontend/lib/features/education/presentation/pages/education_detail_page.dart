@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
-import '../../../../core/constants/asset_constants.dart';
 import '../../../../core/constants/route_constants.dart';
-import '../../../home/presentation/widgets/design_image.dart';
 import '../../domain/entities/education_content.dart';
+import '../../domain/entities/learning_module.dart';
 import '../controllers/education_controller.dart';
 
 class EducationDetailPage extends StatefulWidget {
@@ -22,9 +21,7 @@ class _EducationDetailPageState extends State<EducationDetailPage> {
   @override
   void initState() {
     super.initState();
-    _controller = EducationController.create()
-      ..load()
-      ..loadDetail(widget.contentId);
+    _controller = EducationController.create()..loadDetail(widget.contentId);
   }
 
   @override
@@ -59,7 +56,24 @@ class _EducationDetailPageState extends State<EducationDetailPage> {
             );
           }
 
-          return _DetailContent(content: content, controller: _controller);
+          final module = _controller.selectedModule;
+          if (module == null || module.lessons.isEmpty) {
+            return Center(
+              child: Text(
+                _controller.errorMessage ?? 'Materi modul tidak ditemukan.',
+                style: const TextStyle(
+                  color: AnaboolColors.brownDark,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            );
+          }
+
+          return _DetailContent(
+            content: content,
+            module: module,
+            controller: _controller,
+          );
         },
       ),
     );
@@ -67,23 +81,23 @@ class _EducationDetailPageState extends State<EducationDetailPage> {
 }
 
 class _DetailContent extends StatelessWidget {
-  const _DetailContent({required this.content, required this.controller});
+  const _DetailContent({
+    required this.content,
+    required this.module,
+    required this.controller,
+  });
 
   final EducationContent content;
+  final LearningModule module;
   final EducationController controller;
 
   @override
   Widget build(BuildContext context) {
     final progress = controller.progressFor(content.id);
-    final contentIndex = controller.contents.indexWhere(
-      (item) => item.id == content.id,
-    );
-    final lessonNumber = contentIndex >= 0 ? contentIndex + 1 : 3;
-    final lessonTotal =
-        controller.contents.length < 9 ? 9 : controller.contents.length;
-    final displayedProgress = progress.progressPct == 0
-        ? 0.35
-        : progress.progressPct.clamp(0, 100).toDouble() / 100;
+    final lesson = module.lessonAt(controller.currentLessonIndex);
+    final lessonNumber = controller.currentLessonIndex + 1;
+    final lessonTotal = module.lessons.length;
+    final displayedProgress = lessonNumber / lessonTotal;
 
     return SafeArea(
       bottom: false,
@@ -92,17 +106,25 @@ class _DetailContent extends StatelessWidget {
           Column(
             children: [
               _LessonHeader(
+                xpText: module.hero.badgeText.isEmpty
+                    ? '${content.rewardPoints} XP'
+                    : module.hero.badgeText,
                 progressValue: displayedProgress,
                 progressText: '$lessonNumber/$lessonTotal',
               ),
-              const Expanded(
+              Expanded(
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(22, 8, 22, 18),
-                  child: _LessonCard(),
+                  padding: const EdgeInsets.fromLTRB(22, 8, 22, 18),
+                  child: _LessonCard(
+                    module: module,
+                    lesson: lesson,
+                    isFirstLesson: controller.currentLessonIndex == 0,
+                  ),
                 ),
               ),
               _LessonActions(
                 content: content,
+                module: module,
                 controller: controller,
                 completed: progress.isCompleted,
               ),
@@ -144,12 +166,12 @@ class _LegacyTestLabels extends StatelessWidget {
 
 class _LessonHeader extends StatelessWidget {
   const _LessonHeader({
+    required this.xpText,
     required this.progressValue,
     required this.progressText,
   });
 
-  static const _meowPoints = '194,589 XP';
-
+  final String xpText;
   final double progressValue;
   final String progressText;
 
@@ -167,7 +189,7 @@ class _LessonHeader extends StatelessWidget {
                 onPressed: () => Navigator.of(context).maybePop(),
               ),
               const Spacer(),
-              const _MeowPointsPill(points: _meowPoints),
+              _MeowPointsPill(points: xpText),
             ],
           ),
           const SizedBox(height: 22),
@@ -276,7 +298,15 @@ class _MeowPointsPill extends StatelessWidget {
 }
 
 class _LessonCard extends StatelessWidget {
-  const _LessonCard();
+  const _LessonCard({
+    required this.module,
+    required this.lesson,
+    required this.isFirstLesson,
+  });
+
+  final LearningModule module;
+  final ModuleLesson lesson;
+  final bool isFirstLesson;
 
   @override
   Widget build(BuildContext context) {
@@ -288,64 +318,109 @@ class _LessonCard extends StatelessWidget {
         border: Border.all(color: AnaboolColors.border),
         borderRadius: BorderRadius.circular(7),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '3. Mengenal Toxoplasma gondii',
-            style: TextStyle(
+            '${lesson.order}. ${lesson.title}',
+            style: const TextStyle(
               color: AnaboolColors.brownDark,
               fontSize: 12,
               fontWeight: FontWeight.w900,
               height: 1.2,
             ),
           ),
-          SizedBox(height: 8),
-          Text(
-            'Toxoplasma gondii adalah parasit mikroskopis yang sering disalahpahami, terutama oleh pemilik kucing. Banyak orang langsung menghubungkannya dengan kucing, padahal risikonya bukan sekadar dari memelihara, menyentuh, atau menyayangi kucing.',
-            style: TextStyle(
-              color: AnaboolColors.brownDark,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              height: 1.22,
+          const SizedBox(height: 8),
+          for (final paragraph in lesson.paragraphs) ...[
+            Text(
+              paragraph,
+              style: const TextStyle(
+                color: AnaboolColors.brownDark,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w500,
+                height: 1.22,
+              ),
             ),
-          ),
-          SizedBox(height: 18),
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(6)),
-            child: DesignImage(
-              asset: EducationAssets.moduleMaterial,
-              fit: BoxFit.contain,
+            const SizedBox(height: 16),
+          ],
+          if (lesson.safetyNote != null) ...[
+            _LessonNote(
+              icon: Icons.health_and_safety_rounded,
+              title: 'Catatan keamanan',
+              body: lesson.safetyNote!,
             ),
+            const SizedBox(height: 12),
+          ],
+          _LessonNote(
+            icon: Icons.lightbulb_rounded,
+            title: 'Poin penting',
+            body: lesson.keyTakeaway,
           ),
-          SizedBox(height: 18),
-          Text(
-            'Hal yang lebih perlu diperhatikan adalah kebersihan yang kurang aman, makanan yang terkontaminasi, kotoran kucing yang dibiarkan terlalu lama, serta kebiasaan tidak mencuci tangan setelah membersihkan kotak pasir, berkebun, memegang makanan mentah, atau membuang limbah.',
-            style: TextStyle(
-              color: AnaboolColors.brownDark,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              height: 1.22,
-            ),
-          ),
-          SizedBox(height: 18),
-          Text(
-            'Karena parasit ini tidak bisa dilihat langsung oleh mata, pencegahan tidak bisa hanya mengandalkan tampilan kotoran atau pasir. Pencegahan lebih bergantung pada kebiasaan harian yang aman dan konsisten.',
-            style: TextStyle(
-              color: AnaboolColors.brownDark,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              height: 1.22,
-            ),
-          ),
-          SizedBox(height: 18),
-          Text(
-            'Modul ini akan membantu kamu memahami bagaimana Toxoplasma gondii bekerja, bagaimana cara penyebarannya, dan kenapa kebersihan kotak pasir penting untuk menjaga rumah tetap aman tanpa harus takut pada kucing kesayangan.',
-            style: TextStyle(
-              color: AnaboolColors.brownDark,
-              fontSize: 11.5,
-              fontWeight: FontWeight.w500,
-              height: 1.22,
+          if (isFirstLesson && module.learningGoals.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _LearningGoals(goals: module.learningGoals),
+          ],
+          if (module.pdfAsset != null &&
+              module.pdfViewerCta.buttonLabel.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            _PdfAssetButton(module: module),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _LessonNote extends StatelessWidget {
+  const _LessonNote({
+    required this.icon,
+    required this.title,
+    required this.body,
+  });
+
+  final IconData icon;
+  final String title;
+  final String body;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(11),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF2E8),
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(color: const Color(0xFFFFD8C8)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 17, color: AnaboolColors.brown),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: AnaboolColors.brownDark,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    height: 1.15,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  body,
+                  style: const TextStyle(
+                    color: AnaboolColors.brownDark,
+                    fontSize: 10.8,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -354,14 +429,137 @@ class _LessonCard extends StatelessWidget {
   }
 }
 
+class _LearningGoals extends StatelessWidget {
+  const _LearningGoals({required this.goals});
+
+  final List<String> goals;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(11),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(7),
+        border: Border.all(color: AnaboolColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Tujuan belajar',
+            style: TextStyle(
+              color: AnaboolColors.brownDark,
+              fontSize: 11,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          const SizedBox(height: 7),
+          for (final goal in goals.take(4)) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 2),
+                  child: Icon(
+                    Icons.check_circle_rounded,
+                    size: 13,
+                    color: AnaboolColors.brown,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    goal,
+                    style: const TextStyle(
+                      color: AnaboolColors.brownDark,
+                      fontSize: 10.8,
+                      fontWeight: FontWeight.w500,
+                      height: 1.18,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _PdfAssetButton extends StatelessWidget {
+  const _PdfAssetButton({required this.module});
+
+  final LearningModule module;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton.icon(
+      onPressed: () => showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: AnaboolColors.canvas,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+        ),
+        builder: (context) => Padding(
+          padding: EdgeInsets.fromLTRB(
+            22,
+            18,
+            22,
+            22 + MediaQuery.paddingOf(context).bottom,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                module.pdfViewerCta.title,
+                style: const TextStyle(
+                  color: AnaboolColors.brownDark,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${module.pdfViewerCta.description}\n\nAsset: ${module.pdfAsset}',
+                style: const TextStyle(
+                  color: AnaboolColors.brownDark,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  height: 1.3,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AnaboolColors.brown,
+        side: const BorderSide(color: AnaboolColors.border),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      icon: const Icon(Icons.picture_as_pdf_rounded, size: 17),
+      label: Text(
+        module.pdfViewerCta.buttonLabel,
+        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w900),
+      ),
+    );
+  }
+}
+
 class _LessonActions extends StatelessWidget {
   const _LessonActions({
     required this.content,
+    required this.module,
     required this.controller,
     required this.completed,
   });
 
   final EducationContent content;
+  final LearningModule module;
   final EducationController controller;
   final bool completed;
 
@@ -378,7 +576,9 @@ class _LessonActions extends StatelessWidget {
             width: 72,
             height: 42,
             child: OutlinedButton(
-              onPressed: () => Navigator.of(context).maybePop(),
+              onPressed: controller.currentLessonIndex == 0
+                  ? () => Navigator.of(context).maybePop()
+                  : controller.goToPreviousLesson,
               style: OutlinedButton.styleFrom(
                 foregroundColor: AnaboolColors.brown,
                 side: const BorderSide(color: AnaboolColors.brown, width: 1.2),
@@ -388,7 +588,7 @@ class _LessonActions extends StatelessWidget {
                 padding: EdgeInsets.zero,
               ),
               child: const Text(
-                'Kembali',
+                'Back',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w900),
               ),
             ),
@@ -402,26 +602,31 @@ class _LessonActions extends StatelessWidget {
                 onPressed: controller.isCompleting || completed
                     ? null
                     : () async {
-                        final completeSuccess = await controller.complete(
-                          content.id,
-                        );
+                        final isLastLesson = controller.currentLessonIndex >=
+                            module.lessons.length - 1;
+                        final completeSuccess =
+                            await controller.completeCurrentLesson();
                         if (!context.mounted || !completeSuccess) {
                           return;
                         }
 
-                        final nextContent = controller.nextRecommendedAfter(
-                          content.id,
-                        );
+                        if (isLastLesson) {
+                          final nextContent = controller.nextRecommendedAfter(
+                            content.id,
+                          );
 
-                        Navigator.of(context).pushReplacementNamed(
-                          RouteConstants.educationComplete,
-                          arguments: EducationCompleteArguments(
-                            title: content.title,
-                            rewardPoints: content.rewardPoints,
-                            nextContentId: nextContent?.id,
-                            nextTitle: nextContent?.title,
-                          ),
-                        );
+                          Navigator.of(context).pushReplacementNamed(
+                            RouteConstants.educationComplete,
+                            arguments: EducationCompleteArguments(
+                              title: module.completion.message.isEmpty
+                                  ? content.title
+                                  : module.completion.message,
+                              rewardPoints: content.rewardPoints,
+                              nextContentId: nextContent?.id,
+                              nextTitle: nextContent?.title,
+                            ),
+                          );
+                        }
                       },
                 style: FilledButton.styleFrom(
                   backgroundColor: AnaboolColors.brown,
@@ -442,7 +647,11 @@ class _LessonActions extends StatelessWidget {
                         ),
                       )
                     : Text(
-                        completed ? 'Selesai' : 'Tandai selesai',
+                        completed
+                            ? 'Selesai'
+                            : module
+                                .lessonAt(controller.currentLessonIndex)
+                                .ctaLabel,
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w900,

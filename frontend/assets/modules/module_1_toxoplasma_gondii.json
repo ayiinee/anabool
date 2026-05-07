@@ -1,0 +1,227 @@
+{
+  "id": "module_1_toxoplasma_gondii",
+  "title": "Memahami Toxoplasma gondii",
+  "subtitle": "Parasit yang Sering Diabaikan",
+  "slug": "memahami-toxoplasma-gondii",
+  "category": "safety",
+  "categoryLabel": "Safety",
+  "level": "basic",
+  "language": "id",
+  "xpReward": 25,
+  "totalLessons": 9,
+  "estimatedDurationMinutes": 8,
+  "isPublished": true,
+  "sourceType": "pdf",
+  "pdfAsset": "assets/modules/modul_1_toxoplasma_gondii.pdf",
+  "thumbnailAsset": "assets/images/education/modul-image.png",
+  "summary": "Pelajari apa itu Toxoplasma gondii, bagaimana cara penularannya, mengapa penting untuk pengguna hamil, dan bagaimana menjaga kebersihan litter box dengan aman.",
+  "hero": {
+    "title": "Belajar Aman Bersama Si Ana",
+    "description": "Kenali risiko toxoplasmosis tanpa perlu takut pada kucing kesayangan. Fokus utama modul ini adalah memahami cara pencegahan yang aman dan konsisten.",
+    "badgeText": "+25 XP",
+    "safetyLevel": "high"
+  },
+  "learningGoals": [
+    "Memahami apa itu Toxoplasma gondii.",
+    "Memahami peran kucing dalam siklus hidup parasit.",
+    "Mengetahui kapan kotoran kucing mulai berisiko menularkan oosista.",
+    "Mengenali jalur penularan utama pada manusia.",
+    "Memahami risiko infeksi primer pada masa kehamilan.",
+    "Menerapkan langkah pencegahan saat membersihkan litter box."
+  ],
+  "lessons": [
+    {
+      "id": "lesson_1",
+      "order": 1,
+      "title": "Kenali Toxoplasma gondii",
+      "shortTitle": "Kenali Toxoplasma",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Toxoplasma gondii adalah parasit mikroskopis yang sering disalahpahami, terutama karena banyak orang langsung menghubungkannya dengan kucing.",
+        "Padahal, risiko toxoplasmosis bukan hanya berasal dari memelihara, menyentuh, atau menyayangi kucing. Risiko juga berkaitan dengan kebersihan yang kurang aman, makanan yang terkontaminasi, serta kebiasaan tidak mencuci tangan setelah kontak dengan tanah, litter box, makanan mentah, atau limbah.",
+        "Karena parasit ini tidak bisa dilihat langsung oleh mata, pencegahan tidak bisa hanya mengandalkan tampilan kotoran atau pasir. Pencegahan lebih bergantung pada kebiasaan harian yang aman dan konsisten.",
+        "Modul ini akan membantu kamu memahami bagaimana Toxoplasma gondii bekerja, bagaimana cara penyebarannya, dan kenapa kebersihan litter box penting untuk menjaga rumah tetap aman tanpa harus takut pada kucing kesayangan."
+      ],
+      "safetyNote": null,
+      "keyTakeaway": "Toxoplasma gondii adalah parasit mikroskopis, sehingga pencegahannya harus dilakukan melalui kebiasaan kebersihan yang aman.",
+      "ctaLabel": "Mark as complete"
+    },
+    {
+      "id": "lesson_2",
+      "order": 2,
+      "title": "Pahami Peran Kucing sebagai Inang Utama",
+      "shortTitle": "Peran Kucing",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Kucing dan keluarga Felidae disebut sebagai inang definitif atau inang utama bagi Toxoplasma gondii.",
+        "Artinya, parasit ini dapat melakukan reproduksi seksual di dalam usus kucing. Setelah itu, parasit menghasilkan oosista atau telur parasit yang dapat keluar bersama kotoran kucing.",
+        "Kucing biasanya dapat terinfeksi setelah memakan tikus liar, burung, atau daging mentah yang sudah tercemar.",
+        "Karena itu, menjaga pola makan kucing dan kebersihan lingkungan menjadi bagian penting dari pencegahan."
+      ],
+      "safetyNote": "Kucing bukan musuh. Fokus pencegahan adalah menjaga kebersihan litter box, makanan, dan lingkungan.",
+      "keyTakeaway": "Kucing berperan sebagai inang utama, tetapi risiko dapat dikurangi dengan kebersihan dan pengelolaan litter box yang baik.",
+      "ctaLabel": "Mark as complete"
+    },
+    {
+      "id": "lesson_3",
+      "order": 3,
+      "title": "Kapan Kotoran Kucing Menjadi Berisiko?",
+      "shortTitle": "Oosista 1-5 Hari",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Oosista yang baru keluar bersama kotoran kucing segar belum langsung menjadi bentuk yang menular.",
+        "Oosista membutuhkan waktu sekitar 1 hingga 5 hari di lingkungan luar yang hangat dan lembap untuk bersporulasi dan menjadi bentuk yang menular.",
+        "Setelah matang, oosista bisa bertahan di tanah, air, atau taman dalam waktu yang lama.",
+        "Karena itu, membersihkan litter box setiap hari adalah salah satu langkah pencegahan paling penting."
+      ],
+      "safetyNote": "Jangan biarkan kotoran kucing menumpuk berhari-hari di litter box. Membersihkan setiap hari membantu memutus siklus sebelum oosista menjadi menular.",
+      "keyTakeaway": "Kotoran segar belum langsung menular, tetapi bisa menjadi berisiko setelah 1-5 hari di lingkungan yang mendukung.",
+      "ctaLabel": "Mark as complete"
+    },
+    {
+      "id": "lesson_4",
+      "order": 4,
+      "title": "Kenali Jalur Penularan Utama",
+      "shortTitle": "Jalur Penularan",
+      "type": "reading",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Manusia dapat terpapar Toxoplasma gondii melalui beberapa jalur utama.",
+        "Jalur makanan dapat terjadi ketika seseorang mengonsumsi daging yang kurang matang, terutama daging yang mengandung kista parasit.",
+        "Jalur lingkungan dapat terjadi ketika seseorang tidak sengaja menelan oosista dari litter box yang kotorannya sudah dibiarkan terlalu lama, sayuran mentah yang tidak dicuci bersih, atau tanah saat berkebun tanpa sarung tangan.",
+        "Jalur kongenital dapat terjadi ketika infeksi primer pada ibu hamil menular ke janin melalui plasenta."
+      ],
+      "safetyNote": "Risiko tidak hanya berasal dari litter box. Makanan kurang matang, sayuran yang tidak dicuci, dan kebiasaan tangan yang kurang bersih juga perlu diperhatikan.",
+      "keyTakeaway": "Toxoplasmosis dapat berkaitan dengan makanan, lingkungan, dan kehamilan, sehingga pencegahannya perlu dilakukan dari banyak sisi.",
+      "ctaLabel": "Mark as complete"
+    },
+    {
+      "id": "lesson_5",
+      "order": 5,
+      "title": "Mitos: Kucing Bukan Satu-satunya Sumber",
+      "shortTitle": "Mitos Kucing",
+      "type": "myth_fact",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Salah satu mitos terbesar adalah anggapan bahwa seseorang bisa tertular toxoplasmosis hanya karena mengelus kucing.",
+        "Anggapan itu tidak tepat. Kucing hampir tidak pernah membawa parasit ini di bulunya karena kucing adalah hewan yang menjaga kebersihan diri.",
+        "Risiko dari kucing berkaitan dengan kontak terhadap kotoran yang sudah dibiarkan lebih dari 1 hari, bukan dari bulu atau aktivitas membelai kucing.",
+        "Dalam banyak kasus, risiko juga bisa berasal dari daging kurang matang atau sayuran mentah yang tidak dicuci bersih."
+      ],
+      "safetyNote": "Kamu tidak perlu menjauhi kucing. Yang lebih penting adalah menjaga kebersihan litter box dan mencuci tangan setelah membersihkan area kucing.",
+      "keyTakeaway": "Mengelus kucing bukan jalur utama penularan. Risiko lebih berkaitan dengan kotoran yang sudah dibiarkan terlalu lama dan kebiasaan kebersihan yang kurang aman.",
+      "ctaLabel": "Mark as complete"
+    },
+    {
+      "id": "lesson_6",
+      "order": 6,
+      "title": "Mengapa Penting untuk Ibu Hamil?",
+      "shortTitle": "Risiko Ibu Hamil",
+      "type": "warning",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Pada orang dewasa dengan sistem kekebalan tubuh yang sehat, infeksi Toxoplasma sering tidak menimbulkan gejala atau hanya terasa seperti flu ringan.",
+        "Namun, infeksi pertama kali atau infeksi primer tepat sebelum atau selama masa kehamilan perlu lebih diperhatikan.",
+        "Janin belum memiliki sistem imun yang sempurna untuk melawan infeksi. Jika parasit menyeberang melalui plasenta, perkembangan janin dapat terganggu.",
+        "Karena itu, pengguna yang sedang hamil sebaiknya lebih berhati-hati dalam membersihkan litter box dan mengelola kebersihan makanan serta lingkungan."
+      ],
+      "safetyNote": "Modul ini bersifat edukatif dan preventif, bukan diagnosis medis. Jika kamu sedang hamil dan merasa khawatir, konsultasikan dengan tenaga kesehatan.",
+      "keyTakeaway": "Infeksi primer saat kehamilan perlu diperhatikan karena dapat berdampak pada janin.",
+      "ctaLabel": "Mark as complete"
+    },
+    {
+      "id": "lesson_7",
+      "order": 7,
+      "title": "Tips Aman Membersihkan Litter Box",
+      "shortTitle": "Tips Aman",
+      "type": "protocol",
+      "estimatedReadMinutes": 1,
+      "xpReward": 3,
+      "paragraphs": [
+        "Jika sedang hamil, sebaiknya minta bantuan pasangan atau anggota keluarga lain untuk membersihkan litter box setiap hari.",
+        "Membersihkan pasir setiap hari membantu memutus siklus oosista sebelum parasit menjadi bentuk yang menular.",
+        "Jika terpaksa harus membersihkan sendiri, gunakan sarung tangan sekali pakai dan masker.",
+        "Setelah selesai, segera cuci tangan menggunakan sabun dan air hangat."
+      ],
+      "safetyNote": "Untuk pengguna hamil atau berisiko, hindari kontak langsung dengan kotoran kucing jika memungkinkan.",
+      "keyTakeaway": "Membersihkan litter box setiap hari, memakai pelindung, dan mencuci tangan adalah langkah pencegahan utama.",
+      "ctaLabel": "Mark as complete"
+    },
+    {
+      "id": "lesson_8",
+      "order": 8,
+      "title": "Mitos dan Fakta yang Perlu Diingat",
+      "shortTitle": "Mitos & Fakta",
+      "type": "myth_fact",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Mitos: Kucing menularkan Toxoplasma dari bulunya saat dibelai.",
+        "Fakta: Parasit hidup di usus dan keluar melalui kotoran, bukan dari bulu kucing.",
+        "Mitos: Mengganti pasir kucing langsung menularkan penyakit.",
+        "Fakta: Parasit di kotoran membutuhkan waktu sekitar 1 hingga 5 hari untuk menjadi bentuk yang menular.",
+        "Mitos: Daging setengah matang aman untuk ibu hamil.",
+        "Fakta: Daging yang tidak matang sempurna dapat menyimpan kista parasit hidup."
+      ],
+      "safetyNote": "Jangan hanya fokus pada kucing. Perhatikan juga makanan, sayuran mentah, kebersihan tangan, dan aktivitas berkebun.",
+      "keyTakeaway": "Banyak ketakutan terhadap kucing berasal dari mitos. Pencegahan yang benar lebih penting daripada menjauhi kucing.",
+      "ctaLabel": "Mark as complete"
+    },
+    {
+      "id": "lesson_9",
+      "order": 9,
+      "title": "Ringkasan Poin Penting",
+      "shortTitle": "Ringkasan",
+      "type": "summary",
+      "estimatedReadMinutes": 1,
+      "xpReward": 2,
+      "paragraphs": [
+        "Toxoplasma gondii menjadikan kucing sebagai inang utama untuk berkembang biak dan menghasilkan oosista yang keluar melalui kotoran.",
+        "Oosista pada kotoran kucing baru menjadi menular setelah sekitar 1 hingga 5 hari di lingkungan luar.",
+        "Membersihkan litter box setiap hari adalah langkah pencegahan yang sangat penting.",
+        "Manusia juga dapat terpapar melalui daging kurang matang, sayuran mentah yang tidak dicuci bersih, atau kebiasaan tidak mencuci tangan setelah berkebun.",
+        "Untuk pengguna hamil, pencegahan perlu dilakukan dengan lebih hati-hati karena infeksi primer pada masa kehamilan dapat berdampak pada janin."
+      ],
+      "safetyNote": "Jadikan pencegahan sebagai kebiasaan harian: bersihkan litter box, gunakan pelindung, cuci tangan, dan pastikan makanan matang serta bersih.",
+      "keyTakeaway": "Kamu tetap bisa menyayangi kucing sambil menjaga rumah tetap aman melalui kebiasaan kebersihan yang konsisten.",
+      "ctaLabel": "Selesaikan modul"
+    }
+  ],
+  "completion": {
+    "title": "Modul Selesai!",
+    "message": "Kamu sudah menyelesaikan modul Memahami Toxoplasma gondii.",
+    "rewardText": "Kamu mendapatkan +25 XP.",
+    "buttonLabel": "Kembali ke Modul"
+  },
+  "chatbotCta": {
+    "title": "Masih bingung?",
+    "description": "Tanya Si Ana tentang isi modul ini.",
+    "buttonLabel": "Tanya Si Ana",
+    "ragFilter": {
+      "module": "toxoplasma_gondii_intro",
+      "language": "id",
+      "source_type": "module"
+    }
+  },
+  "pdfViewerCta": {
+    "title": "Lihat Modul Lengkap",
+    "description": "Buka versi PDF lengkap dari modul pembelajaran ini.",
+    "buttonLabel": "Buka PDF"
+  },
+  "references": [
+    "Jones, J. L., et al., 2003. Toxoplasmosis-related knowledge and practices among pregnant women in the United States.",
+    "Mulugeta, S., et al., 2020. Seroprevalence of Anti-Toxoplasma gondii Antibodies and Associated Factors Among Pregnant Women.",
+    "Salari, N., et al., 2025. Global seroprevalence of Toxoplasma gondii in pregnant women: a systematic review and meta-analysis.",
+    "Mulu Gelaw, Y., et al., 2024. Toxoplasma gondii seroprevalence among pregnant women in Africa: A systematic review and meta-analysis.",
+    "CDC., 2024. Preventing Toxoplasmosis | Parasites."
+  ]
+}

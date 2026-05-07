@@ -1,24 +1,36 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
+
 import '../../../../core/constants/asset_constants.dart';
 import '../models/education_category_model.dart';
 import '../models/education_content_model.dart';
+import '../models/learning_module_model.dart';
 import '../models/user_edu_progress_model.dart';
 
 abstract class EducationRemoteDatasource {
   Future<List<EducationCategoryModel>> getCategories();
   Future<List<EducationContentModel>> getContents();
   Future<EducationContentModel> getDetail(String contentId);
+  Future<LearningModuleModel> getLearningModule(String contentId);
   Future<List<UserEduProgressModel>> getProgress();
   Future<UserEduProgressModel> completeContent(String contentId);
+  Future<UserEduProgressModel> completeLesson(
+      String contentId, String lessonId);
 }
 
 class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
   LocalEducationRemoteDatasource();
 
+  static const _moduleAssetPaths = [
+    'assets/modules/module_1_toxoplasma_gondii.json',
+  ];
+
   static const _categories = [
     {
-      'id': 'cat-education',
-      'name': 'Edukasi',
-      'slug': 'education',
+      'id': 'cat-safety',
+      'name': 'Safety',
+      'slug': 'safety',
     },
     {
       'id': 'cat-tutorial',
@@ -27,109 +39,10 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
     },
   ];
 
-  static const _contents = [
-    {
-      'id': 'toxoplasma-basic',
-      'category_id': 'cat-education',
-      'category_slug': 'education',
-      'title': 'Memahami Toksoplasma Gondii',
-      'summary':
-          'Pelajari apa itu Toksoplasma gondii dan alasan pemilik kucing perlu memahami risikonya.',
-      'body':
-          'Toksoplasma gondii adalah parasit yang dapat hidup di tubuh kucing dan lingkungan sekitarnya. Modul ini membantu kamu mengenali sumber risiko, cara penyebaran, dan kebiasaan sederhana untuk menjaga keluarga serta anabul tetap aman.',
-      'thumbnail_asset': EducationAssets.moduleCat,
-      'reward_points': 80,
-      'duration_minutes': 6,
-      'is_featured': true,
-    },
-    {
-      'id': 'pregnancy-risk',
-      'category_id': 'cat-education',
-      'category_slug': 'education',
-      'title': 'Risiko Toksoplasmosis untuk Kehamilan',
-      'summary':
-          'Pahami mengapa ibu hamil perlu lebih berhati-hati saat membersihkan kotak pasir.',
-      'body':
-          'Risiko toksoplasmosis dapat ditekan dengan kebiasaan higienis yang konsisten. Gunakan sarung tangan, minta bantuan anggota keluarga lain bila memungkinkan, dan selalu cuci tangan setelah kontak dengan pasir atau limbah anabul.',
-      'thumbnail_asset': EducationAssets.moduleThinkingCat,
-      'reward_points': 90,
-      'duration_minutes': 8,
-      'is_featured': false,
-    },
-    {
-      'id': 'cat-waste-spread',
-      'category_id': 'cat-education',
-      'category_slug': 'education',
-      'title': 'Cara Penyebaran dari Limbah Kucing',
-      'summary':
-          'Kenali jalur paparan melalui pasir, tanah, dan permukaan yang tidak dibersihkan.',
-      'body':
-          'Paparan dapat terjadi ketika partikel dari limbah kucing terbawa ke tangan, alat pembersih, atau area rumah. Pisahkan alat kebersihan kotak pasir dari alat rumah tangga lain dan bersihkan area secara berkala.',
-      'thumbnail_asset': EducationAssets.moduleCat,
-      'reward_points': 75,
-      'duration_minutes': 5,
-      'is_featured': false,
-    },
-    {
-      'id': 'safe-disposal',
-      'category_id': 'cat-tutorial',
-      'category_slug': 'tutorial',
-      'title': 'Membuang Limbah Kucing dengan Aman',
-      'summary':
-          'Ikuti langkah praktis untuk membungkus dan membuang limbah tanpa menyebarkan risiko.',
-      'body':
-          'Gunakan sekop khusus, masukkan limbah ke kantong tertutup, lalu buang ke tempat sampah yang sesuai. Setelah itu bersihkan sekop dan cuci tangan dengan sabun selama minimal dua puluh detik.',
-      'thumbnail_asset': EducationAssets.moduleThinkingCat,
-      'reward_points': 70,
-      'duration_minutes': 7,
-      'is_featured': true,
-    },
-    {
-      'id': 'hygiene-routine',
-      'category_id': 'cat-tutorial',
-      'category_slug': 'tutorial',
-      'title': 'Rutinitas Higienis Harian',
-      'summary':
-          'Bangun kebiasaan sederhana untuk menurunkan risiko saat merawat kotak pasir.',
-      'body':
-          'Jadwalkan pembersihan kotak pasir, gunakan perlengkapan khusus, simpan pasir cadangan di tempat kering, dan pantau perubahan perilaku buang air anabul melalui ANABOOL.',
-      'thumbnail_asset': EducationAssets.moduleCat,
-      'reward_points': 85,
-      'duration_minutes': 6,
-      'is_featured': false,
-    },
-    {
-      'id': 'fertilizer-cycle',
-      'category_id': 'cat-education',
-      'category_slug': 'education',
-      'title': 'Dari Limbah Menjadi Pupuk',
-      'summary':
-          'Lihat bagaimana pengelolaan limbah yang aman bisa mendukung ekonomi sirkular.',
-      'body':
-          'Pengelolaan limbah anabul membutuhkan proses terkontrol agar aman. Modul ini memperkenalkan konsep pemilahan, penanganan awal, dan peran layanan terjadwal dalam menciptakan sistem yang lebih bertanggung jawab.',
-      'thumbnail_asset': EducationAssets.moduleThinkingCat,
-      'reward_points': 100,
-      'duration_minutes': 9,
-      'is_featured': false,
-    },
-  ];
+  List<LearningModuleModel>? _moduleCache;
 
-  final Map<String, UserEduProgressModel> _progress = {
-    'toxoplasma-basic': const UserEduProgressModel(
-      contentId: 'toxoplasma-basic',
-      progressPct: 72,
-      isCompleted: false,
-    ),
-    'safe-disposal': const UserEduProgressModel(
-      contentId: 'safe-disposal',
-      progressPct: 38,
-      isCompleted: false,
-    ),
-    'cat-waste-spread': const UserEduProgressModel(
-      contentId: 'cat-waste-spread',
-      progressPct: 100,
-      isCompleted: true,
-    ),
+  final Map<String, int> _completedLessons = {
+    'module_1_toxoplasma_gondii': 2,
   };
 
   @override
@@ -139,14 +52,24 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
 
   @override
   Future<List<EducationContentModel>> getContents() async {
-    return _contents.map(EducationContentModel.fromMap).toList();
+    final modules = await _loadModules();
+    return modules.map(_contentFromModule).toList();
   }
 
   @override
   Future<EducationContentModel> getDetail(String contentId) async {
-    for (final content in _contents) {
-      if (content['id'] == contentId) {
-        return EducationContentModel.fromMap(content);
+    return _contentFromModule(await getLearningModule(contentId));
+  }
+
+  @override
+  Future<LearningModuleModel> getLearningModule(String contentId) async {
+    final modules = await _loadModules();
+    final normalized = contentId.trim().toLowerCase();
+
+    for (final module in modules) {
+      if (module.id.toLowerCase() == normalized ||
+          module.slug.toLowerCase() == normalized) {
+        return module;
       }
     }
 
@@ -155,19 +78,93 @@ class LocalEducationRemoteDatasource implements EducationRemoteDatasource {
 
   @override
   Future<List<UserEduProgressModel>> getProgress() async {
-    return List.unmodifiable(_progress.values);
+    final modules = await _loadModules();
+    return [
+      for (final module in modules) _progressForModule(module),
+    ];
   }
 
   @override
   Future<UserEduProgressModel> completeContent(String contentId) async {
-    await getDetail(contentId);
-    final completed = UserEduProgressModel(
-      contentId: contentId,
+    final module = await getLearningModule(contentId);
+    _completedLessons[module.id] = module.lessons.length;
+    return UserEduProgressModel(
+      contentId: module.id,
       progressPct: 100,
       isCompleted: true,
     );
-    _progress[contentId] = completed;
-    return completed;
+  }
+
+  @override
+  Future<UserEduProgressModel> completeLesson(
+    String contentId,
+    String lessonId,
+  ) async {
+    final module = await getLearningModule(contentId);
+    final lessonIndex = module.lessons.indexWhere(
+      (lesson) => lesson.id == lessonId,
+    );
+
+    if (lessonIndex < 0) {
+      throw const EducationRemoteException('Pelajaran tidak ditemukan.');
+    }
+
+    final previousCompleted = _completedLessons[module.id] ?? 0;
+    _completedLessons[module.id] = previousCompleted > lessonIndex + 1
+        ? previousCompleted
+        : lessonIndex + 1;
+
+    return _progressForModule(module);
+  }
+
+  Future<List<LearningModuleModel>> _loadModules() async {
+    final cached = _moduleCache;
+    if (cached != null) {
+      return cached;
+    }
+
+    final modules = <LearningModuleModel>[];
+    for (final assetPath in _moduleAssetPaths) {
+      final source = await rootBundle.loadString(assetPath);
+      modules.add(
+        LearningModuleModel.fromMap(jsonDecode(source) as Map<String, dynamic>),
+      );
+    }
+
+    _moduleCache = List.unmodifiable(modules);
+    return _moduleCache!;
+  }
+
+  EducationContentModel _contentFromModule(LearningModuleModel module) {
+    return EducationContentModel.fromMap({
+      'id': module.id,
+      'category_id': 'cat-${module.category}',
+      'category_slug': module.category,
+      'title': module.title,
+      'summary': module.summary,
+      'body': module.hero.description,
+      'thumbnail_asset': module.thumbnailAsset.isEmpty
+          ? EducationAssets.moduleCat
+          : module.thumbnailAsset,
+      'reward_points': module.xpReward,
+      'duration_minutes': module.estimatedDurationMinutes,
+      'is_featured': true,
+    });
+  }
+
+  UserEduProgressModel _progressForModule(LearningModuleModel module) {
+    final totalLessons = module.lessons.isEmpty ? 1 : module.lessons.length;
+    final completedLessons = (_completedLessons[module.id] ?? 0).clamp(
+      0,
+      totalLessons,
+    );
+    final progressPct = completedLessons / totalLessons * 100;
+
+    return UserEduProgressModel(
+      contentId: module.id,
+      progressPct: progressPct,
+      isCompleted: completedLessons >= totalLessons,
+    );
   }
 }
 

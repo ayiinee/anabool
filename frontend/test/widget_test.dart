@@ -50,6 +50,7 @@ void main() {
       EducationAssets.heroBackground,
       EducationAssets.moduleCat,
       EducationAssets.moduleThinkingCat,
+      EducationAssets.moduleMaterial,
     ];
 
     for (final asset in assets) {
@@ -303,21 +304,19 @@ void main() {
     expect(find.text('Daftar Modul'), findsOneWidget);
     expect(find.textContaining('modul belum selesai'), findsOneWidget);
     expect(find.text('Semua'), findsOneWidget);
-    expect(find.byKey(const ValueKey('education-category-education')),
+    expect(find.byKey(const ValueKey('education-category-safety')),
         findsOneWidget);
     expect(find.byKey(const ValueKey('education-category-tutorial')),
         findsOneWidget);
-    expect(find.text('Memahami Toksoplasma Gondii'), findsWidgets);
-    expect(find.text('Membuang Limbah Kucing dengan Aman'), findsOneWidget);
+    expect(find.text('Memahami Toxoplasma gondii'), findsWidgets);
 
     await tester.enterText(
       find.byKey(const ValueKey('education-search-field')),
-      'kehamilan',
+      'hamil',
     );
     await tester.pump();
 
-    expect(find.text('Risiko Toksoplasmosis untuk Kehamilan'), findsOneWidget);
-    expect(find.text('Membuang Limbah Kucing dengan Aman'), findsNothing);
+    expect(find.text('Memahami Toxoplasma gondii'), findsWidgets);
 
     await tester.enterText(
       find.byKey(const ValueKey('education-search-field')),
@@ -326,9 +325,7 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('education-category-tutorial')));
     await tester.pump();
 
-    expect(find.text('Membuang Limbah Kucing dengan Aman'), findsOneWidget);
-    expect(find.text('Rutinitas Higienis Harian'), findsOneWidget);
-    expect(find.text('Risiko Toksoplasmosis untuk Kehamilan'), findsNothing);
+    expect(find.text('Modul tidak ditemukan.'), findsOneWidget);
   });
 
   testWidgets('education detail completes module and opens reward page',
@@ -352,12 +349,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.ensureVisible(find.text('Membuang Limbah Kucing dengan Aman'));
-    await tester.tap(find.text('Membuang Limbah Kucing dengan Aman'));
+    await tester.ensureVisible(find.text('Memahami Toxoplasma gondii').first);
+    await tester.tap(find.text('Memahami Toxoplasma gondii').first);
     await tester.pumpAndSettle();
 
     expect(find.text('Detail Modul'), findsOneWidget);
-    expect(find.text('Poin penting'), findsOneWidget);
+    expect(find.text('Poin penting'), findsWidgets);
+    expect(find.text('3/9'), findsOneWidget);
+    expect(
+        find.text('3. Kapan Kotoran Kucing Menjadi Berisiko?'), findsOneWidget);
     expect(find.byKey(const ValueKey('education-complete-button')),
         findsOneWidget);
 
@@ -366,10 +366,17 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('education-complete-button')));
     await tester.pumpAndSettle();
 
+    expect(find.text('4/9'), findsOneWidget);
+    expect(find.text('4. Kenali Jalur Penularan Utama'), findsOneWidget);
+
+    for (var i = 0; i < 6; i += 1) {
+      await tester.tap(find.byKey(const ValueKey('education-complete-button')));
+      await tester.pumpAndSettle();
+    }
+
     expect(find.text('Modul selesai!'), findsOneWidget);
     expect(find.text('Reward berhasil diklaim'), findsOneWidget);
-    expect(find.text('Lanjut modul berikutnya'), findsOneWidget);
-    expect(find.text('+70 MeowPoints untuk progres belajar kamu.'),
+    expect(find.text('+25 MeowPoints untuk progres belajar kamu.'),
         findsOneWidget);
   });
 }
