@@ -51,6 +51,63 @@ class ModuleRepository:
             grouped[str(row["module_id"])].append(row)
         return dict(grouped)
 
+    def get_module(self, module_id: str) -> dict[str, Any] | None:
+        if self._client is None:
+            return None
+
+        response = (
+            self._client.table("modules")
+            .select(
+                "id,category,poop_type,title,summary,content_json,slug,"
+                "meowpoints_reward,estimated_duration_minutes,updated_at"
+            )
+            .eq("id", module_id)
+            .limit(1)
+            .execute()
+        )
+        return response.data[0] if response.data else None
+
+    def get_step(self, *, module_id: str, step_id: str) -> dict[str, Any] | None:
+        if self._client is None:
+            return None
+
+        response = (
+            self._client.table("module_steps")
+            .select("*")
+            .eq("id", step_id)
+            .eq("module_id", module_id)
+            .limit(1)
+            .execute()
+        )
+        return response.data[0] if response.data else None
+
+    def mark_step_completed(
+        self,
+        *,
+        user_id: str,
+        module_id: str,
+        step_id: str,
+        current_step_order: int,
+        progress_pct: float,
+    ) -> dict[str, Any]:
+        if self._client is None:
+            return {}
+
+        payload = {
+            "user_id": user_id,
+            "module_id": module_id,
+            "step_id": step_id,
+            "current_step_order": current_step_order,
+            "progress_pct": progress_pct,
+            "is_completed": True,
+        }
+        response = (
+            self._client.table("user_module_progress")
+            .upsert(payload, on_conflict="user_id,module_id,step_id")
+            .execute()
+        )
+        return response.data[0] if response.data else payload
+
     def list_progress_by_module(
         self,
         *,

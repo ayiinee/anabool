@@ -118,6 +118,14 @@ class PickupRepository:
 
         return self.get_order(order_id) or {}
 
+    def set_order_meowpoints(self, *, order_id: str, points: int) -> None:
+        if self._client is None:
+            return
+
+        self._client.table("pickup_orders").update(
+            {"meowpoints_earned": max(points, 0)}
+        ).eq("id", order_id).execute()
+
     # ── Couriers ──────────────────────────────────────────────────────────
 
     def list_available_couriers(self) -> list[dict]:
