@@ -73,14 +73,14 @@ class AppBottomNavigation extends StatelessWidget {
                   children: [
                     _BottomNavItem(
                       icon: Icons.home_rounded,
-                      label: useFigmaLabels ? 'Home' : 'Beranda',
+                      label: 'Beranda',
                       active: activeDestination ==
                           AppBottomNavigationDestination.home,
                       onTap: onHomeTap ?? () => _goHome(context),
                     ),
                     _BottomNavItem(
                       icon: Icons.school_rounded,
-                      label: useFigmaLabels ? 'Education' : 'Modul',
+                      label: 'Modul',
                       active: activeDestination ==
                           AppBottomNavigationDestination.education,
                       onTap: onEducationTap ?? () => _goEducation(context),
@@ -88,19 +88,19 @@ class AppBottomNavigation extends StatelessWidget {
                     SizedBox(width: centerGap),
                     _BottomNavItem(
                       icon: Icons.storefront_rounded,
-                      label: useFigmaLabels ? 'Market' : 'Produk',
+                      label: 'Produk',
                       active: activeDestination ==
                           AppBottomNavigationDestination.market,
                       onTap: onMarketTap ?? () => _goMarket(context),
                     ),
                     _BottomNavItem(
                       icon: Icons.person_rounded,
-                      label: useFigmaLabels ? 'Profile' : 'Profil',
+                      label: 'Profil',
                       active: activeDestination ==
                           AppBottomNavigationDestination.profile,
                       onTap: onProfileTap ?? () => _goProfile(context),
                     ),
-                  ],
+                  ]
                 ),
               ),
               Positioned(

@@ -43,9 +43,10 @@ _CTA_SELECTION_RESPONSES = {
             "yang tertutup, lalu ikuti metode pengolahan yang memang disiapkan untuk limbah "
             "hewan. Hindari kontak langsung dan cuci alat setelah selesai."
         ),
-        "module_title": "Modul Pengolahan Limbah",
-        "module_category": "waste_processing",
-        "target_route": "/modules/waste-processing",
+        "module_title": "Modul 7: Dari Limbah Menjadi Pupuk",
+        "module_category": "sustainability",
+        "module_id": "module_7_limbah_menjadi_pupuk_circular_economy",
+        "target_route": "/modules/dari-limbah-menjadi-pupuk-circular-economy-yang-aman-dan-berkelanjutan",
     },
     "dispose": {
         "selected_label": "Buang",
@@ -55,9 +56,10 @@ _CTA_SELECTION_RESPONSES = {
             "Buang ke tempat sampah sesuai aturan setempat, bersihkan sekop, dan cuci tangan "
             "dengan sabun."
         ),
-        "module_title": "Modul Sanitasi Lingkungan",
-        "module_category": "environment_sanitation",
-        "target_route": "/modules/environment-sanitation",
+        "module_title": "Modul 4: Protokol Aman Membersihkan & Membuang",
+        "module_category": "safety",
+        "module_id": "module_4_protokol_aman_membersihkan_membuang_kotoran_kucing",
+        "target_route": "/modules/protokol-aman-membersihkan-membuang-kotoran-kucing",
     },
     "pickup": {
         "selected_label": "Pick Up",
@@ -66,9 +68,10 @@ _CTA_SELECTION_RESPONSES = {
             "letakkan di titik ambil yang teduh, jauhkan dari anak-anak dan hewan lain, lalu "
             "pastikan area litter box tetap dibersihkan setelah limbah dipindahkan."
         ),
-        "module_title": "Modul Teknik Kebersihan/Kesehatan",
-        "module_category": "cleanliness_health",
-        "target_route": "/modules/cleanliness-health",
+        "module_title": "Modul 5: Hygiene Measures",
+        "module_category": "safety",
+        "module_id": "module_5_hygiene_measures_mencegah_toxoplasmosis",
+        "target_route": "/modules/hygiene-measures-yang-terbukti-efektif-mencegah-toxoplasmosis",
     },
 }
 
@@ -211,7 +214,10 @@ def send_chat_message(session_id: str, content: str) -> ChatSession:
         user_profile=context.get("user_profile"),
         scan_result=context.get("scan_result"),
     )
-    assistant_message = _assistant_text(_format_rag_answer(rag_result))
+    assistant_message = _assistant_rag_response(
+        session_id=session.id,
+        content=_format_rag_answer(rag_result),
+    )
     session.messages.append(_persist_message(session.id, assistant_message))
     _cache_session(session, context)
     return session
@@ -254,6 +260,7 @@ def select_chat_cta_card(session_id: str, card_type: str) -> ChatSession:
         tutorial=tutorial,
         module_title=response_config["module_title"],
         module_category=response_config["module_category"],
+        module_id=response_config["module_id"],
         target_route=response_config["target_route"],
     )
 
@@ -362,7 +369,9 @@ def _format_rag_answer(rag_result: dict) -> str:
 
 def _format_cta_rag_tutorial(*, rag_result: dict, module_title: str) -> str:
     answer = _format_rag_answer(rag_result).strip()
-    return f"Quick tips dari {module_title}:\n\n{answer}"
+    if module_title in answer and "Quick tips" in answer:
+        return answer
+    return f"Quick tips dari {module_title}: {answer}"
 
 
 def _detect_topic(content: str) -> str:
@@ -392,6 +401,22 @@ def _assistant_text(content: str) -> ChatMessage:
     )
 
 
+def _assistant_rag_response(*, session_id: str, content: str) -> ChatMessage:
+    module_card_config = _module_card_config_from_answer(content)
+    if module_card_config is None:
+        return _assistant_text(content)
+
+    return _assistant_cta_followup(
+        session_id=session_id,
+        card_type=module_card_config["card_type"],
+        tutorial=content,
+        module_title=module_card_config["module_title"],
+        module_category=module_card_config["module_category"],
+        module_id=module_card_config["module_id"],
+        target_route=module_card_config["target_route"],
+    )
+
+
 def _assistant_cta_cards() -> ChatMessage:
     return ChatMessage(
         id=_new_id("msg"),
@@ -403,6 +428,20 @@ def _assistant_cta_cards() -> ChatMessage:
     )
 
 
+def _module_card_config_from_answer(content: str) -> dict | None:
+    normalized = content.lower()
+    if "untuk informasi lebih lanjut" not in normalized:
+        return None
+
+    if "modul 7" in normalized:
+        return {"card_type": "process", **_CTA_SELECTION_RESPONSES["process"]}
+    if "modul 4" in normalized:
+        return {"card_type": "dispose", **_CTA_SELECTION_RESPONSES["dispose"]}
+    if "modul 5" in normalized:
+        return {"card_type": "pickup", **_CTA_SELECTION_RESPONSES["pickup"]}
+    return None
+
+
 def _assistant_cta_followup(
     *,
     session_id: str,
@@ -410,10 +449,11 @@ def _assistant_cta_followup(
     tutorial: str,
     module_title: str,
     module_category: str,
+    module_id: str,
     target_route: str,
 ) -> ChatMessage:
     content = tutorial
-    if "Untuk informasi lebih lanjut, silakan baca Modul" not in content:
+    if "silakan baca Modul" not in content:
         content = f"{content}\n\nKlik Pelajari Selengkapnya untuk membuka {module_title}."
 
     return ChatMessage(
@@ -430,6 +470,8 @@ def _assistant_cta_followup(
                 target_route=target_route,
                 payload={
                     "module_category": module_category,
+                    "module_id": module_id,
+                    "content_id": module_id,
                     "chat_session_id": session_id,
                     "return_route": f"/chats/{session_id}",
                     "preserve_chat_session": True,

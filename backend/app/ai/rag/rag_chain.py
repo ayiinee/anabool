@@ -147,7 +147,7 @@ def generate_ana_response(
                     },
                 ]
             ).strip()
-            answer = _ensure_module_reference(answer, module_reference)
+            answer = _finalize_module_answer(answer, module_reference)
             provider = "groq"
         except Exception:
             answer = _build_grounded_fallback_answer(
@@ -226,6 +226,16 @@ def _build_grounded_fallback_answer(
     user_profile: dict | None,
     module_reference: str | None = None,
 ) -> str:
+    if module_reference:
+        return _build_module_fallback_answer(
+            user_message=user_message,
+            retrieval_result=retrieval_result,
+            fallback_knowledge=fallback_knowledge,
+            scan_result=scan_result,
+            user_profile=user_profile,
+            module_reference=module_reference,
+        )
+
     reference_lines: list[str] = []
     if retrieval_result.has_matches:
         for chunk in retrieval_result.chunks[:2]:
@@ -260,7 +270,56 @@ def _build_grounded_fallback_answer(
         "lemas, tidak mau makan, kesulitan buang air, atau tanda dehidrasi, konsultasikan ke dokter hewan.\n\n"
         f"Rujukan yang dipakai:\n{references}"
     )
-    return _ensure_module_reference(answer, module_reference)
+    return _finalize_module_answer(answer, module_reference)
+
+
+def _build_module_fallback_answer(
+    *,
+    user_message: str,
+    retrieval_result: RetrievalResult,
+    fallback_knowledge: list[dict[str, str]],
+    scan_result: dict | None,
+    user_profile: dict | None,
+    module_reference: str,
+) -> str:
+    safety_parts: list[str] = []
+    risk_group = (user_profile or {}).get("risk_group")
+    if (user_profile or {}).get("safety_mode") or risk_group in {"pregnant", "low_immunity"}:
+        safety_parts.append(
+            "Karena safety mode atau kelompok risiko aktif, hindari kontak langsung dengan feses, "
+            "gunakan sarung tangan dan masker, dan minta bantuan orang lain jika memungkinkan."
+        )
+
+    if scan_result:
+        detected_class = scan_result.get("detected_class", "unknown")
+        risk_level = scan_result.get("risk_level", "unknown")
+        safety_parts.append(
+            f"Hasil scan memberi indikasi awal {detected_class} dengan risiko {risk_level}, "
+            "jadi perlakukan limbah sebagai bahan yang perlu ditangani hati-hati."
+        )
+
+    context_items: list[str] = []
+    if retrieval_result.has_matches:
+        context_items = [chunk.content.strip() for chunk in retrieval_result.chunks[:4]]
+    else:
+        context_items = [item["content"].strip() for item in fallback_knowledge[:4]]
+
+    context_text = "\n\n".join(item for item in context_items if item)
+    if not context_text:
+        context_text = (
+            "Gunakan sarung tangan atau sekop khusus, kurangi kontak langsung, "
+            "kemas limbah dengan rapat, dan cuci tangan setelah selesai."
+        )
+
+    intro = (
+        f"Untuk pertanyaan '{user_message}', Ana rangkum langkah amannya berdasarkan materi yang tersedia. "
+        "Penjelasan ini bersifat edukatif dan bukan diagnosis medis."
+    )
+    if safety_parts:
+        intro = f"{intro} {' '.join(safety_parts)}"
+
+    answer = f"{intro}\n\n{context_text}"
+    return _finalize_module_answer(answer, module_reference)
 
 
 def _detect_routed_intent(user_message: str, trigger_action: str | None) -> str | None:
@@ -341,11 +400,10 @@ def _normalize_text(value: str) -> str:
     return " ".join(normalized.split())
 
 
-def _ensure_module_reference(answer: str, module_reference: str | None) -> str:
+def _finalize_module_answer(answer: str, module_reference: str | None) -> str:
     if not module_reference:
         return answer
 
     cleaned_answer = answer.strip()
-    if cleaned_answer.endswith(module_reference):
-        return cleaned_answer
+    cleaned_answer = cleaned_answer.replace(module_reference, "").strip()
     return f"{cleaned_answer}\n\n{module_reference}"

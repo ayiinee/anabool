@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_config.dart';
+import '../../domain/entities/chat_cta_card.dart';
 import '../../../scan/domain/entities/scan_session.dart';
 import '../models/chat_session_model.dart';
 
@@ -10,6 +11,7 @@ abstract class ChatRemoteDatasource {
     ScanSession? scanSession,
   });
   Future<ChatSessionModel> sendChatMessage(String sessionId, String content);
+  Future<ChatSessionModel> selectCtaCard(String sessionId, ChatCtaCard card);
 }
 
 class DioChatRemoteDatasource implements ChatRemoteDatasource {
@@ -66,6 +68,21 @@ class DioChatRemoteDatasource implements ChatRemoteDatasource {
     return _readSession(response.data);
   }
 
+  @override
+  Future<ChatSessionModel> selectCtaCard(
+    String sessionId,
+    ChatCtaCard card,
+  ) async {
+    final response = await _runChatRequest(
+      () => _dio.post<Map<String, dynamic>>(
+        '/api/v1/chats/$sessionId/select-card',
+        data: {'card_type': _normalizeCardType(card.cardType)},
+      ),
+    );
+
+    return _readSession(response.data);
+  }
+
   Future<Response<Map<String, dynamic>>> _runChatRequest(
     Future<Response<Map<String, dynamic>>> Function() request,
   ) async {
@@ -108,6 +125,15 @@ class DioChatRemoteDatasource implements ChatRemoteDatasource {
     }
 
     return ChatSessionModel.fromApiResponse(body);
+  }
+
+  String _normalizeCardType(String cardType) {
+    final normalized = cardType.trim().toLowerCase();
+    if (normalized.endsWith('_module')) {
+      return normalized.substring(0, normalized.length - '_module'.length);
+    }
+
+    return normalized;
   }
 }
 

@@ -24,7 +24,12 @@ def build_ana_user_prompt(
     if module_reference:
         reference_instruction = (
             "\nInstruksi rujukan wajib:\n"
-            f"- Jawaban harus diakhiri persis dengan kalimat: {module_reference}\n"
+            "- Struktur jawaban harus berurutan: pertama jelaskan materi secara lengkap dan komprehensif berdasarkan konteks rujukan, lalu terakhir baru berikan CTA modul.\n"
+            "- Jangan membuka jawaban dengan CTA, rujukan modul, atau kalimat seperti 'silakan baca Modul'.\n"
+            "- Jangan menyisipkan CTA atau rujukan modul di tengah jawaban.\n"
+            "- Untuk intent olah/pupuk, jelaskan langkah aman pengolahan limbah menjadi pupuk berdasarkan konteks.\n"
+            "- Untuk intent buang, jelaskan langkah aman membuang limbah kucing berdasarkan konteks.\n"
+            f"- Baris paling akhir jawaban harus persis: {module_reference}\n"
             "- Jangan menambahkan daftar sumber lain setelah kalimat tersebut.\n"
         )
 
