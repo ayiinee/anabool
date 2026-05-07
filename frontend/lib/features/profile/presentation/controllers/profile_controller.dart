@@ -45,7 +45,11 @@ class ProfileController extends ChangeNotifier {
   String? errorMessage;
   UserProfile? profile;
 
-  Future<void> load() async {
+  Future<void> load({bool force = false}) async {
+    if (isLoading || (profile != null && !force)) {
+      return;
+    }
+
     isLoading = true;
     errorMessage = null;
     notifyListeners();

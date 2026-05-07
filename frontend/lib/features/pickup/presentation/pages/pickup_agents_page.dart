@@ -36,8 +36,6 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
   PickupController get _ctrl => widget.controller;
 
   LatLng _userPoint = _fallbackUserPoint;
-  bool _isLoadingMap = true;
-  String _mapStatus = 'Mendeteksi lokasi pengguna...';
   Map<String, AgentRouteInfo> _routeInfoByAgent = {};
 
   @override
@@ -61,11 +59,6 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
   }
 
   Future<void> _loadMapAndRoutes() async {
-    setState(() {
-      _isLoadingMap = true;
-      _mapStatus = 'Mendeteksi lokasi pengguna...';
-    });
-
     final detectedPoint = await _detectUserPoint();
     final agentPoints = _buildDummyAgentPoints(detectedPoint);
     final routeEntries = <String, AgentRouteInfo>{};
@@ -81,10 +74,6 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
     setState(() {
       _userPoint = detectedPoint;
       _routeInfoByAgent = routeEntries;
-      _isLoadingMap = false;
-      _mapStatus = routeEntries.values.any((route) => route.isFromOsrm)
-          ? 'ETA dihitung dari OSRM'
-          : 'OSRM tidak tersedia, memakai estimasi lokal';
     });
   }
 
@@ -246,8 +235,6 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
                     agentPoints: agentPoints,
                     selectedAgentId: _ctrl.selectedAgentId,
                     routeInfoByAgent: _routeInfoByAgent,
-                    isLoading: _isLoadingMap,
-                    status: _mapStatus,
                     onSelectAgent: _ctrl.selectAgent,
                   ),
                 ),
@@ -409,8 +396,6 @@ class _PickupMap extends StatelessWidget {
     required this.agentPoints,
     required this.selectedAgentId,
     required this.routeInfoByAgent,
-    required this.isLoading,
-    required this.status,
     required this.onSelectAgent,
   });
 
@@ -418,8 +403,6 @@ class _PickupMap extends StatelessWidget {
   final Map<String, LatLng> agentPoints;
   final String? selectedAgentId;
   final Map<String, AgentRouteInfo> routeInfoByAgent;
-  final bool isLoading;
-  final String status;
   final ValueChanged<String> onSelectAgent;
 
   @override
@@ -476,62 +459,6 @@ class _PickupMap extends StatelessWidget {
               ],
             ),
           ],
-        ),
-        Positioned(
-          left: 16,
-          right: 16,
-          top: 12,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.94),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x16000000),
-                  blurRadius: 12,
-                  offset: Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: isLoading
-                        ? const CircularProgressIndicator(strokeWidth: 2)
-                        : const Icon(
-                            Icons.route_rounded,
-                            color: AnaboolColors.green,
-                            size: 18,
-                          ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      status,
-                      style: const TextStyle(
-                        color: AnaboolColors.ink,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                  if (selectedRoute != null)
-                    Text(
-                      selectedRoute.etaLabel,
-                      style: const TextStyle(
-                        color: AnaboolColors.brown,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
         ),
       ],
     );
@@ -829,7 +756,7 @@ class _PickupActionBar extends StatelessWidget {
                         ),
                       )
                     : const Text(
-                        'Lanjutkan',
+                        'Pesan',
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w900,

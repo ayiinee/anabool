@@ -6,6 +6,7 @@ import '../../../../shared/widgets/app_bottom_navigation.dart';
 import '../../../home/presentation/widgets/design_image.dart';
 import '../../domain/entities/user_profile.dart';
 import '../controllers/profile_controller.dart';
+import '../controllers/profile_session.dart';
 import '../widgets/address_card.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_menu_item.dart';
@@ -24,13 +25,24 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _controller = ProfileController.create()..load();
+    _controller = profileSessionController..load();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+  }
+
+  Future<void> _openEditProfile() async {
+    final updated = await Navigator.of(context).pushNamed(
+      RouteConstants.editProfile,
+    );
+
+    if (!mounted || updated != true) {
+      return;
+    }
+
+    await _controller.load(force: true);
   }
 
   @override
@@ -66,9 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       ProfileHeader(
                         profile: profile,
-                        onEditProfile: () => Navigator.of(context).pushNamed(
-                          RouteConstants.editProfile,
-                        ),
+                        onEditProfile: _openEditProfile,
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
@@ -125,9 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               icon: Icons.person_outline_rounded,
                               title: 'Edit Profil',
                               subtitle: 'Nama, email, telepon, dan lokasi',
-                              onTap: () => Navigator.of(context).pushNamed(
-                                RouteConstants.editProfile,
-                              ),
+                              onTap: _openEditProfile,
                             ),
                             const SizedBox(height: 9),
                             ProfileMenuItem(

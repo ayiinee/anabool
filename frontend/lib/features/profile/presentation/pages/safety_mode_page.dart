@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../controllers/profile_controller.dart';
+import '../controllers/profile_session.dart';
 import '../widgets/safety_mode_card.dart';
 
 class SafetyModePage extends StatefulWidget {
@@ -17,12 +18,11 @@ class _SafetyModePageState extends State<SafetyModePage> {
   @override
   void initState() {
     super.initState();
-    _controller = ProfileController.create()..load();
+    _controller = profileSessionController..load();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 

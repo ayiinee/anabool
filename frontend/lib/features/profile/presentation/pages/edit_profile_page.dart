@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme.dart';
 import '../../../home/presentation/widgets/design_image.dart';
 import '../controllers/profile_controller.dart';
+import '../controllers/profile_session.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -23,12 +24,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    _controller = ProfileController.create()..load();
+    _controller = profileSessionController..load();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
@@ -66,8 +66,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
     }
 
     if (saved) {
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(true);
+      return;
     }
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            _controller.errorMessage ?? 'Profil gagal disimpan.',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
   }
 
   @override

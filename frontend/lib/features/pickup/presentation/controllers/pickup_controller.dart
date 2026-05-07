@@ -85,6 +85,20 @@ class PickupController extends ChangeNotifier {
       _activeOrder != null &&
       _activeOrder!.statusLogs.every((log) => log.isCompleted);
 
+  void clearCompletedOrder() {
+    if (!isOrderComplete) return;
+
+    _simulationTimer?.cancel();
+    _simulationTimer = null;
+    _simulationPhase = 0;
+    _activeOrder = null;
+    _activeRoute = null;
+    _acceptedAt = null;
+    _processingAt = null;
+    _completedAt = null;
+    notifyListeners();
+  }
+
   String get activeOrderStatusLabel {
     final order = _activeOrder;
     if (order == null) return '';

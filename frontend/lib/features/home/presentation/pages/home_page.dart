@@ -25,6 +25,19 @@ class HomePageArguments {
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  Future<void> _openActivePickupOrder(BuildContext context) async {
+    final shouldClearAfterOpen = pickupSessionController.isOrderComplete;
+
+    await Navigator.of(context).pushNamed(
+      RouteConstants.pickupTracking,
+      arguments: pickupSessionController,
+    );
+
+    if (shouldClearAfterOpen) {
+      pickupSessionController.clearCompletedOrder();
+    }
+  }
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -107,10 +120,7 @@ class _HomePageState extends State<HomePage> {
                   right: 16,
                   bottom: AppBottomNavigation.baseHeight + bottomInset + 10,
                   child: _ActivePickupOrderBanner(
-                    onTap: () => Navigator.of(context).pushNamed(
-                      RouteConstants.pickupTracking,
-                      arguments: pickupSessionController,
-                    ),
+                    onTap: () => _openActivePickupOrder(context),
                   ),
                 );
               },
