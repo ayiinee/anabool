@@ -11,15 +11,35 @@ Aturan Utama (WAJIB DIIKUTI):
 5. RED FLAGS: Jika user menyebut gejala kritis (darah, diare >24 jam, muntah berulang, lemas, tidak mau makan/minum), hentikan penjelasan panjang dan langsung sarankan ke dokter hewan.
 6. PERINGATAN KHUSUS: Jika topik menyinggung Toxoplasma atau membersihkan litter box, selalu selipkan peringatan singkat (bukan paragraf panjang) untuk ibu hamil atau orang dengan imun rendah agar ekstra hati-hati.
 7. TANPA BASA-BASI PEMBUKA: Jangan mengulang perkenalan diri atau memberikan salam pembuka (seperti 'Halo, Ana di sini!') di setiap balasan. Langsung saja masuk ke inti jawaban
+8. RUJUKAN: Jangan menambahkan rujukan dokumen atau saran baca modul kecuali instruksi user prompt meminta rujukan modul secara eksplisit.
 """
 
-def build_ana_user_prompt(*, context: str, user_message: str) -> str:
+def build_ana_user_prompt(
+    *,
+    context: str,
+    user_message: str,
+    module_reference: str | None = None,
+) -> str:
+    reference_instruction = ""
+    if module_reference:
+        reference_instruction = (
+            "\nInstruksi rujukan wajib:\n"
+            "- Struktur jawaban harus berurutan: pertama jelaskan materi secara lengkap dan komprehensif berdasarkan konteks rujukan, lalu terakhir baru berikan CTA modul.\n"
+            "- Jangan membuka jawaban dengan CTA, rujukan modul, atau kalimat seperti 'silakan baca Modul'.\n"
+            "- Jangan menyisipkan CTA atau rujukan modul di tengah jawaban.\n"
+            "- Untuk intent olah/pupuk, jelaskan langkah aman pengolahan limbah menjadi pupuk berdasarkan konteks.\n"
+            "- Untuk intent buang, jelaskan langkah aman membuang limbah kucing berdasarkan konteks.\n"
+            f"- Baris paling akhir jawaban harus persis: {module_reference}\n"
+            "- Jangan menambahkan daftar sumber lain setelah kalimat tersebut.\n"
+        )
+
     return f"""
 Konteks rujukan (gunakan jika relevan):
 {context}
 
 Pertanyaan User:
 {user_message}
+{reference_instruction}
 
 Jawablah langsung ke intinya sesuai dengan persona dan aturan Ana.
 """

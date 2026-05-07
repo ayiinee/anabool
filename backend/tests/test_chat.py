@@ -121,7 +121,60 @@ def test_send_message_uses_rag_response(monkeypatch):
     assert "Sumber rujukan: Modul 1" in answer
 
 
-def test_select_process_card_returns_tutorial_and_dynamic_module_link():
+def test_send_message_adds_module_cta_when_rag_references_module(monkeypatch):
+    from app.services import chat_service
+
+    monkeypatch.setattr(
+        chat_service,
+        "generate_ana_response",
+        lambda *_args, **_kwargs: {
+            "answer": "Gunakan wadah tertutup dan jangan dipakai untuk tanaman pangan.\n\nUntuk informasi lebih lanjut, silakan baca Modul 7",
+            "provider": "fallback",
+            "sources": ["Modul 7"],
+            "retrieved_chunks": 1,
+            "used_rag": True,
+            "append_source_footer": False,
+        },
+    )
+
+    session_id = _start_session_id()
+    response = client.post(
+        f"/api/v1/chats/{session_id}/messages",
+        json={"content": "Bagaimana cara mengolah kotoran kucing jadi pupuk?"},
+    )
+
+    assert response.status_code == 200
+    followup = response.json()["data"]["messages"][-1]
+    assert followup["message_type"] == "cta_cards"
+    assert followup["content"].endswith("Untuk informasi lebih lanjut, silakan baca Modul 7")
+    assert len(followup["cards"]) == 1
+
+    card = followup["cards"][0]
+    assert card["cta_label"] == "Pelajari Selengkapnya"
+    assert card["target_route"] == "/modules/dari-limbah-menjadi-pupuk-circular-economy-yang-aman-dan-berkelanjutan"
+    assert card["payload"]["module_id"] == "module_7_limbah_menjadi_pupuk_circular_economy"
+    assert card["payload"]["chat_session_id"] == session_id
+    assert card["payload"]["preserve_chat_session"] is True
+
+
+def test_select_process_card_returns_tutorial_and_dynamic_module_link(monkeypatch):
+    from app.services import chat_service
+
+    captured = {}
+
+    def fake_generate_ana_response(*_args, **kwargs):
+        captured.update(kwargs)
+        return {
+            "answer": "Gunakan wadah tertutup dan jangan dipakai untuk tanaman pangan.\n\nUntuk informasi lebih lanjut, silakan baca Modul 7",
+            "provider": "fallback",
+            "sources": ["Modul 7"],
+            "retrieved_chunks": 1,
+            "used_rag": True,
+            "append_source_footer": False,
+        }
+
+    monkeypatch.setattr(chat_service, "generate_ana_response", fake_generate_ana_response)
+
     session_id = _start_scan_session_id()
     response = client.post(
         f"/api/v1/chats/{session_id}/select-card",
@@ -137,19 +190,40 @@ def test_select_process_card_returns_tutorial_and_dynamic_module_link():
     followup = session["messages"][-1]
     assert followup["message_type"] == "cta_cards"
     assert "Quick tips" in followup["content"]
-    assert "Modul Pengolahan Limbah" in followup["content"]
+    assert "Modul 7: Dari Limbah Menjadi Pupuk" in followup["content"]
+    assert followup["content"].endswith("Untuk informasi lebih lanjut, silakan baca Modul 7")
+    assert captured["trigger_action"] == "process"
     assert len(followup["cards"]) == 1
 
     card = followup["cards"][0]
     assert card["cta_label"] == "Pelajari Selengkapnya"
-    assert card["target_route"] == "/modules/waste-processing"
-    assert card["payload"]["module_category"] == "waste_processing"
+    assert card["target_route"] == "/modules/dari-limbah-menjadi-pupuk-circular-economy-yang-aman-dan-berkelanjutan"
+    assert card["payload"]["module_category"] == "sustainability"
+    assert card["payload"]["module_id"] == "module_7_limbah_menjadi_pupuk_circular_economy"
+    assert card["payload"]["content_id"] == "module_7_limbah_menjadi_pupuk_circular_economy"
     assert card["payload"]["chat_session_id"] == session_id
     assert card["payload"]["return_route"] == f"/chats/{session_id}"
     assert card["payload"]["preserve_chat_session"] is True
 
 
-def test_select_dispose_card_routes_to_environment_sanitation_module():
+def test_select_dispose_card_routes_to_environment_sanitation_module(monkeypatch):
+    from app.services import chat_service
+
+    captured = {}
+
+    def fake_generate_ana_response(*_args, **kwargs):
+        captured.update(kwargs)
+        return {
+            "answer": "Masukkan ke kantong kuat, ikat rapat, lalu buang sesuai aturan setempat.\n\nUntuk informasi lebih lanjut, silakan baca Modul 4",
+            "provider": "fallback",
+            "sources": ["Modul 4"],
+            "retrieved_chunks": 1,
+            "used_rag": True,
+            "append_source_footer": False,
+        }
+
+    monkeypatch.setattr(chat_service, "generate_ana_response", fake_generate_ana_response)
+
     session_id = _start_scan_session_id()
     response = client.post(
         f"/api/v1/chats/{session_id}/select-card",
@@ -158,9 +232,12 @@ def test_select_dispose_card_routes_to_environment_sanitation_module():
 
     assert response.status_code == 200
     followup = response.json()["data"]["messages"][-1]
-    assert "Modul Sanitasi Lingkungan" in followup["content"]
-    assert followup["cards"][0]["target_route"] == "/modules/environment-sanitation"
-    assert followup["cards"][0]["payload"]["module_category"] == "environment_sanitation"
+    assert "Modul 4: Protokol Aman Membersihkan & Membuang" in followup["content"]
+    assert followup["content"].endswith("Untuk informasi lebih lanjut, silakan baca Modul 4")
+    assert captured["trigger_action"] == "dispose"
+    assert followup["cards"][0]["target_route"] == "/modules/protokol-aman-membersihkan-membuang-kotoran-kucing"
+    assert followup["cards"][0]["payload"]["module_category"] == "safety"
+    assert followup["cards"][0]["payload"]["module_id"] == "module_4_protokol_aman_membersihkan_membuang_kotoran_kucing"
 
 
 def test_select_pickup_card_routes_to_cleanliness_health_module():
@@ -172,9 +249,10 @@ def test_select_pickup_card_routes_to_cleanliness_health_module():
 
     assert response.status_code == 200
     followup = response.json()["data"]["messages"][-1]
-    assert "Modul Teknik Kebersihan/Kesehatan" in followup["content"]
-    assert followup["cards"][0]["target_route"] == "/modules/cleanliness-health"
-    assert followup["cards"][0]["payload"]["module_category"] == "cleanliness_health"
+    assert "Modul 5: Hygiene Measures" in followup["content"]
+    assert followup["cards"][0]["target_route"] == "/modules/hygiene-measures-yang-terbukti-efektif-mencegah-toxoplasmosis"
+    assert followup["cards"][0]["payload"]["module_category"] == "safety"
+    assert followup["cards"][0]["payload"]["module_id"] == "module_5_hygiene_measures_mencegah_toxoplasmosis"
 
 
 def test_select_unknown_card_returns_400():

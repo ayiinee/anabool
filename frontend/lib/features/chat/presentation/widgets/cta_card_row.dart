@@ -123,9 +123,13 @@ class _ReferenceActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = spec.title;
-    final description = spec.description;
-    final headerHeight = wide ? 122.0 : 128.0;
+    final title = card.title.trim().isEmpty ? spec.title : card.title;
+    final description =
+        card.description.trim().isEmpty ? spec.description : card.description;
+    final ctaLabel = card.ctaLabel.trim().isEmpty
+        ? (card.opensRoute ? 'Pelajari Selengkapnya' : 'Pilih')
+        : card.ctaLabel;
+    final headerHeight = wide ? 108.0 : 112.0;
 
     return SizedBox(
       width: width,
@@ -162,27 +166,37 @@ class _ReferenceActionCard extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: ColoredBox(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            wide ? 8 : 7,
-                            wide ? 7 : 8,
-                            wide ? 8 : 7,
-                            4,
-                          ),
-                          child: Text(
-                            description,
-                            maxLines: wide ? 2 : 3,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: AnaboolColors.ink.withValues(alpha: 0.72),
-                              fontSize: wide ? 13 : 12,
-                              fontWeight: FontWeight.w900,
-                              height: 1.05,
-                            ),
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          wide ? 10 : 8,
+                          wide ? 8 : 8,
+                          wide ? 10 : 8,
+                          5,
+                        ),
+                        child: Text(
+                          description,
+                          maxLines: wide ? 2 : 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AnaboolColors.ink.withValues(alpha: 0.72),
+                            fontSize: wide ? 13 : 12,
+                            fontWeight: FontWeight.w900,
+                            height: 1.05,
                           ),
                         ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        wide ? 10 : 8,
+                        0,
+                        wide ? 10 : 8,
+                        wide ? 9 : 8,
+                      ),
+                      child: _CtaPill(
+                        label: ctaLabel,
+                        enabled: enabled,
+                        opensRoute: card.opensRoute,
                       ),
                     ),
                   ],
@@ -190,6 +204,59 @@ class _ReferenceActionCard extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _CtaPill extends StatelessWidget {
+  const _CtaPill({
+    required this.label,
+    required this.enabled,
+    required this.opensRoute,
+  });
+
+  final String label;
+  final bool enabled;
+  final bool opensRoute;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: enabled ? AnaboolColors.brown : AnaboolColors.brownSoft,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  height: 1,
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(
+              opensRoute
+                  ? Icons.arrow_forward_rounded
+                  : Icons.touch_app_rounded,
+              color: Colors.white,
+              size: 14,
+            ),
+          ],
         ),
       ),
     );

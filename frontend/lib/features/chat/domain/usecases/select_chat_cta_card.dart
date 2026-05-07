@@ -8,9 +8,6 @@ class SelectChatCtaCard {
   final ChatRepository _repository;
 
   Future<ChatSession> call(ChatSession session, ChatCtaCard card) {
-    return _repository.sendChatMessage(
-      session.id,
-      'Saya pilih ${card.title}. ${card.ctaLabel}.',
-    );
+    return _repository.selectCtaCard(session.id, card);
   }
 }
