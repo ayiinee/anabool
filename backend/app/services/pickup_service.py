@@ -60,7 +60,12 @@ class PickupService:
             "already_granted": False,
         }
         if status == "completed" and order.get("pickup_type") == "pupuk":
-            points = calculate_pickup_points(order.get("actual_weight_g"))
+            package_bonus = (order.get("package") or {}).get("meowpoints_bonus")
+            points = (
+                int(package_bonus)
+                if package_bonus is not None and int(package_bonus) > 0
+                else calculate_pickup_points(order.get("actual_weight_g"))
+            )
             reward = self._reward_service.grant_once(
                 user_id=str(order["user_id"]),
                 points=points,

@@ -288,7 +288,11 @@ class PickupController extends ChangeNotifier {
           ],
         );
         if (_activeOrder!.pickupType == 'pupuk') {
-          MeowPointsStore.instance.awardPickupCompost(_activeOrder!.id);
+          final earnedPoints = selectedAgent?.meowpoints;
+          MeowPointsStore.instance.awardPickupCompost(
+            _activeOrder!.id,
+            points: earnedPoints,
+          );
         }
         notifyListeners();
       }

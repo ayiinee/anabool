@@ -42,6 +42,7 @@ def test_completed_pupuk_pickup_grants_points():
             "pickup_type": "pupuk",
             "actual_weight_g": None,
             "meowpoints_earned": 0,
+            "package": {"meowpoints_bonus": 3000},
         }
     )
     service = PickupService(
@@ -51,9 +52,9 @@ def test_completed_pupuk_pickup_grants_points():
 
     order = service.update_order_status(order_id="pickup-1", status="completed")
 
-    assert order["reward"]["points_granted"] == 50
-    assert order["reward"]["balance"] == 50
-    assert order["meowpoints_earned"] == 50
+    assert order["reward"]["points_granted"] == 3000
+    assert order["reward"]["balance"] == 3000
+    assert order["meowpoints_earned"] == 3000
 
 
 def test_completed_non_pupuk_pickup_does_not_grant_points():
