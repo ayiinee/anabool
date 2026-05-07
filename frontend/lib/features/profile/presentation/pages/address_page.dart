@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme.dart';
 import '../../domain/entities/user_address.dart';
 import '../controllers/profile_controller.dart';
+import '../controllers/profile_session.dart';
 import '../widgets/address_card.dart';
 
 class AddressPage extends StatefulWidget {
@@ -18,12 +19,11 @@ class _AddressPageState extends State<AddressPage> {
   @override
   void initState() {
     super.initState();
-    _controller = ProfileController.create()..load();
+    _controller = profileSessionController..load();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 

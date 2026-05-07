@@ -23,6 +23,7 @@ class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
   }
 
   UserProfile _profile;
+  bool _hasLocalProfileEdits = false;
 
   static final Map<String, dynamic> _mock = {
     'id': CurrentUserIdentity.fallbackUserId,
@@ -74,6 +75,7 @@ class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
   @override
   Future<UserProfile> updateProfile(UserProfile profile) async {
     await CurrentUserIdentity.updateDisplayName(profile.name);
+    _hasLocalProfileEdits = true;
     _profile = UserProfileModel.fromEntity(profile);
     return _profile;
   }
@@ -109,9 +111,15 @@ class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
   }
 
   void _syncCurrentUser() {
+    final userId = CurrentUserIdentity.userId(fallback: _profile.id);
+
+    if (_hasLocalProfileEdits) {
+      _profile = _profile.copyWith(id: userId);
+      return;
+    }
+
     final userName = CurrentUserIdentity.displayName(fallback: _profile.name);
     final email = CurrentUserIdentity.email(fallback: _profile.email);
-    final userId = CurrentUserIdentity.userId(fallback: _profile.id);
 
     _profile = _profile.copyWith(
       id: userId,

@@ -15,6 +15,19 @@ import '../widgets/shortcut_section.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  Future<void> _openActivePickupOrder(BuildContext context) async {
+    final shouldClearAfterOpen = pickupSessionController.isOrderComplete;
+
+    await Navigator.of(context).pushNamed(
+      RouteConstants.pickupTracking,
+      arguments: pickupSessionController,
+    );
+
+    if (shouldClearAfterOpen) {
+      pickupSessionController.clearCompletedOrder();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.paddingOf(context).bottom;
@@ -54,10 +67,7 @@ class HomePage extends StatelessWidget {
                   right: 16,
                   bottom: AppBottomNavigation.baseHeight + bottomInset + 10,
                   child: _ActivePickupOrderBanner(
-                    onTap: () => Navigator.of(context).pushNamed(
-                      RouteConstants.pickupTracking,
-                      arguments: pickupSessionController,
-                    ),
+                    onTap: () => _openActivePickupOrder(context),
                   ),
                 );
               },

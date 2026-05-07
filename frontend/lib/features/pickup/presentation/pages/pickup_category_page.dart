@@ -98,7 +98,7 @@ class _PickupCategoryPageState extends State<PickupCategoryPage> {
                               Expanded(
                                 child: _CategoryButton(
                                   label: 'Pick-up\nKotoran',
-                                  isFilled: true,
+                                  isFilled: false,
                                   onTap: () => _onCategoryTap('kotoran'),
                                 ),
                               ),
@@ -204,49 +204,58 @@ class _CategoryButton extends StatefulWidget {
 
 class _CategoryButtonState extends State<_CategoryButton> {
   bool _pressed = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => setState(() => _pressed = true),
-      onTapUp: (_) => setState(() => _pressed = false),
-      onTapCancel: () => setState(() => _pressed = false),
-      onTap: widget.onTap,
-      child: AnimatedScale(
-        duration: const Duration(milliseconds: 120),
-        scale: _pressed ? 0.95 : 1.0,
-        child: Container(
-          height: 74,
-          decoration: BoxDecoration(
-            color: widget.isFilled
-                ? AnaboolColors.brown
-                : AnaboolColors.peach.withValues(alpha: 0.5),
-            borderRadius: BorderRadius.circular(16),
-            border: widget.isFilled
-                ? null
-                : Border.all(
-                    color: AnaboolColors.brown.withValues(alpha: 0.3),
-                    width: 1.5,
-                  ),
-            boxShadow: [
-              BoxShadow(
-                color: widget.isFilled
-                    ? AnaboolColors.brown.withValues(alpha: 0.3)
-                    : const Color(0x14000000),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+    final isActive = widget.isFilled || _hovered || _pressed;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        onTap: widget.onTap,
+        child: AnimatedScale(
+          duration: const Duration(milliseconds: 120),
+          scale: _pressed ? 0.95 : 1.0,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 160),
+            curve: Curves.easeOut,
+            height: 74,
+            decoration: BoxDecoration(
+              color: isActive
+                  ? AnaboolColors.brown
+                  : AnaboolColors.peach.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(16),
+              border: isActive
+                  ? null
+                  : Border.all(
+                      color: AnaboolColors.brown.withValues(alpha: 0.3),
+                      width: 1.5,
+                    ),
+              boxShadow: [
+                BoxShadow(
+                  color: isActive
+                      ? AnaboolColors.brown.withValues(alpha: 0.3)
+                      : const Color(0x14000000),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              widget.label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: isActive ? Colors.white : AnaboolColors.brown,
+                height: 1.3,
               ),
-            ],
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            widget.label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-              color: widget.isFilled ? Colors.white : AnaboolColors.brown,
-              height: 1.3,
             ),
           ),
         ),

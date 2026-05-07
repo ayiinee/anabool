@@ -62,6 +62,9 @@ class _PickupTrackingPageState extends State<PickupTrackingPage> {
                 // ── App Bar ──
                 _TrackingAppBar(
                   onBack: () {
+                    if (_ctrl.isOrderComplete) {
+                      _ctrl.clearCompletedOrder();
+                    }
                     Navigator.of(context).pushNamedAndRemoveUntil(
                       RouteConstants.home,
                       (route) => false,
@@ -152,21 +155,6 @@ class _TrackingAppBar extends StatelessWidget {
                 fontWeight: FontWeight.w800,
                 color: AnaboolColors.ink,
               ),
-            ),
-          ),
-          SizedBox(
-            width: 36,
-            height: 36,
-            child: IconButton(
-              tooltip: 'Bagikan',
-              onPressed: () {},
-              style: IconButton.styleFrom(
-                backgroundColor: const Color(0xFFFFD3B8),
-                foregroundColor: AnaboolColors.ink,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                padding: EdgeInsets.zero,
-              ),
-              icon: const Icon(Icons.share_rounded, size: 20),
             ),
           ),
         ],
@@ -558,7 +546,7 @@ class _AgentInfoCard extends StatelessWidget {
             ),
             child: const ClipOval(
               child: DesignImage(
-                asset: HomeAssets.profilePhoto,
+                asset: HomeAssets.pickupCat,
                 width: 56,
                 height: 56,
                 fit: BoxFit.cover,
