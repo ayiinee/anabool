@@ -227,32 +227,70 @@ class PickupController extends ChangeNotifier {
       PickupAgent(
         id: 'agent_1',
         name: 'Agen Anabool Metro',
-        distanceMeters: 5,
+        distanceMeters: 850,
         priceIdr: 9000,
         meowpoints: 3000,
         rating: 4.5,
         vehicleName: 'Jupiter 135 MX',
         plateNumber: 'DK 1234 MQ',
+        reviewSummary:
+            'Respons cepat, petugas rapi, dan pengambilan sesuai waktu.',
+        recommendationReasons: [
+          'Paling dekat dari titik pengguna',
+          'Rutin menangani pickup limbah kucing',
+          'Membawa perlengkapan sanitasi standar ANABOOL',
+        ],
       ),
       PickupAgent(
         id: 'agent_2',
         name: 'Agen Anabool Sentro',
-        distanceMeters: 17,
+        distanceMeters: 1200,
         priceIdr: 10000,
         meowpoints: 4500,
         rating: 4.8,
         vehicleName: 'Beat Street',
         plateNumber: 'DK 5678 AB',
+        reviewSummary:
+            'Banyak ulasan positif untuk komunikasi dan ketepatan jemput.',
+        recommendationReasons: [
+          'Rating tertinggi di area terdekat',
+          'Cocok untuk pickup dengan instruksi khusus',
+          'Memiliki riwayat penyelesaian pesanan stabil',
+        ],
       ),
       PickupAgent(
         id: 'agent_3',
         name: 'Agen Anabool Dentro',
-        distanceMeters: 59,
+        distanceMeters: 1650,
         priceIdr: 12000,
         meowpoints: 2000,
         rating: 4.2,
         vehicleName: 'Vario 125',
         plateNumber: 'DK 9012 CD',
+        reviewSummary:
+            'Direkomendasikan untuk pickup pupuk dan pengemasan ulang.',
+        recommendationReasons: [
+          'Berpengalaman untuk kategori pupuk',
+          'Biaya MeowPoint paling rendah',
+          'Area parkir dekat rute utama',
+        ],
+      ),
+      PickupAgent(
+        id: 'agent_4',
+        name: 'Agen Anabool Utara',
+        distanceMeters: 2100,
+        priceIdr: 14000,
+        meowpoints: 5200,
+        rating: 4.6,
+        vehicleName: 'Scoopy Prestige',
+        plateNumber: 'DK 3372 AN',
+        reviewSummary:
+            'Disukai pengguna karena pengambilan bersih dan dokumentasi jelas.',
+        recommendationReasons: [
+          'Alternatif saat agen terdekat sibuk',
+          'Menyediakan foto bukti pickup',
+          'Komunikasi WhatsApp aktif',
+        ],
       ),
     ];
   }

@@ -11,6 +11,8 @@ class PickupAgent {
     this.vehicleName,
     this.plateNumber,
     this.serviceType = 'Pick-up & Jasa Pembersihan',
+    this.reviewSummary,
+    this.recommendationReasons = const [],
   });
 
   final String id;
@@ -23,6 +25,8 @@ class PickupAgent {
   final String? vehicleName;
   final String? plateNumber;
   final String serviceType;
+  final String? reviewSummary;
+  final List<String> recommendationReasons;
 
   String get distanceLabel {
     if (distanceMeters >= 1000) {
