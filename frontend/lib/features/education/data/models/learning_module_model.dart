@@ -80,7 +80,7 @@ class LearningModuleModel extends LearningModule {
       paragraphs: _stringList(map['paragraphs'] as List<dynamic>?),
       safetyNote: map['safetyNote'] as String?,
       keyTakeaway: map['keyTakeaway'] as String? ?? '',
-      ctaLabel: map['ctaLabel'] as String? ?? 'Mark as complete',
+      ctaLabel: map['ctaLabel'] as String? ?? 'Selanjutnya',
     );
   }
 

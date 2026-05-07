@@ -120,7 +120,7 @@ class EducationController extends ChangeNotifier {
       progress = catalog.progress;
       selectedContent = await _getEducationDetail(contentId);
       selectedModule = await _getLearningModule(contentId);
-      currentLessonIndex = nextLessonIndexFor(selectedModule!.id);
+      currentLessonIndex = 0;
     } catch (error) {
       errorMessage = error.toString();
     } finally {
@@ -170,8 +170,8 @@ class EducationController extends ChangeNotifier {
         updated,
       ];
 
-      if (!updated.isCompleted) {
-        currentLessonIndex = nextLessonIndexFor(module.id);
+      if (currentLessonIndex < module.lessons.length - 1) {
+        currentLessonIndex += 1;
       }
 
       return true;
