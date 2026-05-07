@@ -88,6 +88,7 @@ flutter:
     - assets/images/home/
     - assets/images/auth/
     - assets/images/chat/
+    - assets/images/cats/
     - assets/images/education/
     - assets/images/pickup/
     - assets/images/marketplace/

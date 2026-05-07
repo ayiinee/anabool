@@ -88,7 +88,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 TextButton.icon(
-                                  onPressed: () {},
+                                  onPressed: () => Navigator.of(context)
+                                      .pushNamed(RouteConstants.addCat),
                                   style: TextButton.styleFrom(
                                     foregroundColor: AnaboolColors.brownDark,
                                     padding: EdgeInsets.zero,

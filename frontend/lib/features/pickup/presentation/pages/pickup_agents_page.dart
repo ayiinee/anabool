@@ -38,7 +38,7 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
   LatLng _userPoint = _fallbackUserPoint;
   bool _isLoadingMap = true;
   String _mapStatus = 'Mendeteksi lokasi pengguna...';
-  Map<String, _AgentRouteInfo> _routeInfoByAgent = {};
+  Map<String, AgentRouteInfo> _routeInfoByAgent = {};
 
   @override
   void initState() {
@@ -68,19 +68,14 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
 
     final detectedPoint = await _detectUserPoint();
     final agentPoints = _buildDummyAgentPoints(detectedPoint);
-    final routeEntries = Map<String, _AgentRouteInfo>.fromEntries(
-      await Future.wait(
-        agentPoints.entries.map(
-          (entry) async => MapEntry(
-            entry.key,
-            await _loadOsrmRoute(
-              userPoint: detectedPoint,
-              agentPoint: entry.value,
-            ),
-          ),
-        ),
-      ),
-    );
+    final routeEntries = <String, AgentRouteInfo>{};
+
+    for (final entry in agentPoints.entries) {
+      routeEntries[entry.key] = await _loadOsrmRoute(
+        userPoint: detectedPoint,
+        agentPoint: entry.value,
+      );
+    }
 
     if (!mounted) return;
     setState(() {
@@ -142,11 +137,11 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
     };
   }
 
-  Future<_AgentRouteInfo> _loadOsrmRoute({
+  Future<AgentRouteInfo> _loadOsrmRoute({
     required LatLng userPoint,
     required LatLng agentPoint,
   }) async {
-    final fallback = _AgentRouteInfo.fallback(userPoint, agentPoint);
+    final fallback = AgentRouteInfo.fallback(userPoint, agentPoint);
     final url = 'https://router.project-osrm.org/route/v1/driving/'
         '${agentPoint.longitude},${agentPoint.latitude};'
         '${userPoint.longitude},${userPoint.latitude}';
@@ -176,7 +171,7 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
         }
       }
 
-      return _AgentRouteInfo(
+      return AgentRouteInfo(
         point: agentPoint,
         distanceMeters: ((route['distance'] as num?) ?? 0).round(),
         durationSeconds: ((route['duration'] as num?) ?? 0).round(),
@@ -191,7 +186,7 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
   Future<void> _continueToProcessing() async {
     if (_ctrl.selectedAgent == null || _ctrl.isOrdering) return;
     final routeInfo = _routeInfoByAgent[_ctrl.selectedAgent!.id] ??
-        _AgentRouteInfo.fallback(
+        AgentRouteInfo.fallback(
           _userPoint,
           _buildDummyAgentPoints(_userPoint)[_ctrl.selectedAgent!.id] ??
               _userPoint,
@@ -285,7 +280,7 @@ class _PickupAgentDetailPage extends StatelessWidget {
 
   final PickupController controller;
   final PickupAgent agent;
-  final _AgentRouteInfo? routeInfo;
+  final AgentRouteInfo? routeInfo;
 
   Future<void> _confirmViaWhatsApp(BuildContext context) async {
     final eta = routeInfo?.etaLabel ?? 'menunggu konfirmasi';
@@ -422,7 +417,7 @@ class _PickupMap extends StatelessWidget {
   final LatLng userPoint;
   final Map<String, LatLng> agentPoints;
   final String? selectedAgentId;
-  final Map<String, _AgentRouteInfo> routeInfoByAgent;
+  final Map<String, AgentRouteInfo> routeInfoByAgent;
   final bool isLoading;
   final String status;
   final ValueChanged<String> onSelectAgent;
@@ -669,7 +664,7 @@ class _AgentBottomSheet extends StatelessWidget {
   });
 
   final PickupController controller;
-  final Map<String, _AgentRouteInfo> routeInfoByAgent;
+  final Map<String, AgentRouteInfo> routeInfoByAgent;
   final bool hasSelection;
   final bool isOrdering;
   final VoidCallback onDetailTap;
@@ -897,7 +892,7 @@ class _AgentTile extends StatelessWidget {
   });
 
   final PickupAgent agent;
-  final _AgentRouteInfo? routeInfo;
+  final AgentRouteInfo? routeInfo;
   final bool isSelected;
   final String paymentMode;
   final VoidCallback onTap;
@@ -1033,7 +1028,7 @@ class _AgentHeroCard extends StatelessWidget {
   const _AgentHeroCard({required this.agent, required this.routeInfo});
 
   final PickupAgent agent;
-  final _AgentRouteInfo? routeInfo;
+  final AgentRouteInfo? routeInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -1199,8 +1194,8 @@ class _DetailSection extends StatelessWidget {
   }
 }
 
-class _AgentRouteInfo {
-  const _AgentRouteInfo({
+class AgentRouteInfo {
+  const AgentRouteInfo({
     required this.point,
     required this.distanceMeters,
     required this.durationSeconds,
@@ -1208,11 +1203,11 @@ class _AgentRouteInfo {
     required this.isFromOsrm,
   });
 
-  factory _AgentRouteInfo.fallback(LatLng userPoint, LatLng agentPoint) {
+  factory AgentRouteInfo.fallback(LatLng userPoint, LatLng agentPoint) {
     final distance =
         const Distance().as(LengthUnit.Meter, userPoint, agentPoint);
     final seconds = (distance / 450 * 60).round().clamp(240, 1800).toInt();
-    return _AgentRouteInfo(
+    return AgentRouteInfo(
       point: agentPoint,
       distanceMeters: distance.round(),
       durationSeconds: seconds,

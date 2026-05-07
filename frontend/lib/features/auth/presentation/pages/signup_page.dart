@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../../../core/constants/route_constants.dart';
+import '../../../home/presentation/pages/home_page.dart';
 import '../controllers/auth_controller.dart';
 import '../widgets/auth_footer_link.dart';
 import '../widgets/auth_layout.dart';
@@ -89,18 +90,19 @@ class _SignupPageState extends State<SignupPage> {
     if (_authController.currentUser != null && !_navigatedToHome) {
       _navigatedToHome = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _showRegistrationSuccessDialogAndGoHome();
+        _goHomeAfterRegistration();
       });
     }
   }
 
-  Future<void> _showRegistrationSuccessDialogAndGoHome() async {
+  Future<void> _goHomeAfterRegistration() async {
     if (!mounted) {
       return;
     }
     Navigator.of(context).pushNamedAndRemoveUntil(
       RouteConstants.home,
       (route) => false,
+      arguments: const HomePageArguments(showCatOnboarding: true),
     );
   }
 

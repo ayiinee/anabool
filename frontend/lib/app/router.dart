@@ -4,6 +4,10 @@ import '../core/constants/route_constants.dart';
 import '../features/auth/presentation/pages/auth_gate_page.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/auth/presentation/pages/signup_page.dart';
+import '../features/cats/presentation/pages/add_cat_page.dart';
+import '../features/cats/presentation/pages/cat_detail_page.dart';
+import '../features/cats/presentation/pages/cat_list_page.dart';
+import '../features/cats/presentation/pages/record_activity_page.dart';
 import '../features/home/presentation/pages/home_page.dart';
 import '../features/chat/presentation/pages/chat_page.dart';
 import '../features/education/presentation/pages/education_complete_page.dart';
@@ -80,6 +84,24 @@ class AppRouter {
       RouteConstants.editProfile: (_) => const EditProfilePage(),
       RouteConstants.safetyMode: (_) => const SafetyModePage(),
       RouteConstants.address: (_) => const AddressPage(),
+      RouteConstants.cats: (_) => const CatListPage(),
+      RouteConstants.addCat: (_) => const AddCatPage(),
+      RouteConstants.catDetail: (context) {
+        final arguments = ModalRoute.of(context)?.settings.arguments;
+        if (arguments is String && arguments.trim().isNotEmpty) {
+          return CatDetailPage(catId: arguments.trim());
+        }
+
+        return const CatListPage();
+      },
+      RouteConstants.recordCatActivity: (context) {
+        final arguments = ModalRoute.of(context)?.settings.arguments;
+        if (arguments is String && arguments.trim().isNotEmpty) {
+          return RecordActivityPage(catId: arguments.trim());
+        }
+
+        return const CatListPage();
+      },
       RouteConstants.scanCamera: (_) => const ScanCameraPage(),
       RouteConstants.scanPreview: (context) {
         final arguments = ModalRoute.of(context)?.settings.arguments;

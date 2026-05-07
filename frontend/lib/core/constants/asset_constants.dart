@@ -86,3 +86,11 @@ class MarketplaceAssets {
   static const fishOilProduct = HomeAssets.product7;
   static const putuReview = HomeAssets.profilePhoto;
 }
+
+class CatAssets {
+  const CatAssets._();
+
+  static const imageBase = 'assets/images/cats';
+
+  static const personalizationMascot = '$imageBase/cats-personalization.png';
+}
