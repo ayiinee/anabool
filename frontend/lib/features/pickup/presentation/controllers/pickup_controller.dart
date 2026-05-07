@@ -26,7 +26,7 @@ class PickupController extends ChangeNotifier {
   String? _selectedAgentId;
   String? get selectedAgentId => _selectedAgentId;
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   bool _isOrdering = false;
@@ -96,6 +96,7 @@ class PickupController extends ChangeNotifier {
         rating: agent.rating,
         vehicleName: agent.vehicleName,
         plateNumber: agent.plateNumber,
+        serviceType: agent.serviceType,
       ),
       pickupType: _selectedCategory ?? 'kotoran',
       status: 'processing',
@@ -114,7 +115,7 @@ class PickupController extends ChangeNotifier {
           timestamp: null,
           isCompleted: false,
         ),
-        PickupStatusLog(
+        const PickupStatusLog(
           status: 'completed',
           label: 'Pick-up Selesai',
           subtitle: null,
@@ -226,13 +227,14 @@ class PickupController extends ChangeNotifier {
     return const [
       PickupAgent(
         id: 'agent_1',
-        name: 'Agen Anabool Metro',
+        name: 'Nabila Wijaya Putri',
         distanceMeters: 850,
         priceIdr: 9000,
         meowpoints: 3000,
         rating: 4.5,
         vehicleName: 'Jupiter 135 MX',
-        plateNumber: 'DK 1234 MQ',
+        plateNumber: 'DK 1326 MQ',
+        serviceType: 'Pick-up & Jasa Pembersihan',
         reviewSummary:
             'Respons cepat, petugas rapi, dan pengambilan sesuai waktu.',
         recommendationReasons: [

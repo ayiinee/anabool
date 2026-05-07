@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
-import '../../../../shared/widgets/app_bottom_navigation.dart';
+import '../../../../core/constants/route_constants.dart';
 import '../../../home/presentation/widgets/design_image.dart';
 import '../../domain/entities/pickup_agent.dart';
 import '../controllers/pickup_controller.dart';
@@ -104,7 +104,9 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
       }
 
       final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
       );
       return LatLng(position.latitude, position.longitude);
     } catch (_) {
@@ -114,10 +116,14 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
 
   Map<String, LatLng> _buildDummyAgentPoints(LatLng userPoint) {
     return {
-      'agent_1': LatLng(userPoint.latitude + 0.0048, userPoint.longitude + 0.0032),
-      'agent_2': LatLng(userPoint.latitude - 0.0065, userPoint.longitude + 0.0068),
-      'agent_3': LatLng(userPoint.latitude + 0.0082, userPoint.longitude - 0.0054),
-      'agent_4': LatLng(userPoint.latitude - 0.0105, userPoint.longitude - 0.0046),
+      'agent_1':
+          LatLng(userPoint.latitude + 0.0048, userPoint.longitude + 0.0032),
+      'agent_2':
+          LatLng(userPoint.latitude - 0.0065, userPoint.longitude + 0.0068),
+      'agent_3':
+          LatLng(userPoint.latitude + 0.0082, userPoint.longitude - 0.0054),
+      'agent_4':
+          LatLng(userPoint.latitude - 0.0105, userPoint.longitude - 0.0046),
     };
   }
 
@@ -167,13 +173,25 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
     }
   }
 
+  Future<void> _continueToProcessing() async {
+    if (_ctrl.selectedAgent == null || _ctrl.isOrdering) return;
+
+    await _ctrl.createOrder();
+    if (!mounted || _ctrl.activeOrder == null) return;
+
+    await Navigator.of(context).pushNamed(
+      RouteConstants.pickupTracking,
+      arguments: _ctrl,
+    );
+  }
+
   void _openDetail() {
     final agent = _ctrl.selectedAgent;
     if (agent == null) return;
 
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => PickupAgentDetailPage(
+        builder: (_) => _PickupAgentDetailPage(
           controller: _ctrl,
           agent: agent,
           routeInfo: _routeInfoByAgent[agent.id],
@@ -184,7 +202,6 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.paddingOf(context).bottom;
     final agentPoints = _buildDummyAgentPoints(_userPoint);
 
     return Scaffold(
@@ -195,7 +212,15 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
           children: [
             Column(
               children: [
-                _AgentsAppBar(onBack: () => Navigator.of(context).maybePop()),
+                _AgentsAppBar(onBack: () {
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  } else {
+                    Navigator.of(context).pushReplacementNamed(
+                      RouteConstants.pickup,
+                    );
+                  }
+                }),
                 Expanded(
                   flex: 6,
                   child: _PickupMap(
@@ -213,17 +238,13 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
                   child: _AgentBottomSheet(
                     controller: _ctrl,
                     routeInfoByAgent: _routeInfoByAgent,
-                    onOrderTap: _openDetail,
-                    bottomInset: bottomInset,
+                    hasSelection: _ctrl.selectedAgent != null,
+                    isOrdering: _ctrl.isOrdering,
+                    onDetailTap: _openDetail,
+                    onContinueTap: _continueToProcessing,
                   ),
                 ),
               ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: AppBottomNavigation(
-                onHomeTap: () => Navigator.of(context).pushReplacementNamed('/home'),
-              ),
             ),
           ],
         ),
@@ -232,9 +253,8 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
   }
 }
 
-class PickupAgentDetailPage extends StatelessWidget {
-  const PickupAgentDetailPage({
-    super.key,
+class _PickupAgentDetailPage extends StatelessWidget {
+  const _PickupAgentDetailPage({
     required this.controller,
     required this.agent,
     this.routeInfo,
@@ -259,10 +279,12 @@ class PickupAgentDetailPage extends StatelessWidget {
       '- Layanan: ${agent.serviceType}\n\n'
       'Mohon bantu koordinasi pickup saya.',
     );
-    final appUri = Uri.parse('whatsapp://send?phone=6285337236836&text=$message');
+    final appUri =
+        Uri.parse('whatsapp://send?phone=6285337236836&text=$message');
     final webUri = Uri.parse('https://wa.me/6285337236836?text=$message');
 
-    final launched = await launchUrl(appUri, mode: LaunchMode.externalApplication);
+    final launched =
+        await launchUrl(appUri, mode: LaunchMode.externalApplication);
     if (!launched) {
       await launchUrl(webUri, mode: LaunchMode.externalApplication);
     }
@@ -587,19 +609,21 @@ class _AgentBottomSheet extends StatelessWidget {
   const _AgentBottomSheet({
     required this.controller,
     required this.routeInfoByAgent,
-    required this.onOrderTap,
-    required this.bottomInset,
+    required this.hasSelection,
+    required this.isOrdering,
+    required this.onDetailTap,
+    required this.onContinueTap,
   });
 
   final PickupController controller;
   final Map<String, _AgentRouteInfo> routeInfoByAgent;
-  final VoidCallback onOrderTap;
-  final double bottomInset;
+  final bool hasSelection;
+  final bool isOrdering;
+  final VoidCallback onDetailTap;
+  final Future<void> Function() onContinueTap;
 
   @override
   Widget build(BuildContext context) {
-    final hasSelection = controller.selectedAgent != null;
-
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -646,10 +670,9 @@ class _AgentBottomSheet extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          SizedBox(
-            height: 236,
+          Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
               itemCount: controller.agents.length,
               separatorBuilder: (_, __) => const SizedBox(height: 10),
               itemBuilder: (context, index) {
@@ -665,25 +688,105 @@ class _AgentBottomSheet extends StatelessWidget {
               },
             ),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 12, 16, 86 + bottomInset),
+          _PickupActionBar(
+            hasSelection: hasSelection,
+            isOrdering: isOrdering,
+            onDetailTap: onDetailTap,
+            onContinueTap: onContinueTap,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PickupActionBar extends StatelessWidget {
+  const _PickupActionBar({
+    required this.hasSelection,
+    required this.isOrdering,
+    required this.onDetailTap,
+    required this.onContinueTap,
+  });
+
+  final bool hasSelection;
+  final bool isOrdering;
+  final VoidCallback onDetailTap;
+  final Future<void> Function() onContinueTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: AnaboolColors.border)),
+      ),
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 12 + bottomInset),
+      child: Row(
+        children: [
+          Expanded(
             child: SizedBox(
-              width: double.infinity,
+              height: 50,
+              child: OutlinedButton.icon(
+                onPressed: hasSelection ? onDetailTap : null,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AnaboolColors.brown,
+                  side: BorderSide(
+                    color: hasSelection
+                        ? AnaboolColors.brown
+                        : AnaboolColors.border,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                ),
+                icon: const Icon(Icons.person_search_rounded, size: 20),
+                label: const Text(
+                  'Lihat Agent',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: SizedBox(
               height: 50,
               child: FilledButton(
-                onPressed: hasSelection ? onOrderTap : null,
+                onPressed: hasSelection && !isOrdering ? onContinueTap : null,
                 style: FilledButton.styleFrom(
                   backgroundColor: AnaboolColors.brown,
                   foregroundColor: Colors.white,
                   disabledBackgroundColor: AnaboolColors.border,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Pesan Sekarang',
-                  style: TextStyle(fontWeight: FontWeight.w900),
-                ),
+                child: isOrdering
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.4,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      )
+                    : const Text(
+                        'Lanjutkan',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
               ),
             ),
           ),
@@ -759,7 +862,8 @@ class _ToggleTab extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 14, color: isActive ? Colors.white : AnaboolColors.muted),
+            Icon(icon,
+                size: 14, color: isActive ? Colors.white : AnaboolColors.muted),
             const SizedBox(width: 4),
             Text(
               label,
@@ -803,12 +907,16 @@ class _AgentTile extends StatelessWidget {
           color: isSelected ? const Color(0xFFFFF1E7) : Colors.white,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isSelected ? AnaboolColors.brown : AnaboolColors.border.withValues(alpha: 0.35),
+            color: isSelected
+                ? AnaboolColors.brown
+                : AnaboolColors.border.withValues(alpha: 0.35),
             width: isSelected ? 1.5 : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: isSelected ? const Color(0x22A64700) : const Color(0x0F000000),
+              color: isSelected
+                  ? const Color(0x22A64700)
+                  : const Color(0x0F000000),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -823,7 +931,7 @@ class _AgentTile extends StatelessWidget {
                 color: AnaboolColors.peach.withValues(alpha: 0.65),
                 shape: BoxShape.circle,
               ),
-              child: ClipOval(
+              child: const ClipOval(
                 child: DesignImage(
                   asset: HomeAssets.pickupCat,
                   width: 48,
@@ -861,7 +969,8 @@ class _AgentTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.star_rounded, color: AnaboolColors.header, size: 15),
+                      const Icon(Icons.star_rounded,
+                          color: AnaboolColors.header, size: 15),
                       const SizedBox(width: 3),
                       Text(
                         agent.rating?.toStringAsFixed(1) ?? '-',
@@ -878,7 +987,9 @@ class _AgentTile extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              paymentMode == 'meowpoint' ? agent.meowpointsLabel : agent.priceLabelIdr,
+              paymentMode == 'meowpoint'
+                  ? agent.meowpointsLabel
+                  : agent.priceLabelIdr,
               style: const TextStyle(
                 color: AnaboolColors.ink,
                 fontSize: 13,
@@ -894,12 +1005,14 @@ class _AgentTile extends StatelessWidget {
                 color: isSelected ? AnaboolColors.brown : Colors.transparent,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: isSelected ? AnaboolColors.brown : AnaboolColors.border,
+                  color:
+                      isSelected ? AnaboolColors.brown : AnaboolColors.border,
                   width: 2,
                 ),
               ),
               child: isSelected
-                  ? const Icon(Icons.check_rounded, size: 16, color: Colors.white)
+                  ? const Icon(Icons.check_rounded,
+                      size: 16, color: Colors.white)
                   : null,
             ),
           ],
@@ -935,7 +1048,7 @@ class _AgentHeroCard extends StatelessWidget {
                   color: AnaboolColors.peach.withValues(alpha: 0.7),
                   shape: BoxShape.circle,
                 ),
-                child: ClipOval(
+                child: const ClipOval(
                   child: DesignImage(
                     asset: HomeAssets.pickupCat,
                     width: 64,
@@ -1089,7 +1202,8 @@ class _AgentRouteInfo {
   });
 
   factory _AgentRouteInfo.fallback(LatLng userPoint, LatLng agentPoint) {
-    final distance = const Distance().as(LengthUnit.Meter, userPoint, agentPoint);
+    final distance =
+        const Distance().as(LengthUnit.Meter, userPoint, agentPoint);
     final seconds = (distance / 450 * 60).round().clamp(240, 1800);
     return _AgentRouteInfo(
       point: agentPoint,

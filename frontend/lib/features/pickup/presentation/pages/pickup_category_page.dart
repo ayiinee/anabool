@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../../../core/constants/route_constants.dart';
-import '../../../../shared/widgets/app_bottom_navigation.dart';
 import '../../../home/presentation/widgets/design_image.dart';
 import '../controllers/pickup_controller.dart';
 
@@ -43,8 +42,6 @@ class _PickupCategoryPageState extends State<PickupCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.paddingOf(context).bottom;
-
     return Scaffold(
       backgroundColor: AnaboolColors.canvas,
       body: SafeArea(
@@ -56,20 +53,16 @@ class _PickupCategoryPageState extends State<PickupCategoryPage> {
                 // ── App Bar ──
                 _PickupAppBar(
                   title: 'Pick-up',
-                  onBack: () {
-                    if (Navigator.of(context).canPop()) {
-                      Navigator.of(context).pop();
-                    } else {
-                      Navigator.of(context)
-                          .pushReplacementNamed(RouteConstants.home);
-                    }
-                  },
+                  onBack: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                    RouteConstants.home,
+                    (route) => false,
+                  ),
                 ),
 
                 // ── Content ──
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: 118 + bottomInset),
+                    padding: const EdgeInsets.only(bottom: 28),
                     child: Column(
                       children: [
                         const SizedBox(height: 32),
@@ -125,12 +118,6 @@ class _PickupCategoryPageState extends State<PickupCategoryPage> {
                 ),
               ],
             ),
-
-            // Bottom navigation
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: AppBottomNavigation(),
-            ),
           ],
         ),
       ),
@@ -146,12 +133,10 @@ class _PickupAppBar extends StatelessWidget {
   const _PickupAppBar({
     required this.title,
     this.onBack,
-    this.trailing,
   });
 
   final String title;
   final VoidCallback? onBack;
-  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -190,11 +175,7 @@ class _PickupAppBar extends StatelessWidget {
             ),
           ),
 
-          // Trailing
-          if (trailing != null)
-            trailing!
-          else
-            const SizedBox(width: 36),
+          const SizedBox(width: 36),
         ],
       ),
     );
