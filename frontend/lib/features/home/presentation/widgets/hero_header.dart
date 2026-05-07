@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../core/auth/current_user_identity.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../../../core/constants/route_constants.dart';
 import 'design_image.dart';
@@ -289,22 +289,7 @@ class _UserPill extends StatelessWidget {
 }
 
 String _currentUserName() {
-  try {
-    final user = FirebaseAuth.instance.currentUser;
-    final displayName = user?.displayName?.trim();
-    if (displayName != null && displayName.isNotEmpty) {
-      return displayName;
-    }
-
-    final email = user?.email?.trim();
-    if (email != null && email.isNotEmpty) {
-      return email.split('@').first;
-    }
-  } catch (_) {
-    return 'Anabool';
-  }
-
-  return 'Anabool';
+  return CurrentUserIdentity.displayName();
 }
 
 String _wibGreeting() {

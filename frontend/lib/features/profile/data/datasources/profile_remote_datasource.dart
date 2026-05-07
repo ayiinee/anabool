@@ -1,3 +1,4 @@
+import '../../../../core/auth/current_user_identity.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../domain/entities/user_address.dart';
 import '../../domain/entities/user_profile.dart';
@@ -17,14 +18,16 @@ abstract class ProfileRemoteDatasource {
 }
 
 class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
-  LocalProfileRemoteDatasource() : _profile = UserProfileModel.fromMap(_mock);
+  LocalProfileRemoteDatasource() : _profile = UserProfileModel.fromMap(_mock) {
+    _syncCurrentUser();
+  }
 
   UserProfile _profile;
 
   static final Map<String, dynamic> _mock = {
-    'id': 'user-putu-alvin',
-    'name': 'Putu Alvin',
-    'email': 'putu.alvin@example.com',
+    'id': CurrentUserIdentity.fallbackUserId,
+    'name': CurrentUserIdentity.fallbackName,
+    'email': CurrentUserIdentity.fallbackEmail,
     'phone_number': '+62 812 4567 8901',
     'avatar_asset': HomeAssets.profilePhoto,
     'location': 'Bali, Indonesia',
@@ -35,7 +38,7 @@ class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
       {
         'id': 'address-home',
         'label': 'Rumah',
-        'recipient_name': 'Putu Alvin',
+        'recipient_name': CurrentUserIdentity.fallbackName,
         'phone_number': '+62 812 4567 8901',
         'full_address': 'Jl. Tukad Yeh Aya No. 18, Renon',
         'city': 'Denpasar',
@@ -64,11 +67,13 @@ class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
 
   @override
   Future<UserProfile> getProfile() async {
+    _syncCurrentUser();
     return _profile;
   }
 
   @override
   Future<UserProfile> updateProfile(UserProfile profile) async {
+    await CurrentUserIdentity.updateDisplayName(profile.name);
     _profile = UserProfileModel.fromEntity(profile);
     return _profile;
   }
@@ -101,5 +106,21 @@ class LocalProfileRemoteDatasource implements ProfileRemoteDatasource {
     ];
     _profile = _profile.copyWith(addresses: addresses);
     return _profile;
+  }
+
+  void _syncCurrentUser() {
+    final userName = CurrentUserIdentity.displayName(fallback: _profile.name);
+    final email = CurrentUserIdentity.email(fallback: _profile.email);
+    final userId = CurrentUserIdentity.userId(fallback: _profile.id);
+
+    _profile = _profile.copyWith(
+      id: userId,
+      name: userName,
+      email: email,
+      addresses: [
+        for (final address in _profile.addresses)
+          address.isPrimary ? address.copyWith(recipientName: userName) : address,
+      ],
+    );
   }
 }

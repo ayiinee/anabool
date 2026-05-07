@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
+import '../../../../core/auth/current_user_identity.dart';
 import '../../../../core/constants/asset_constants.dart';
 import '../../../../core/constants/route_constants.dart';
 import '../../../../shared/widgets/app_bottom_navigation.dart';
@@ -180,13 +181,14 @@ class _BackButton extends StatelessWidget {
 class _UserSummaryCard extends StatelessWidget {
   const _UserSummaryCard({required this.uncompletedCount});
 
-  static const _userName = 'Putu Alvin';
   static const _meowPoints = '194,589 XP';
 
   final int uncompletedCount;
 
   @override
   Widget build(BuildContext context) {
+    final userName = CurrentUserIdentity.displayName();
+
     return Container(
       height: 91,
       width: double.infinity,
@@ -220,24 +222,24 @@ class _UserSummaryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          const Expanded(
+          Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _userName,
+                  userName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
                     height: 1,
                   ),
                 ),
-                SizedBox(height: 7),
-                Row(
+                const SizedBox(height: 7),
+                const Row(
                   children: [
                     CircleAvatar(
                       radius: 7,
