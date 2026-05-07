@@ -38,7 +38,7 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
   LatLng _userPoint = _fallbackUserPoint;
   bool _isLoadingMap = true;
   String _mapStatus = 'Mendeteksi lokasi pengguna...';
-  Map<String, _AgentRouteInfo> _routeInfoByAgent = {};
+  Map<String, AgentRouteInfo> _routeInfoByAgent = {};
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
 
     final detectedPoint = await _detectUserPoint();
     final agentPoints = _buildDummyAgentPoints(detectedPoint);
-    final routeEntries = <String, _AgentRouteInfo>{};
+    final routeEntries = <String, AgentRouteInfo>{};
 
     for (final entry in agentPoints.entries) {
       routeEntries[entry.key] = await _loadOsrmRoute(
@@ -104,7 +104,9 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
       }
 
       final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
       );
       return LatLng(position.latitude, position.longitude);
     } catch (_) {
@@ -114,18 +116,22 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
 
   Map<String, LatLng> _buildDummyAgentPoints(LatLng userPoint) {
     return {
-      'agent_1': LatLng(userPoint.latitude + 0.0048, userPoint.longitude + 0.0032),
-      'agent_2': LatLng(userPoint.latitude - 0.0065, userPoint.longitude + 0.0068),
-      'agent_3': LatLng(userPoint.latitude + 0.0082, userPoint.longitude - 0.0054),
-      'agent_4': LatLng(userPoint.latitude - 0.0105, userPoint.longitude - 0.0046),
+      'agent_1':
+          LatLng(userPoint.latitude + 0.0048, userPoint.longitude + 0.0032),
+      'agent_2':
+          LatLng(userPoint.latitude - 0.0065, userPoint.longitude + 0.0068),
+      'agent_3':
+          LatLng(userPoint.latitude + 0.0082, userPoint.longitude - 0.0054),
+      'agent_4':
+          LatLng(userPoint.latitude - 0.0105, userPoint.longitude - 0.0046),
     };
   }
 
-  Future<_AgentRouteInfo> _loadOsrmRoute({
+  Future<AgentRouteInfo> _loadOsrmRoute({
     required LatLng userPoint,
     required LatLng agentPoint,
   }) async {
-    final fallback = _AgentRouteInfo.fallback(userPoint, agentPoint);
+    final fallback = AgentRouteInfo.fallback(userPoint, agentPoint);
     final url = 'https://router.project-osrm.org/route/v1/driving/'
         '${agentPoint.longitude},${agentPoint.latitude};'
         '${userPoint.longitude},${userPoint.latitude}';
@@ -155,7 +161,7 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
         }
       }
 
-      return _AgentRouteInfo(
+      return AgentRouteInfo(
         point: agentPoint,
         distanceMeters: ((route['distance'] as num?) ?? 0).round(),
         durationSeconds: ((route['duration'] as num?) ?? 0).round(),
@@ -222,7 +228,8 @@ class _PickupAgentsPageState extends State<PickupAgentsPage> {
             Align(
               alignment: Alignment.bottomCenter,
               child: AppBottomNavigation(
-                onHomeTap: () => Navigator.of(context).pushReplacementNamed('/home'),
+                onHomeTap: () =>
+                    Navigator.of(context).pushReplacementNamed('/home'),
               ),
             ),
           ],
@@ -242,7 +249,7 @@ class PickupAgentDetailPage extends StatelessWidget {
 
   final PickupController controller;
   final PickupAgent agent;
-  final _AgentRouteInfo? routeInfo;
+  final AgentRouteInfo? routeInfo;
 
   Future<void> _confirmViaWhatsApp(BuildContext context) async {
     final eta = routeInfo?.etaLabel ?? 'menunggu konfirmasi';
@@ -259,10 +266,12 @@ class PickupAgentDetailPage extends StatelessWidget {
       '- Layanan: ${agent.serviceType}\n\n'
       'Mohon bantu koordinasi pickup saya.',
     );
-    final appUri = Uri.parse('whatsapp://send?phone=6285337236836&text=$message');
+    final appUri =
+        Uri.parse('whatsapp://send?phone=6285337236836&text=$message');
     final webUri = Uri.parse('https://wa.me/6285337236836?text=$message');
 
-    final launched = await launchUrl(appUri, mode: LaunchMode.externalApplication);
+    final launched =
+        await launchUrl(appUri, mode: LaunchMode.externalApplication);
     if (!launched) {
       await launchUrl(webUri, mode: LaunchMode.externalApplication);
     }
@@ -377,7 +386,7 @@ class _PickupMap extends StatelessWidget {
   final LatLng userPoint;
   final Map<String, LatLng> agentPoints;
   final String? selectedAgentId;
-  final Map<String, _AgentRouteInfo> routeInfoByAgent;
+  final Map<String, AgentRouteInfo> routeInfoByAgent;
   final bool isLoading;
   final String status;
   final ValueChanged<String> onSelectAgent;
@@ -592,7 +601,7 @@ class _AgentBottomSheet extends StatelessWidget {
   });
 
   final PickupController controller;
-  final Map<String, _AgentRouteInfo> routeInfoByAgent;
+  final Map<String, AgentRouteInfo> routeInfoByAgent;
   final VoidCallback onOrderTap;
   final double bottomInset;
 
@@ -759,7 +768,8 @@ class _ToggleTab extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 14, color: isActive ? Colors.white : AnaboolColors.muted),
+            Icon(icon,
+                size: 14, color: isActive ? Colors.white : AnaboolColors.muted),
             const SizedBox(width: 4),
             Text(
               label,
@@ -786,7 +796,7 @@ class _AgentTile extends StatelessWidget {
   });
 
   final PickupAgent agent;
-  final _AgentRouteInfo? routeInfo;
+  final AgentRouteInfo? routeInfo;
   final bool isSelected;
   final String paymentMode;
   final VoidCallback onTap;
@@ -803,12 +813,16 @@ class _AgentTile extends StatelessWidget {
           color: isSelected ? const Color(0xFFFFF1E7) : Colors.white,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isSelected ? AnaboolColors.brown : AnaboolColors.border.withValues(alpha: 0.35),
+            color: isSelected
+                ? AnaboolColors.brown
+                : AnaboolColors.border.withValues(alpha: 0.35),
             width: isSelected ? 1.5 : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: isSelected ? const Color(0x22A64700) : const Color(0x0F000000),
+              color: isSelected
+                  ? const Color(0x22A64700)
+                  : const Color(0x0F000000),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -823,7 +837,7 @@ class _AgentTile extends StatelessWidget {
                 color: AnaboolColors.peach.withValues(alpha: 0.65),
                 shape: BoxShape.circle,
               ),
-              child: ClipOval(
+              child: const ClipOval(
                 child: DesignImage(
                   asset: HomeAssets.pickupCat,
                   width: 48,
@@ -861,7 +875,8 @@ class _AgentTile extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.star_rounded, color: AnaboolColors.header, size: 15),
+                      const Icon(Icons.star_rounded,
+                          color: AnaboolColors.header, size: 15),
                       const SizedBox(width: 3),
                       Text(
                         agent.rating?.toStringAsFixed(1) ?? '-',
@@ -878,7 +893,9 @@ class _AgentTile extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              paymentMode == 'meowpoint' ? agent.meowpointsLabel : agent.priceLabelIdr,
+              paymentMode == 'meowpoint'
+                  ? agent.meowpointsLabel
+                  : agent.priceLabelIdr,
               style: const TextStyle(
                 color: AnaboolColors.ink,
                 fontSize: 13,
@@ -894,12 +911,14 @@ class _AgentTile extends StatelessWidget {
                 color: isSelected ? AnaboolColors.brown : Colors.transparent,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: isSelected ? AnaboolColors.brown : AnaboolColors.border,
+                  color:
+                      isSelected ? AnaboolColors.brown : AnaboolColors.border,
                   width: 2,
                 ),
               ),
               child: isSelected
-                  ? const Icon(Icons.check_rounded, size: 16, color: Colors.white)
+                  ? const Icon(Icons.check_rounded,
+                      size: 16, color: Colors.white)
                   : null,
             ),
           ],
@@ -913,7 +932,7 @@ class _AgentHeroCard extends StatelessWidget {
   const _AgentHeroCard({required this.agent, required this.routeInfo});
 
   final PickupAgent agent;
-  final _AgentRouteInfo? routeInfo;
+  final AgentRouteInfo? routeInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -935,7 +954,7 @@ class _AgentHeroCard extends StatelessWidget {
                   color: AnaboolColors.peach.withValues(alpha: 0.7),
                   shape: BoxShape.circle,
                 ),
-                child: ClipOval(
+                child: const ClipOval(
                   child: DesignImage(
                     asset: HomeAssets.pickupCat,
                     width: 64,
@@ -1079,8 +1098,8 @@ class _DetailSection extends StatelessWidget {
   }
 }
 
-class _AgentRouteInfo {
-  const _AgentRouteInfo({
+class AgentRouteInfo {
+  const AgentRouteInfo({
     required this.point,
     required this.distanceMeters,
     required this.durationSeconds,
@@ -1088,10 +1107,11 @@ class _AgentRouteInfo {
     required this.isFromOsrm,
   });
 
-  factory _AgentRouteInfo.fallback(LatLng userPoint, LatLng agentPoint) {
-    final distance = const Distance().as(LengthUnit.Meter, userPoint, agentPoint);
+  factory AgentRouteInfo.fallback(LatLng userPoint, LatLng agentPoint) {
+    final distance =
+        const Distance().as(LengthUnit.Meter, userPoint, agentPoint);
     final seconds = (distance / 450 * 60).round().clamp(240, 1800);
-    return _AgentRouteInfo(
+    return AgentRouteInfo(
       point: agentPoint,
       distanceMeters: distance.round(),
       durationSeconds: seconds,

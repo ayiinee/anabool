@@ -146,12 +146,10 @@ class _PickupAppBar extends StatelessWidget {
   const _PickupAppBar({
     required this.title,
     this.onBack,
-    this.trailing,
   });
 
   final String title;
   final VoidCallback? onBack;
-  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -190,11 +188,7 @@ class _PickupAppBar extends StatelessWidget {
             ),
           ),
 
-          // Trailing
-          if (trailing != null)
-            trailing!
-          else
-            const SizedBox(width: 36),
+          const SizedBox(width: 36),
         ],
       ),
     );

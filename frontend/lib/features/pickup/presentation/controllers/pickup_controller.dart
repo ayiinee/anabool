@@ -26,7 +26,7 @@ class PickupController extends ChangeNotifier {
   String? _selectedAgentId;
   String? get selectedAgentId => _selectedAgentId;
 
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   bool _isOrdering = false;
@@ -114,7 +114,7 @@ class PickupController extends ChangeNotifier {
           timestamp: null,
           isCompleted: false,
         ),
-        PickupStatusLog(
+        const PickupStatusLog(
           status: 'completed',
           label: 'Pick-up Selesai',
           subtitle: null,

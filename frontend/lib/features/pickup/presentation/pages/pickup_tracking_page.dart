@@ -44,9 +44,9 @@ class _PickupTrackingPageState extends State<PickupTrackingPage> {
     final order = _ctrl.activeOrder;
 
     if (order == null) {
-      return Scaffold(
+      return const Scaffold(
         backgroundColor: AnaboolColors.canvas,
-        body: const Center(child: Text('Pesanan tidak ditemukan')),
+        body: Center(child: Text('Pesanan tidak ditemukan')),
       );
     }
 
@@ -298,10 +298,10 @@ class _MapBackgroundPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     // Draw some fake streets
-    canvas.drawLine(
-        Offset(0, size.height * 0.3), Offset(size.width, size.height * 0.4), paint);
-    canvas.drawLine(
-        Offset(size.width * 0.4, 0), Offset(size.width * 0.5, size.height), paint);
+    canvas.drawLine(Offset(0, size.height * 0.3),
+        Offset(size.width, size.height * 0.4), paint);
+    canvas.drawLine(Offset(size.width * 0.4, 0),
+        Offset(size.width * 0.5, size.height), paint);
     canvas.drawLine(Offset(size.width * 0.2, size.height * 0.2),
         Offset(size.width * 0.8, size.height * 0.8), paint);
     canvas.drawLine(Offset(size.width * 0.7, 0),
@@ -347,7 +347,8 @@ class _RoutePainter extends CustomPainter {
       Offset(size.width * 0.6, size.height * 0.35),
       Offset(size.width * 0.62, size.height * 0.45),
       Offset(size.width * 0.7, size.height * 0.46),
-      Offset(size.width * 0.72, size.height * 0.65), // End point (driver origin)
+      Offset(
+          size.width * 0.72, size.height * 0.65), // End point (driver origin)
     ];
 
     path.moveTo(points.first.dx, points.first.dy);
@@ -613,7 +614,7 @@ class _AgentInfoCard extends StatelessWidget {
               color: AnaboolColors.peach.withValues(alpha: 0.5),
               shape: BoxShape.circle,
             ),
-            child: ClipOval(
+            child: const ClipOval(
               child: DesignImage(
                 asset: HomeAssets.profilePhoto,
                 width: 56,
@@ -642,7 +643,7 @@ class _AgentInfoCard extends StatelessWidget {
                 Row(
                   children: [
                     // Rating
-                    Icon(
+                    const Icon(
                       Icons.star_rounded,
                       size: 16,
                       color: AnaboolColors.header,
@@ -905,9 +906,9 @@ class _TimelineItem extends StatelessWidget {
                           ]
                         : null,
                   ),
-                  child: ClipOval(
+                  child: const ClipOval(
                     child: Padding(
-                      padding: const EdgeInsets.all(6),
+                      padding: EdgeInsets.all(6),
                       child: DesignImage(
                         asset: HomeAssets.pickupCat,
                         fit: BoxFit.contain,

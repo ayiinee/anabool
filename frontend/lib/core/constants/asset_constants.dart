@@ -75,3 +75,11 @@ class PickupAssets {
   /// Reuse the home pickup cat as the mascot for category selection.
   static const pickupMascot = HomeAssets.pickupCat;
 }
+
+class CatAssets {
+  const CatAssets._();
+
+  static const imageBase = 'assets/images/cats';
+
+  static const personalizationMascot = '$imageBase/cats-personalization.png';
+}
