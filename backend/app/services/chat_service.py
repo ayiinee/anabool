@@ -228,6 +228,19 @@ def select_chat_cta_card(session_id: str, card_type: str) -> ChatSession:
         raise ValueError("Unknown chat CTA card type")
 
     context = _session_context.get(session_id, {})
+    tutorial = response_config["tutorial"]
+    if normalized_card_type in {"process", "dispose"}:
+        rag_result = generate_ana_response(
+            f"Saya memilih {response_config['selected_label']}.",
+            user_profile=context.get("user_profile"),
+            scan_result=context.get("scan_result"),
+            trigger_action=normalized_card_type,
+        )
+        tutorial = _format_cta_rag_tutorial(
+            rag_result=rag_result,
+            module_title=response_config["module_title"],
+        )
+
     user_message = ChatMessage(
         id=_new_id("msg"),
         role="user",
@@ -238,7 +251,7 @@ def select_chat_cta_card(session_id: str, card_type: str) -> ChatSession:
     assistant_message = _assistant_cta_followup(
         session_id=session.id,
         card_type=normalized_card_type,
-        tutorial=response_config["tutorial"],
+        tutorial=tutorial,
         module_title=response_config["module_title"],
         module_category=response_config["module_category"],
         target_route=response_config["target_route"],
@@ -342,9 +355,14 @@ def get_chat_session(session_id: str) -> ChatSession:
 def _format_rag_answer(rag_result: dict) -> str:
     answer = rag_result["answer"].strip()
     sources = rag_result.get("sources") or []
-    if sources:
+    if sources and rag_result.get("append_source_footer", True):
         answer = f"{answer}\n\nSumber rujukan: {', '.join(sources)}"
     return answer
+
+
+def _format_cta_rag_tutorial(*, rag_result: dict, module_title: str) -> str:
+    answer = _format_rag_answer(rag_result).strip()
+    return f"Quick tips dari {module_title}:\n\n{answer}"
 
 
 def _detect_topic(content: str) -> str:
@@ -394,11 +412,15 @@ def _assistant_cta_followup(
     module_category: str,
     target_route: str,
 ) -> ChatMessage:
+    content = tutorial
+    if "Untuk informasi lebih lanjut, silakan baca Modul" not in content:
+        content = f"{content}\n\nKlik Pelajari Selengkapnya untuk membuka {module_title}."
+
     return ChatMessage(
         id=_new_id("msg"),
         role="assistant",
         message_type="cta_cards",
-        content=f"{tutorial}\n\nKlik Pelajari Selengkapnya untuk membuka {module_title}.",
+        content=content,
         cards=[
             ChatCtaCard(
                 card_type=f"{card_type}_module",

@@ -121,7 +121,24 @@ def test_send_message_uses_rag_response(monkeypatch):
     assert "Sumber rujukan: Modul 1" in answer
 
 
-def test_select_process_card_returns_tutorial_and_dynamic_module_link():
+def test_select_process_card_returns_tutorial_and_dynamic_module_link(monkeypatch):
+    from app.services import chat_service
+
+    captured = {}
+
+    def fake_generate_ana_response(*_args, **kwargs):
+        captured.update(kwargs)
+        return {
+            "answer": "Gunakan wadah tertutup dan jangan dipakai untuk tanaman pangan.\n\nUntuk informasi lebih lanjut, silakan baca Modul 7",
+            "provider": "fallback",
+            "sources": ["Modul 7"],
+            "retrieved_chunks": 1,
+            "used_rag": True,
+            "append_source_footer": False,
+        }
+
+    monkeypatch.setattr(chat_service, "generate_ana_response", fake_generate_ana_response)
+
     session_id = _start_scan_session_id()
     response = client.post(
         f"/api/v1/chats/{session_id}/select-card",
@@ -138,6 +155,8 @@ def test_select_process_card_returns_tutorial_and_dynamic_module_link():
     assert followup["message_type"] == "cta_cards"
     assert "Quick tips" in followup["content"]
     assert "Modul Pengolahan Limbah" in followup["content"]
+    assert followup["content"].endswith("Untuk informasi lebih lanjut, silakan baca Modul 7")
+    assert captured["trigger_action"] == "process"
     assert len(followup["cards"]) == 1
 
     card = followup["cards"][0]
@@ -149,7 +168,24 @@ def test_select_process_card_returns_tutorial_and_dynamic_module_link():
     assert card["payload"]["preserve_chat_session"] is True
 
 
-def test_select_dispose_card_routes_to_environment_sanitation_module():
+def test_select_dispose_card_routes_to_environment_sanitation_module(monkeypatch):
+    from app.services import chat_service
+
+    captured = {}
+
+    def fake_generate_ana_response(*_args, **kwargs):
+        captured.update(kwargs)
+        return {
+            "answer": "Masukkan ke kantong kuat, ikat rapat, lalu buang sesuai aturan setempat.\n\nUntuk informasi lebih lanjut, silakan baca Modul 4",
+            "provider": "fallback",
+            "sources": ["Modul 4"],
+            "retrieved_chunks": 1,
+            "used_rag": True,
+            "append_source_footer": False,
+        }
+
+    monkeypatch.setattr(chat_service, "generate_ana_response", fake_generate_ana_response)
+
     session_id = _start_scan_session_id()
     response = client.post(
         f"/api/v1/chats/{session_id}/select-card",
@@ -159,6 +195,8 @@ def test_select_dispose_card_routes_to_environment_sanitation_module():
     assert response.status_code == 200
     followup = response.json()["data"]["messages"][-1]
     assert "Modul Sanitasi Lingkungan" in followup["content"]
+    assert followup["content"].endswith("Untuk informasi lebih lanjut, silakan baca Modul 4")
+    assert captured["trigger_action"] == "dispose"
     assert followup["cards"][0]["target_route"] == "/modules/environment-sanitation"
     assert followup["cards"][0]["payload"]["module_category"] == "environment_sanitation"
 
