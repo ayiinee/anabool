@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../core/constants/asset_constants.dart';
+import '../../../../core/constants/route_constants.dart';
 import 'design_image.dart';
 import 'home_components.dart';
 
@@ -219,7 +220,9 @@ class _ProductCard extends StatelessWidget {
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () {},
+          onTap: () => Navigator.of(context).pushNamed(
+            RouteConstants.marketplace,
+          ),
           splashColor: const Color(0x14FFAA61),
           highlightColor: const Color(0x0DFFAA61),
           child: Column(

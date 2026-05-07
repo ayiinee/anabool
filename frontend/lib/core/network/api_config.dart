@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class ApiConfig {
   const ApiConfig._();
 
@@ -16,10 +14,6 @@ class ApiConfig {
       return _configuredBaseUrl;
     }
 
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      return androidEmulatorBaseUrl;
-    }
-
-    return localBaseUrl;
+    return productionBaseUrl;
   }
 }

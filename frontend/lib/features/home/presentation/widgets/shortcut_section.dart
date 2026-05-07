@@ -62,6 +62,11 @@ class _ShortcutItem extends StatelessWidget {
           return;
         }
 
+        if (label == 'Produk') {
+          Navigator.of(context).pushNamed(RouteConstants.marketplace);
+          return;
+        }
+
         _showShortcutFeedback(context, label);
       },
     );
